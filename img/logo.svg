@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240">
+
+    <defs>
+
+        <linearGradient id="gearGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3B82F6"></stop>
+            <stop offset="100%" stop-color="#2563EB"></stop>
+        </linearGradient>
+
+        <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#FFFFFF"></stop>
+            <stop offset="100%" stop-color="#D1D5DB"></stop>
+        </linearGradient>
+
+    </defs>
+
+    <!-- ENGRANAJE -->
+
+    <g transform="translate(120,120)">
+
+        <circle r="60" fill="url(#gearGradient)"></circle>
+
+        <g fill="url(#gearGradient)">
+            <rect x="-10" y="-95" width="20" height="25" rx="4"></rect>
+            <rect x="-10" y="70" width="20" height="25" rx="4"></rect>
+
+            <rect x="-95" y="-10" width="25" height="20" rx="4"></rect>
+            <rect x="70" y="-10" width="25" height="20" rx="4"></rect>
+
+            <rect x="-10" y="-95" width="20" height="25" rx="4" transform="rotate(45)"></rect>
+            <rect x="-10" y="-95" width="20" height="25" rx="4" transform="rotate(90)"></rect>
+            <rect x="-10" y="-95" width="20" height="25" rx="4" transform="rotate(135)"></rect>
+            <rect x="-10" y="-95" width="20" height="25" rx="4" transform="rotate(180)"></rect>
+            <rect x="-10" y="-95" width="20" height="25" rx="4" transform="rotate(225)"></rect>
+            <rect x="-10" y="-95" width="20" height="25" rx="4" transform="rotate(270)"></rect>
+            <rect x="-10" y="-95" width="20" height="25" rx="4" transform="rotate(315)"></rect>
+        </g>
+
+        <circle r="48" fill="#0F172A"></circle>
+
+        <!-- TC -->
+
+        <text x="0" y="18" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="700" fill="#FFFFFF">
+            TC
+        </text>
+
+    </g>
+
+    <!-- TEXTO -->
+
+    <text x="240" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="62" font-weight="700" fill="url(#textGradient)">
+        TECNICOM
+    </text>
+
+    <text x="242" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="22" fill="#94A3B8">
+        Soluciones Informáticas Profesionales
+    </text>
+
+</svg>

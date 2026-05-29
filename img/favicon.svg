@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+
+    <defs>
+        <linearGradient id="gearGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#2563EB"></stop>
+            <stop offset="100%" stop-color="#0EA5E9"></stop>
+        </linearGradient>
+    </defs>
+
+    <!-- Fondo -->
+    <circle cx="256" cy="256" r="240" fill="#0F172A"></circle>
+
+    <!-- Engrane -->
+    <path fill="url(#gearGradient)" d="
+        M287 50
+        L225 50
+        L212 103
+        C196 107 180 113 166 121
+        L119 92
+        L75 136
+        L104 183
+        C96 197 90 213 86 229
+        L33 242
+        L33 304
+        L86 317
+        C90 333 96 349 104 363
+        L75 410
+        L119 454
+        L166 425
+        C180 433 196 439 212 443
+        L225 496
+        L287 496
+        L300 443
+        C316 439 332 433 346 425
+        L393 454
+        L437 410
+        L408 363
+        C416 349 422 333 426 317
+        L479 304
+        L479 242
+        L426 229
+        C422 213 416 197 408 183
+        L437 136
+        L393 92
+        L346 121
+        C332 113 316 107 300 103
+        Z"></path>
+
+    <!-- Centro -->
+    <circle cx="256" cy="256" r="95" fill="#0F172A"></circle>
+
+    <!-- Letra T -->
+    <text x="256" y="285" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="110" font-weight="bold" fill="#FFFFFF">
+        T
+    </text>
+
+</svg>

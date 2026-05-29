@@ -946,3 +946,124 @@ footer{
     }
 
 }
+
+/* PARTICULAS */
+
+.particle{
+
+    position:absolute;
+
+    display:block;
+
+    border-radius:50%;
+
+    background:
+    rgba(59,130,246,.6);
+
+    animation:
+    particleFloat linear infinite;
+
+}
+
+@keyframes particleFloat{
+
+    0%{
+
+        transform:
+        translateY(0);
+
+        opacity:0;
+
+    }
+
+    50%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:
+        translateY(-100vh);
+
+        opacity:0;
+
+    }
+
+}
+
+/* BOTON TOP */
+
+#topButton{
+
+    position:fixed;
+
+    right:25px;
+
+    bottom:25px;
+
+    width:50px;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.3s;
+
+    z-index:9999;
+
+}
+
+#topButton.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+/* MENU MOVIL */
+
+@media(max-width:768px){
+
+    nav.mobile-open{
+
+        display:flex;
+
+        position:absolute;
+
+        top:90px;
+
+        left:0;
+
+        width:100%;
+
+        background:
+        rgba(10,15,30,.95);
+
+        flex-direction:column;
+
+        padding:20px;
+
+        gap:20px;
+
+        text-align:center;
+
+    }
+
+}

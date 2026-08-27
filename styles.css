@@ -376,23 +376,23 @@ nav a.active {
 }
 
 .hero h1 {
-    font-size:
-        clamp(2.5rem, 6vw, 5rem);
+    font-size: clamp(2.3rem, 4.5vw, 4.2rem);
 
-    line-height:
-        1.05;
+    line-height: 1.12;
 
-    letter-spacing:
-        -2px;
+    letter-spacing: -1.5px;
 
-    font-weight:
-        800;
+    font-weight: 800;
 
-    max-width:
-        1050px;
+    max-width: 1000px;
 
-    margin:
-        0 auto 30px;
+    margin: 0 auto 30px;
+
+    text-wrap: balance;
+
+    word-break: normal;
+
+    overflow-wrap: normal;
 }
 
 .hero p {

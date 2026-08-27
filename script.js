@@ -297,48 +297,6 @@ cards.forEach(card => {
 
 
 /* ===================================
-   EFECTO MAQUINA DE ESCRIBIR
-=================================== */
-
-const heroTitle =
-    document.querySelector(".hero h1");
-
-if (heroTitle) {
-
-    const text =
-        heroTitle.innerText.trim();
-
-    heroTitle.innerText = "";
-
-    let index = 0;
-
-    function typeWriter() {
-
-        if (index < text.length) {
-
-            heroTitle.innerText +=
-                text.charAt(index);
-
-            index++;
-
-            setTimeout(
-                typeWriter,
-                25
-            );
-
-        }
-
-    }
-
-    window.addEventListener(
-        "load",
-        typeWriter
-    );
-
-}
-
-
-/* ===================================
    BOTON VOLVER ARRIBA
 =================================== */
 

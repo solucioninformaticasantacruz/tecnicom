@@ -1793,3 +1793,132 @@ footer {
     }
 
 }
+
+/* ===================================
+   IMAGENES DE SERVICIOS
+=================================== */
+
+.card-image {
+    width: 100%;
+
+    height: 170px;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    margin-bottom: 25px;
+
+    background:
+        rgba(37, 99, 235, 0.08);
+
+    border:
+        1px solid rgba(59, 130, 246, 0.15);
+}
+
+.card-image img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.4s ease;
+}
+
+.card:hover .card-image img,
+.coverage-card:hover .card-image img {
+    transform:
+        scale(1.04);
+}
+
+
+/* POS: tarjetas amplias */
+
+.cards-two {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    max-width: 1100px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* DESARROLLO: 4 tarjetas completas */
+
+.development-grid {
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+}
+
+
+/* INFRAESTRUCTURA: 4 tarjetas completas */
+
+.infrastructure-grid {
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+}
+
+
+/* Evita que el contenido se corte */
+
+.card {
+    height: auto;
+
+    min-height: 100%;
+
+    overflow: visible;
+}
+
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media (max-width: 1100px) {
+
+    .development-grid,
+    .infrastructure-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .cards-two,
+    .development-grid,
+    .infrastructure-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .card-image {
+
+        height: 200px;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .card-image {
+
+        height: 170px;
+
+    }
+
+}

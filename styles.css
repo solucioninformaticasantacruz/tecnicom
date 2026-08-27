@@ -1801,7 +1801,7 @@ footer {
 .card-image {
     width: 100%;
 
-    height: 170px;
+    height: 220px;
 
     overflow: hidden;
 
@@ -1810,11 +1810,24 @@ footer {
     margin-bottom: 25px;
 
     background:
-        rgba(37, 99, 235, 0.08);
+        linear-gradient(
+            145deg,
+            rgba(37, 99, 235, 0.10),
+            rgba(8, 17, 32, 0.35)
+        );
 
     border:
-        1px solid rgba(59, 130, 246, 0.15);
+        1px solid rgba(59, 130, 246, 0.18);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 8px;
 }
+
 
 .card-image img {
     width: 100%;
@@ -1823,58 +1836,26 @@ footer {
 
     display: block;
 
-    object-fit: cover;
+    object-fit: contain;
+
+    object-position: center;
+
+    border-radius: 12px;
 
     transition:
         transform 0.4s ease;
 }
 
+
+/* EFECTO AL PASAR EL MOUSE */
+
 .card:hover .card-image img,
 .coverage-card:hover .card-image img {
+
     transform:
-        scale(1.04);
+        scale(1.03);
+
 }
-
-
-/* POS: tarjetas amplias */
-
-.cards-two {
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    max-width: 1100px;
-
-    margin-left: auto;
-    margin-right: auto;
-}
-
-
-/* DESARROLLO: 4 tarjetas completas */
-
-.development-grid {
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-}
-
-
-/* INFRAESTRUCTURA: 4 tarjetas completas */
-
-.infrastructure-grid {
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-}
-
-
-/* Evita que el contenido se corte */
-
-.card {
-    height: auto;
-
-    min-height: 100%;
-
-    overflow: visible;
-}
-
 
 /* ===================================
    RESPONSIVE

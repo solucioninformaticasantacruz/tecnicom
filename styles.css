@@ -1891,3 +1891,230 @@ footer {
     }
 
 }
+
+/* =========================================================
+   ATENCION LOCAL Y REMOTA
+========================================================= */
+
+.coverage-section .section-subtitle {
+    margin-bottom: 50px;
+}
+
+
+/* GRID */
+
+.coverage-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 30px;
+
+    align-items: stretch;
+}
+
+
+/* TARJETA */
+
+.coverage-card {
+    position: relative;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(18, 32, 59, 0.90),
+            rgba(8, 17, 32, 0.95)
+        );
+
+    border:
+        1px solid rgba(59, 130, 246, 0.20);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+
+.coverage-card:hover {
+    transform: translateY(-6px);
+
+    border-color:
+        rgba(59, 130, 246, 0.45);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.28),
+        0 0 35px rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================================================
+   IMAGEN PANORAMICA
+========================================================= */
+
+.coverage-image {
+    position: relative;
+
+    width: 100%;
+    height: 300px;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+
+    background: #081120;
+}
+
+
+.coverage-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    transition:
+        transform 0.55s ease;
+}
+
+
+.coverage-card:hover .coverage-image img {
+    transform: scale(1.04);
+}
+
+
+/* SOMBRA ENTRE IMAGEN Y CONTENIDO */
+
+.coverage-image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 65%,
+            rgba(8, 17, 32, 0.35) 100%
+        );
+}
+
+
+/* =========================================================
+   CONTENIDO
+========================================================= */
+
+.coverage-content {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    padding: 30px 32px 34px;
+}
+
+
+.coverage-content h3 {
+    margin: 0 0 12px;
+
+    font-size: 1.45rem;
+
+    line-height: 1.3;
+
+    color: #ffffff;
+}
+
+
+.coverage-content p {
+    margin: 0 0 14px;
+
+    color: var(--text-soft);
+
+    line-height: 1.7;
+}
+
+
+.coverage-content p:last-child {
+    margin-bottom: 0;
+}
+
+
+.coverage-small {
+    color: var(--text-muted) !important;
+
+    font-size: 0.94rem;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .coverage-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .coverage-image {
+        height: 320px;
+    }
+
+}
+
+
+/* =========================================================
+   MOVIL
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .coverage-grid {
+        gap: 24px;
+    }
+
+    .coverage-image {
+        height: 220px;
+    }
+
+    .coverage-content {
+        padding: 24px 22px 27px;
+    }
+
+    .coverage-content h3 {
+        font-size: 1.3rem;
+    }
+
+}
+
+
+/* =========================================================
+   MOVILES PEQUEÑOS
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .coverage-image {
+        height: 190px;
+    }
+
+}

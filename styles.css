@@ -1800,8 +1800,7 @@ footer {
 
 .card-image {
     width: 100%;
-
-    height: 220px;
+    height: 280px;
 
     overflow: hidden;
 
@@ -1809,52 +1808,41 @@ footer {
 
     margin-bottom: 25px;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(37, 99, 235, 0.10),
-            rgba(8, 17, 32, 0.35)
-        );
+    background: #081120;
 
     border:
         1px solid rgba(59, 130, 246, 0.18);
 
-    display: flex;
+    position: relative;
 
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 8px;
+    /* IMPORTANTE */
+    padding: 0;
 }
 
 
 .card-image img {
     width: 100%;
-
     height: 100%;
 
     display: block;
 
-    object-fit: contain;
+    /* LLENA TODA LA TARJETA */
+    object-fit: cover;
 
     object-position: center;
 
-    border-radius: 12px;
+    border-radius: 15px;
 
     transition:
-        transform 0.4s ease;
+        transform 0.45s ease;
 }
 
 
-/* EFECTO AL PASAR EL MOUSE */
+/* EFECTO PROFESIONAL AL PASAR EL MOUSE */
 
 .card:hover .card-image img,
 .coverage-card:hover .card-image img {
-
-    transform:
-        scale(1.03);
-
+    transform: scale(1.035);
 }
 
 /* ===================================

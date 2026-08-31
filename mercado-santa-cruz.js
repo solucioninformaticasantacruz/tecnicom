@@ -303,6 +303,7 @@ function seleccionarTipoMuro(tipo) {
 
     const validos = [
         "todos",
+        "comerciante",
         "informacion",
         "reclamo",
         "necesito",
@@ -336,14 +337,45 @@ function seleccionarTipoMuro(tipo) {
 }
 
 
+function obtenerComerciantesMuro() {
+
+    return mercadoItems
+        .filter(
+            item =>
+                normalizarPlan(
+                    item.plan
+                ) === "gratis"
+        )
+        .map(
+            item => ({
+                ...item,
+                _tipoVista: "comerciante",
+                _esComerciante: true
+            })
+        );
+}
+
+
 function obtenerPublicacionesFiltradas() {
+
+    const comerciantes =
+        obtenerComerciantesMuro();
+
+    if (
+        muroTipoSeleccionado ===
+        "comerciante"
+    ) {
+        return comerciantes;
+    }
 
     if (
         muroTipoSeleccionado ===
         "todos"
     ) {
-
-        return muroPublicaciones;
+        return [
+            ...comerciantes,
+            ...muroPublicaciones
+        ];
     }
 
     return muroPublicaciones.filter(
@@ -415,9 +447,13 @@ function renderMuro() {
             publicacion => {
 
                 muroGrid.appendChild(
-                    crearTarjetaMuro(
-                        publicacion
-                    )
+                    publicacion._esComerciante
+                        ? crearTarjetaComercianteMuro(
+                            publicacion
+                        )
+                        : crearTarjetaMuro(
+                            publicacion
+                        )
                 );
             }
         );
@@ -425,6 +461,162 @@ function renderMuro() {
     renderPaginacionMuro(
         totalPaginas
     );
+}
+
+
+function crearTarjetaComercianteMuro(
+    negocio
+) {
+
+    const articulo =
+        document.createElement(
+            "article"
+        );
+
+    articulo.className =
+        "muro-card muro-card-comerciante";
+
+    articulo.tabIndex =
+        0;
+
+    articulo.setAttribute(
+        "role",
+        "button"
+    );
+
+    const cabecera =
+        document.createElement(
+            "div"
+        );
+
+    cabecera.className =
+        "muro-card-header";
+
+    const etiqueta =
+        document.createElement(
+            "span"
+        );
+
+    etiqueta.className =
+        "muro-tipo muro-tipo-comerciante";
+
+    etiqueta.textContent =
+        "Comerciante";
+
+    const ubicacion =
+        document.createElement(
+            "span"
+        );
+
+    ubicacion.className =
+        "muro-fecha";
+
+    ubicacion.textContent =
+        negocio.comuna ||
+        "Santa Cruz";
+
+    cabecera.append(
+        etiqueta,
+        ubicacion
+    );
+
+    const titulo =
+        document.createElement(
+            "h3"
+        );
+
+    titulo.textContent =
+        negocio.nombre ||
+        "Comerciante";
+
+    const mensaje =
+        document.createElement(
+            "p"
+        );
+
+    mensaje.className =
+        "muro-mensaje";
+
+    mensaje.textContent =
+        negocio.descripcion ||
+        "Comerciante local de Santa Cruz.";
+
+    const footer =
+        document.createElement(
+            "div"
+        );
+
+    footer.className =
+        "muro-card-footer";
+
+    if (negocio.categoria) {
+        const categoria =
+            document.createElement(
+                "span"
+            );
+
+        categoria.className =
+            "muro-autor";
+
+        categoria.textContent =
+            negocio.categoria;
+
+        footer.appendChild(
+            categoria
+        );
+    }
+
+    const hint =
+        document.createElement(
+            "span"
+        );
+
+    hint.className =
+        "muro-card-hint";
+
+    hint.textContent =
+        "Ver ficha del comerciante";
+
+    footer.appendChild(
+        hint
+    );
+
+    articulo.append(
+        cabecera,
+        titulo,
+        mensaje,
+        footer
+    );
+
+    const abrir = () => {
+        if (!negocio.slug) {
+            return;
+        }
+
+        abrirMercado(
+            negocio.slug
+        );
+    };
+
+    articulo.addEventListener(
+        "click",
+        abrir
+    );
+
+    articulo.addEventListener(
+        "keydown",
+        event => {
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+                event.preventDefault();
+                abrir();
+            }
+        }
+    );
+
+    return articulo;
 }
 
 
@@ -1394,6 +1586,9 @@ function nombreTipo(
 ) {
 
     return {
+        comerciante:
+            "Comerciante",
+
         informacion:
             "Información",
 
@@ -1464,6 +1659,14 @@ async function cargarMercado() {
         renderMercado(
             mercadoItems
         );
+
+        /*
+         * El Muro también muestra los negocios del plan Gratis.
+         * Se vuelve a renderizar después de cargar Mercado para
+         * incorporar esos comerciantes aunque ambas cargas hayan
+         * comenzado en paralelo.
+         */
+        renderMuro();
 
         ocultarEstadoMercado();
 
@@ -1814,13 +2017,13 @@ function renderMercado(
 
 
     /* =====================================================
-       DIRECTORIO
+       COMERCIOS Y SERVICIOS
 
-       Aquí aparecen solamente:
-       - Comerciante  = Gratis
-       - Emprendedor  = Básico
+       Aquí aparecen EXCLUSIVAMENTE las Tiendas Online.
 
-       Las Tiendas Online ya tienen su espacio exclusivo arriba.
+       - Gratis  -> El Muro
+       - Básico  -> La Tiendita
+       - Full    -> Comercios y servicios + Tiendas Online
     ====================================================== */
 
     const directorio =
@@ -1828,7 +2031,7 @@ function renderMercado(
             item =>
                 normalizarPlan(
                     item.plan
-                ) !== "full"
+                ) === "full"
         );
 
 
@@ -1845,7 +2048,7 @@ function renderMercado(
     ) {
 
         marketGrid.innerHTML =
-            '<p class="market-empty">No encontramos comercios o emprendedores para esta búsqueda.</p>';
+            '<p class="market-empty">No encontramos Tiendas Online para esta búsqueda.</p>';
 
         return;
     }

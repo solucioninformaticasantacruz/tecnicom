@@ -2056,3 +2056,24 @@ a {
     border-color: #10203a;
     color: #ffffff;
 }
+
+
+/* =========================================================
+   NIVELES DEFINITIVOS - MERCADO SANTA CRUZ
+========================================================= */
+
+.muro-card-comerciante {
+    border-top: 3px solid #315e9e;
+}
+
+.muro-tipo-comerciante {
+    background: #eaf1fb;
+    color: #244f8d;
+}
+
+.market-business-description {
+    margin: 8px 0 0;
+    color: #69717c;
+    font-size: 13px;
+    line-height: 1.5;
+}

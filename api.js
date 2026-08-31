@@ -1,31 +1,14 @@
 "use strict";
 
 
-/* =========================================================
-   TECNICOM - CLIENTE API REST
-   =========================================================
-
-   Este archivo centraliza todas las comunicaciones
-   entre el sitio web TECNICOM y la API PHP.
-
-   API:
-   https://www.carnesdiaz.cl/api/
-
-   ========================================================= */
-
-
 const TECNICOM_API = {
-
-    /* -----------------------------------------------------
-       CONFIGURACIÓN
-    ----------------------------------------------------- */
 
     baseUrl: "https://www.carnesdiaz.cl/api",
 
 
-    /* -----------------------------------------------------
+    /* =====================================================
        PETICIÓN GENERAL
-    ----------------------------------------------------- */
+    ====================================================== */
 
     async request(endpoint, options = {}) {
 
@@ -39,7 +22,9 @@ const TECNICOM_API = {
                 options.method || "GET",
 
             headers: {
-                "Accept": "application/json",
+
+                "Accept":
+                    "application/json",
 
                 ...options.headers
             },
@@ -48,10 +33,9 @@ const TECNICOM_API = {
         };
 
 
-        /*
-         * Si enviamos un body como objeto JavaScript,
-         * lo convertimos automáticamente a JSON.
-         */
+        /* =============================================
+           JSON AUTOMÁTICO
+        ============================================== */
 
         if (
             config.body &&
@@ -59,11 +43,15 @@ const TECNICOM_API = {
             !(config.body instanceof FormData)
         ) {
 
-            config.headers["Content-Type"] =
-                "application/json";
+            config.headers[
+                "Content-Type"
+            ] = "application/json";
+
 
             config.body =
-                JSON.stringify(config.body);
+                JSON.stringify(
+                    config.body
+                );
         }
 
 
@@ -76,18 +64,12 @@ const TECNICOM_API = {
                 );
 
 
-            /*
-             * Intentamos obtener JSON.
-             *
-             * Primero usamos text() para poder detectar
-             * respuestas PHP inválidas, warnings, HTML, etc.
-             */
-
             const responseText =
                 await response.text();
 
 
             let result;
+
 
             try {
 
@@ -103,15 +85,16 @@ const TECNICOM_API = {
                     responseText
                 );
 
+
                 throw new Error(
                     "La API devolvió una respuesta inválida."
                 );
             }
 
 
-            /*
-             * Error HTTP
-             */
+            /* =========================================
+               ERROR HTTP
+            ========================================== */
 
             if (!response.ok) {
 
@@ -119,18 +102,16 @@ const TECNICOM_API = {
                     result?.message ||
                     `Error HTTP ${response.status}`;
 
-                throw new Error(message);
+
+                throw new Error(
+                    message
+                );
             }
 
 
-            /*
-             * La API TECNICOM utiliza:
-             *
-             * {
-             *     success: true,
-             *     data: ...
-             * }
-             */
+            /* =========================================
+               ERROR INFORMADO POR API
+            ========================================== */
 
             if (
                 result &&
@@ -146,6 +127,7 @@ const TECNICOM_API = {
 
             return result;
 
+
         } catch (error) {
 
             console.error(
@@ -153,14 +135,15 @@ const TECNICOM_API = {
                 error
             );
 
+
             throw error;
         }
     },
 
 
     /* =====================================================
-       CONTENIDOS DEL MODAL
-    ===================================================== */
+       CONTENIDOS / MODALES
+    ====================================================== */
 
     async getContenido(clave) {
 
@@ -190,9 +173,33 @@ const TECNICOM_API = {
     },
 
 
+    async getContenidos() {
+
+        const result =
+            await this.request(
+                "contenidos"
+            );
+
+
+        return result?.data || [];
+    },
+
+
+    async getContenidosPorTipo(tipo) {
+
+        const result =
+            await this.request(
+                `contenidos/tipo/${encodeURIComponent(tipo)}`
+            );
+
+
+        return result?.data || [];
+    },
+
+
     /* =====================================================
        SERVICIOS
-    ===================================================== */
+    ====================================================== */
 
     async getServicios() {
 
@@ -200,6 +207,7 @@ const TECNICOM_API = {
             await this.request(
                 "servicios"
             );
+
 
         return result?.data || [];
     },
@@ -212,14 +220,14 @@ const TECNICOM_API = {
                 `servicios/${encodeURIComponent(slug)}`
             );
 
+
         return result?.data || null;
     },
 
 
     /* =====================================================
        NOTICIAS
-       Lo utilizaremos posteriormente en noticias.html
-    ===================================================== */
+    ====================================================== */
 
     async getNoticias() {
 
@@ -227,6 +235,7 @@ const TECNICOM_API = {
             await this.request(
                 "noticias"
             );
+
 
         return result?.data || [];
     },
@@ -239,14 +248,14 @@ const TECNICOM_API = {
                 `noticias/${encodeURIComponent(slug)}`
             );
 
+
         return result?.data || null;
     },
 
 
     /* =====================================================
        MERCADO SANTA CRUZ
-       Lo utilizaremos posteriormente.
-    ===================================================== */
+    ====================================================== */
 
     async getMercado() {
 
@@ -254,6 +263,7 @@ const TECNICOM_API = {
             await this.request(
                 "mercado"
             );
+
 
         return result?.data || [];
     },
@@ -266,6 +276,7 @@ const TECNICOM_API = {
                 `mercado/${encodeURIComponent(slug)}`
             );
 
+
         return result?.data || null;
     },
 
@@ -276,6 +287,7 @@ const TECNICOM_API = {
             await this.request(
                 "mercado/categorias"
             );
+
 
         return result?.data || [];
     },
@@ -288,41 +300,114 @@ const TECNICOM_API = {
                 "mercado/eventos"
             );
 
+
         return result?.data || [];
     },
 
 
     /* =====================================================
-       CONTACTO
-       Lo podremos utilizar posteriormente.
-    ===================================================== */
+       EL MURO
+    ====================================================== */
 
-    async enviarContacto(datos) {
+    async getMuro(limit = 50) {
+
+        const limite =
+            Math.min(
+                Math.max(
+                    Number(limit) || 50,
+                    1
+                ),
+                100
+            );
+
 
         const result =
             await this.request(
-                "contacto",
-                {
-                    method: "POST",
-
-                    body: datos
-                }
+                `muro?limit=${limite}`
             );
 
-        return result;
-    }
 
+        return result?.data || [];
+    },
+
+
+    async getMuroPorTipo(
+        tipo,
+        limit = 50
+    ) {
+
+        if (!tipo) {
+
+            throw new Error(
+                "No se indicó el tipo de publicación."
+            );
+        }
+
+
+        const limite =
+            Math.min(
+                Math.max(
+                    Number(limit) || 50,
+                    1
+                ),
+                100
+            );
+
+
+        const result =
+            await this.request(
+                `muro/tipo/${encodeURIComponent(tipo)}?limit=${limite}`
+            );
+
+
+        return result?.data || [];
+    },
+
+
+    async publicarMuro(datos) {
+
+        if (!datos) {
+
+            throw new Error(
+                "No se entregaron los datos de la publicación."
+            );
+        }
+
+
+        return await this.request(
+            "muro",
+            {
+
+                method:
+                    "POST",
+
+                body:
+                    datos
+            }
+        );
+    },
+
+
+    /* =====================================================
+       CONTACTO
+    ====================================================== */
+
+    async enviarContacto(datos) {
+
+        return await this.request(
+            "contacto",
+            {
+
+                method:
+                    "POST",
+
+                body:
+                    datos
+            }
+        );
+    }
 };
 
-
-/* =========================================================
-   DISPONIBILIDAD GLOBAL
-========================================================= */
-
-/*
- * Esto permite usar TECNICOM_API desde otros archivos
- * como modal.js.
- */
 
 window.TECNICOM_API =
     TECNICOM_API;

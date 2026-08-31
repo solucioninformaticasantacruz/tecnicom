@@ -1,1 +1,1 @@
-
+"use strict";document.addEventListener("DOMContentLoaded",()=>document.getElementById("loginForm").addEventListener("submit",async e=>{e.preventDefault();const s=document.getElementById("loginStatus");s.textContent="Ingresando...";try{const r=await TECNICOM_API.login({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value});if(r?.success===false)throw new Error(r.message||"No fue posible ingresar");location.href="mi-negocio.html"}catch(err){s.textContent=err.message||"No fue posible ingresar."}}));

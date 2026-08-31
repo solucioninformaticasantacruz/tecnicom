@@ -24,8 +24,8 @@ const marketFeatured = $("marketFeatured");
 const marketGrid = $("marketGrid");
 const marketStatus = $("marketStatus");
 const marketResultsCount = $("marketResultsCount");
-const marketEvents = $("marketEvents");
-const marketEventsSection = $("marketEventsSection");
+const tienditaGrid = $("tienditaGrid");
+const tienditaStatus = $("tienditaStatus");
 const marketDetailView = $("marketDetailView");
 const marketBackButton = $("marketBackButton");
 const marketMenuButton = $("marketMenuButton");
@@ -724,6 +724,7 @@ function renderPaginacionMuro(
     );
 }
 
+
 function crearBotonPagina(
     texto,
     disabled,
@@ -1404,10 +1405,12 @@ function nombreTipo(
 
         ofrezco:
             "Ofrezco"
+
     }[tipo]
     ||
     "Información";
 }
+
 
 /* =========================================================
    MERCADO
@@ -1425,7 +1428,7 @@ async function cargarMercado() {
             await Promise.allSettled([
                 TECNICOM_API.getMercado(),
                 TECNICOM_API.getCategoriasMercado(),
-                TECNICOM_API.getEventosMercado()
+                TECNICOM_API.getProductosMercado(8)
             ]);
 
         mercadoItems =
@@ -1449,15 +1452,11 @@ async function cargarMercado() {
             "fulfilled"
         ) {
 
-            renderEventos(
-                normalizarArray(
-                    resultados[2].value
-                )
-            );
+            renderTiendita(normalizarArray(resultados[2].value));
 
         } else {
 
-            ocultarEventos();
+            mostrarEstadoTiendita("Todavía no hay productos publicados.");
         }
 
         renderCategorias();
@@ -1507,10 +1506,6 @@ function normalizarArray(
     return [];
 }
 
-
-/* =========================================================
-   CATEGORÍAS
-========================================================= */
 
 function renderCategorias() {
 
@@ -1624,10 +1619,6 @@ function crearCategoriaMercado(
 }
 
 
-/* =========================================================
-   FILTRAR MERCADO
-========================================================= */
-
 function filtrarMercado() {
 
     const busqueda =
@@ -1691,10 +1682,6 @@ function filtrarMercado() {
 }
 
 
-/* =========================================================
-   RENDER MERCADO
-========================================================= */
-
 function renderMercado(
     items
 ) {
@@ -1757,10 +1744,6 @@ function renderMercado(
 }
 
 
-/* =========================================================
-   TARJETA MERCADO
-========================================================= */
-
 function crearTarjetaMercado(
     item
 ) {
@@ -1772,6 +1755,8 @@ function crearTarjetaMercado(
 
     tarjeta.className =
         "market-card";
+
+    if (item.plan === "full") tarjeta.classList.add("market-card-full");
 
     tarjeta.tabIndex =
         0;
@@ -1928,10 +1913,6 @@ function crearTarjetaMercado(
 }
 
 
-/* =========================================================
-   ABRIR DETALLE MERCADO
-========================================================= */
-
 async function abrirDetalleMercado(
     slug
 ) {
@@ -1992,10 +1973,6 @@ async function cargarDetalleMercado(
     }
 }
 
-
-/* =========================================================
-   MOSTRAR DETALLE MERCADO
-========================================================= */
 
 function mostrarDetalleMercado(
     item
@@ -2078,9 +2055,6 @@ function mostrarDetalleMercado(
     }
 }
 
-/* =========================================================
-   OCULTAR LISTADO AL VER DETALLE
-========================================================= */
 
 function ocultarSeccionesListado() {
 
@@ -2090,7 +2064,7 @@ function ocultarSeccionesListado() {
         ".market-categories-section",
         ".market-featured-section",
         ".market-business-section",
-        ".market-events-section"
+        ".market-tiendita-section"
     ]
     .forEach(
         selector => {
@@ -2111,19 +2085,10 @@ function ocultarSeccionesListado() {
 }
 
 
-/* =========================================================
-   VOLVER AL LISTADO
-========================================================= */
-
 function mostrarListadoMercado() {
 
-    if (
-        marketDetailView
-    ) {
-
-        marketDetailView.hidden =
-            true;
-    }
+    marketDetailView.hidden =
+        true;
 
     [
         ".muro-section",
@@ -2149,16 +2114,6 @@ function mostrarListadoMercado() {
         }
     );
 
-    if (
-        marketEvents &&
-        marketEvents.children.length &&
-        marketEventsSection
-    ) {
-
-        marketEventsSection.hidden =
-            false;
-    }
-
     renderMercado(
         mercadoItems
     );
@@ -2166,10 +2121,6 @@ function mostrarListadoMercado() {
     renderMuro();
 }
 
-
-/* =========================================================
-   HISTORIAL DEL NAVEGADOR
-========================================================= */
 
 async function manejarHistorial() {
 
@@ -2205,21 +2156,10 @@ function renderEventos(
 ) {
 
     if (
-        !marketEvents ||
-        !marketEventsSection
-    ) {
-
-        return;
-    }
-
-    if (
-        !Array.isArray(
-            eventos
-        ) ||
         !eventos.length
     ) {
 
-        ocultarEventos();
+        mostrarEstadoTiendita("Todavía no hay productos publicados.");
 
         return;
     }
@@ -2291,18 +2231,13 @@ function renderEventos(
 
 function ocultarEventos() {
 
-    if (
-        marketEventsSection
-    ) {
-
-        marketEventsSection.hidden =
-            true;
-    }
+    marketEventsSection.hidden =
+        true;
 }
 
 
 /* =========================================================
-   UTILIDADES DETALLE
+   UTILIDADES
 ========================================================= */
 
 function establecerDatoDetalle(
@@ -2359,10 +2294,6 @@ function establecerTexto(
 }
 
 
-/* =========================================================
-   IMÁGENES
-========================================================= */
-
 function resolverImagen(
     ruta
 ) {
@@ -2398,10 +2329,6 @@ function resolverImagen(
     );
 }
 
-
-/* =========================================================
-   FECHAS
-========================================================= */
 
 function formatearFecha(
     fecha
@@ -2439,48 +2366,6 @@ function formatearFecha(
 }
 
 
-function formatearFechaCompleta(
-    fecha
-) {
-
-    const date =
-        crearFecha(
-            fecha
-        );
-
-    if (
-        !date
-    ) {
-
-        return fecha ||
-            "";
-    }
-
-    return new Intl.DateTimeFormat(
-        "es-CL",
-        {
-            day:
-                "numeric",
-
-            month:
-                "long",
-
-            year:
-                "numeric",
-
-            hour:
-                "2-digit",
-
-            minute:
-                "2-digit"
-        }
-    )
-    .format(
-        date
-    );
-}
-
-
 function formatearFechaRelativa(
     fecha
 ) {
@@ -2500,26 +2385,13 @@ function formatearFechaRelativa(
     const ahora =
         new Date();
 
-    const diferencia =
-        ahora.getTime() -
-        date.getTime();
-
-    /*
-    | Si por diferencia de reloj la fecha aparece
-    | ligeramente en el futuro, evitamos mostrar
-    | valores negativos.
-    */
-
-    if (
-        diferencia <= 0
-    ) {
-
-        return "Hace un momento";
-    }
-
     const segundos =
         Math.floor(
-            diferencia /
+            (
+                ahora.getTime() -
+                date.getTime()
+            )
+            /
             1000
         );
 
@@ -2540,9 +2412,7 @@ function formatearFechaRelativa(
         minutos < 60
     ) {
 
-        return minutos === 1
-            ? "Hace 1 min"
-            : `Hace ${minutos} min`;
+        return `Hace ${minutos} min`;
     }
 
     const horas =
@@ -2597,43 +2467,16 @@ function crearFecha(
         return null;
     }
 
-    const valor =
-        String(
-            fecha
-        )
-        .trim();
-
-    if (
-        !valor
-    ) {
-
-        return null;
-    }
-
-    /*
-    | MySQL normalmente devuelve:
-    |
-    | 2026-08-31 13:25:20
-    |
-    | Para que el navegador pueda interpretarlo
-    | correctamente lo transformamos a:
-    |
-    | 2026-08-31T13:25:20
-    */
-
-    const normalizada =
-        valor.includes(
-            "T"
-        )
-            ? valor
-            : valor.replace(
-                " ",
-                "T"
-            );
-
     const date =
         new Date(
-            normalizada
+            String(
+                fecha
+            )
+            .trim()
+            .replace(
+                " ",
+                "T"
+            )
         );
 
     return Number.isNaN(
@@ -2643,10 +2486,6 @@ function crearFecha(
         : date;
 }
 
-
-/* =========================================================
-   SLUG
-========================================================= */
 
 function slugificar(
     texto
@@ -2676,20 +2515,9 @@ function slugificar(
 }
 
 
-/* =========================================================
-   ESTADO MERCADO
-========================================================= */
-
 function mostrarEstadoMercado(
     texto
 ) {
-
-    if (
-        !marketStatus
-    ) {
-
-        return;
-    }
 
     marketStatus.hidden =
         false;
@@ -2701,13 +2529,15 @@ function mostrarEstadoMercado(
 
 function ocultarEstadoMercado() {
 
-    if (
-        !marketStatus
-    ) {
-
-        return;
-    }
-
     marketStatus.hidden =
         true;
 }
+
+/* =========================================================
+   LA TIENDITA
+========================================================= */
+function renderTiendita(productos){if(!tienditaGrid)return;tienditaGrid.innerHTML="";if(!Array.isArray(productos)||!productos.length){mostrarEstadoTiendita("Todavía no hay productos publicados.");return}ocultarEstadoTiendita();productos.slice(0,8).forEach(p=>tienditaGrid.appendChild(crearTarjetaProducto(p)))}
+function crearTarjetaProducto(producto){const a=document.createElement("article");a.className="tiendita-product-card";a.tabIndex=0;const w=document.createElement("div");w.className="tiendita-product-image";const ruta=resolverImagen(producto.imagen||producto.imagen_portada);if(ruta){const i=document.createElement("img");i.src=ruta;i.alt=producto.nombre||"Producto";i.loading="lazy";w.appendChild(i)}const c=document.createElement("div");c.className="tiendita-product-content";const cat=document.createElement("p");cat.className="tiendita-product-category";cat.textContent=producto.categoria||"Producto";const h=document.createElement("h3");h.className="tiendita-product-title";h.textContent=producto.nombre||producto.titulo||"";const pr=document.createElement("strong");pr.className="tiendita-product-price";pr.textContent=formatearPrecio(producto.precio);const v=document.createElement("p");v.className="tiendita-product-seller";v.textContent=producto.negocio_nombre?`Vendido por ${producto.negocio_nombre}`:"";c.append(cat,h,pr,v);a.append(w,c);const abrir=()=>{if(producto.slug)location.href=`producto.html?slug=${encodeURIComponent(producto.slug)}`};a.addEventListener("click",abrir);a.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();abrir()}});return a}
+function formatearPrecio(precio){const n=Number(precio);return Number.isFinite(n)?new Intl.NumberFormat("es-CL",{style:"currency",currency:"CLP",maximumFractionDigits:0}).format(n):""}
+function mostrarEstadoTiendita(texto){if(!tienditaStatus)return;tienditaStatus.hidden=false;tienditaStatus.textContent=texto}
+function ocultarEstadoTiendita(){if(tienditaStatus)tienditaStatus.hidden=true}

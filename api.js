@@ -504,6 +504,61 @@ const TECNICOM_API = {
 
 
     /* =====================================================
+       LA TIENDITA / PRODUCTOS
+    ====================================================== */
+
+    async getProductosMercado(limit = 24) {
+        const resultado = await this.request(`productos?limit=${encodeURIComponent(limit)}`);
+        return resultado?.data || [];
+    },
+
+    async getProductoMercado(slug) {
+        const resultado = await this.request(`productos/${encodeURIComponent(slug)}`);
+        return resultado?.data || null;
+    },
+
+    async getProductosCategoria(slug) {
+        const resultado = await this.request(`productos/categoria/${encodeURIComponent(slug)}`);
+        return resultado?.data || [];
+    },
+
+    async getTiendas() {
+        const resultado = await this.request("tiendas");
+        return resultado?.data || [];
+    },
+
+    async getTienda(slug) {
+        const resultado = await this.request(`tiendas/${encodeURIComponent(slug)}`);
+        return resultado?.data || null;
+    },
+
+    async login(datos) {
+        return await this.request("cuenta/login", { method: "POST", body: datos });
+    },
+
+    async registro(datos) {
+        return await this.request("cuenta/registro", { method: "POST", body: datos });
+    },
+
+    async getMiNegocio() {
+        const resultado = await this.request("cuenta/negocio", { credentials: "include" });
+        return resultado?.data || null;
+    },
+
+    async guardarMiNegocio(datos) {
+        return await this.request("cuenta/negocio", { method: "POST", body: datos, credentials: "include" });
+    },
+
+    async getMisProductos() {
+        const resultado = await this.request("cuenta/productos", { credentials: "include" });
+        return resultado?.data || [];
+    },
+
+    async crearProducto(datos) {
+        return await this.request("cuenta/productos", { method: "POST", body: datos, credentials: "include" });
+    },
+
+    /* =====================================================
        CONTACTO
     ====================================================== */
 

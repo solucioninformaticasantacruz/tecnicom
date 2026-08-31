@@ -1112,3 +1112,572 @@ a {
         flex-direction: column;
     }
 }
+
+/* =========================================================
+   BUSCADOR / DIRECTORIO LOCAL
+========================================================= */
+
+.market-search-section {
+    padding: 60px 0;
+    background: #ffffff;
+}
+
+.market-search-section .market-section-heading {
+    margin-bottom: 32px;
+}
+
+.market-search-section .market-search {
+    margin-top: 0;
+}
+
+
+/* =========================================================
+   EL MURO
+========================================================= */
+
+.muro-section {
+    background: #f2eee5;
+    padding: 58px 0 68px;
+    border-top: 1px solid rgba(15, 29, 52, 0.08);
+    border-bottom: 1px solid rgba(15, 29, 52, 0.08);
+}
+
+.muro-section .container {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+}
+
+.muro-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    padding-bottom: 28px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(15, 29, 52, 0.18);
+}
+
+.muro-heading-text {
+    max-width: 760px;
+}
+
+.muro-kicker {
+    margin: 0 0 10px;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: #3568aa;
+}
+
+.muro-heading h2 {
+    margin: 0 0 12px;
+    font-family: "Merriweather", serif;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.05;
+    color: #0f1d34;
+}
+
+.muro-description {
+    margin: 0;
+    max-width: 700px;
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #596274;
+}
+
+.muro-publicar-button {
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 4px;
+    padding: 14px 20px;
+    background: #0f1d34;
+    color: #ffffff;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.muro-publicar-button:hover {
+    background: #3568aa;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(15, 29, 52, 0.15);
+}
+
+.muro-filtros {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.muro-filtro {
+    appearance: none;
+    border: 1px solid rgba(15, 29, 52, 0.18);
+    border-radius: 999px;
+    padding: 9px 16px;
+    background: rgba(255, 255, 255, 0.65);
+    color: #26334a;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.muro-filtro:hover {
+    border-color: #3568aa;
+    color: #3568aa;
+}
+
+.muro-filtro.active {
+    background: #0f1d34;
+    border-color: #0f1d34;
+    color: #ffffff;
+}
+
+.muro-status {
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(15, 29, 52, 0.1);
+    border-radius: 6px;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    color: #687083;
+    text-align: center;
+}
+
+.muro-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.muro-card {
+    position: relative;
+    min-height: 230px;
+    display: flex;
+    flex-direction: column;
+    padding: 22px;
+    background: #fffdf8;
+    border: 1px solid rgba(15, 29, 52, 0.12);
+    border-radius: 3px;
+    box-shadow: 0 8px 24px rgba(15, 29, 52, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.muro-card::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    width: 72px;
+    height: 18px;
+    transform: translateX(-50%) rotate(-1deg);
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(15, 29, 52, 0.06);
+}
+
+.muro-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(15, 29, 52, 0.10);
+}
+
+.muro-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.muro-tipo {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.muro-tipo-necesito { background: #eef3fb; color: #305f9f; }
+.muro-tipo-ofrezco { background: #edf7f1; color: #2f7650; }
+.muro-tipo-informacion { background: #f6f1dd; color: #836e27; }
+.muro-tipo-reclamo { background: #f8ecec; color: #963f3f; }
+
+.muro-fecha {
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    color: #8a91a0;
+}
+
+.muro-card h3 {
+    margin: 0 0 12px;
+    font-family: "Merriweather", serif;
+    font-size: 20px;
+    line-height: 1.35;
+    color: #0f1d34;
+}
+
+.muro-mensaje {
+    margin: 0 0 18px;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #566071;
+}
+
+.muro-card-footer {
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid rgba(15, 29, 52, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.muro-autor {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2b3447;
+}
+
+.muro-contacto {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    color: #6c7482;
+}
+
+.muro-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.muro-ver-mas {
+    border: 1px solid #0f1d34;
+    border-radius: 4px;
+    padding: 11px 20px;
+    background: transparent;
+    color: #0f1d34;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.muro-ver-mas:hover {
+    background: #0f1d34;
+    color: #ffffff;
+}
+
+.muro-modal[hidden] {
+    display: none !important;
+}
+
+.muro-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.muro-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 17, 31, 0.72);
+    backdrop-filter: blur(3px);
+}
+
+.muro-modal-box {
+    position: relative;
+    z-index: 1;
+    width: min(620px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+}
+
+.muro-modal-abierto {
+    overflow: hidden;
+}
+
+.muro-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 16px;
+}
+
+.muro-modal-kicker {
+    margin: 0 0 7px;
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #3568aa;
+}
+
+.muro-modal-header h2 {
+    margin: 0;
+    font-family: "Merriweather", serif;
+    font-size: 28px;
+    color: #0f1d34;
+}
+
+.muro-modal-close {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #f2f3f5;
+    color: #1d293b;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.muro-modal-description {
+    margin: 0 0 24px;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #626b79;
+}
+
+.muro-form {
+    display: grid;
+    gap: 18px;
+}
+
+.muro-form-group {
+    display: grid;
+    gap: 7px;
+}
+
+.muro-form-group label {
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #26334a;
+}
+
+.muro-form-group label span {
+    font-weight: 400;
+    color: #8b929f;
+}
+
+.muro-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.muro-label-row span {
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    color: #9299a5;
+}
+
+.muro-form input,
+.muro-form textarea,
+.muro-form select {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d9dde4;
+    border-radius: 4px;
+    padding: 12px 13px;
+    background: #ffffff;
+    color: #202a3b;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.muro-form textarea {
+    resize: vertical;
+    min-height: 130px;
+    line-height: 1.6;
+}
+
+.muro-form input:focus,
+.muro-form textarea:focus,
+.muro-form select:focus {
+    border-color: #3568aa;
+    box-shadow: 0 0 0 3px rgba(53, 104, 170, 0.11);
+}
+
+.muro-reclamo-aviso {
+    padding: 14px 16px;
+    background: #fff7f7;
+    border: 1px solid #eddada;
+    border-radius: 4px;
+}
+
+.muro-reclamo-aviso strong {
+    display: block;
+    margin-bottom: 5px;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    color: #853a3a;
+}
+
+.muro-reclamo-aviso p {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #755656;
+}
+
+.muro-form-notice {
+    padding: 13px 15px;
+    background: #f6f8fb;
+    border-left: 3px solid #3568aa;
+}
+
+.muro-form-notice p {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #596274;
+}
+
+.muro-form-status {
+    padding: 12px 14px;
+    border-radius: 4px;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+}
+
+.muro-form-status.exito { background: #edf7f1; color: #276342; }
+.muro-form-status.error { background: #f8ecec; color: #873b3b; }
+.muro-form-status.cargando { background: #eef3fb; color: #305f9f; }
+
+.muro-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+.muro-button-secondary,
+.muro-button-primary {
+    border-radius: 4px;
+    padding: 12px 18px;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.muro-button-secondary {
+    border: 1px solid #ced3db;
+    background: #ffffff;
+    color: #374256;
+}
+
+.muro-button-primary {
+    border: 1px solid #0f1d34;
+    background: #0f1d34;
+    color: #ffffff;
+}
+
+.muro-button-primary:hover {
+    background: #3568aa;
+    border-color: #3568aa;
+}
+
+.muro-button-primary:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+@media (max-width: 1050px) {
+    .muro-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .muro-heading {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 760px) {
+    .muro-section {
+        padding: 40px 0 48px;
+    }
+
+    .muro-section .container {
+        width: min(100% - 30px, 1180px);
+    }
+
+    .muro-heading {
+        display: block;
+        margin-bottom: 20px;
+        padding-bottom: 22px;
+    }
+
+    .muro-publicar-button {
+        width: 100%;
+        margin-top: 22px;
+    }
+
+    .muro-filtros {
+        gap: 8px;
+    }
+
+    .muro-filtro {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .muro-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .muro-card {
+        min-height: auto;
+    }
+
+    .muro-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .muro-modal-box {
+        width: 100%;
+        max-height: 92vh;
+        padding: 24px 20px;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .muro-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .muro-button-primary,
+    .muro-button-secondary {
+        width: 100%;
+    }
+}

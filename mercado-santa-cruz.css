@@ -2077,3 +2077,56 @@ a {
     font-size: 13px;
     line-height: 1.5;
 }
+
+
+/* =========================================================
+   FICHA DE COMERCIANTE DENTRO DEL MODAL DE EL MURO
+========================================================= */
+.muro-detalle-empresa {
+    display: grid;
+    gap: 0;
+    margin-top: 22px;
+    border-top: 1px solid #ded9cf;
+}
+
+.muro-detalle-empresa-fila {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    gap: 16px;
+    padding: 13px 0;
+    border-bottom: 1px solid #ded9cf;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.muro-detalle-empresa-fila strong {
+    color: #172033;
+}
+
+.muro-detalle-empresa-fila span,
+.muro-detalle-empresa-fila a {
+    min-width: 0;
+    color: #4d5969;
+    overflow-wrap: anywhere;
+}
+
+.muro-detalle-empresa-fila a {
+    color: #245da8;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.muro-detalle-empresa-fila a:hover {
+    text-decoration: underline;
+}
+
+.muro-detalle-comerciante .muro-detalle-mensaje {
+    white-space: pre-line;
+}
+
+@media (max-width: 620px) {
+    .muro-detalle-empresa-fila {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+}

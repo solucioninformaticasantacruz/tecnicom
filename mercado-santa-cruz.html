@@ -273,32 +273,6 @@
 </section>
 
 
-<!-- =========================================================
-     DESTACADOS
-========================================================= -->
-
-<section class="market-featured-section">
-
-    <div class="container">
-
-        <div class="market-section-heading">
-
-            <div>
-                <p class="market-section-label">TIENDAS ONLINE</p>
-                <h2>Tiendas Online</h2>
-            </div>
-
-        </div>
-
-        <div id="marketStatus" class="market-status" role="status">
-            Cargando información...
-        </div>
-
-        <div id="marketFeatured" class="market-featured-grid"></div>
-
-    </div>
-
-</section>
 
 
 <!-- =========================================================
@@ -314,7 +288,7 @@
             <div>
                 <p class="market-section-label">SANTA CRUZ</p>
                 <h2>Comercios y servicios</h2>
-                <p class="market-business-description">Solo negocios con Tienda Online.</p>
+                <p class="market-business-description">Negocios con Tienda Online disponibles en Mercado Santa Cruz.</p>
             </div>
 
             <div id="marketResultsCount" class="market-results-count"></div>
@@ -655,7 +629,7 @@
         <div class="muro-modal-header">
 
             <div>
-                <p class="muro-modal-kicker">
+                <p id="muroDetalleKicker" class="muro-modal-kicker">
                     EL MURO
                 </p>
 
@@ -714,10 +688,17 @@
                 <span id="muroDetalleContacto"></span>
             </div>
 
+
+            <div
+                id="muroDetalleEmpresaDatos"
+                class="muro-detalle-empresa"
+                hidden
+            ></div>
+
         </article>
 
 
-        <section class="muro-comentarios">
+        <section id="muroComentariosSection" class="muro-comentarios">
 
             <div class="muro-comentarios-heading">
 

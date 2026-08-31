@@ -20,7 +20,7 @@ const $ = id => document.getElementById(id);
 const marketSearch = $("marketSearch");
 const marketSearchButton = $("marketSearchButton");
 const marketCategories = $("marketCategories");
-const marketFeatured = $("marketFeatured");
+const marketFeatured = $("marketFeatured"); // puede no existir: se eliminó la sección duplicada Tiendas Online
 const marketGrid = $("marketGrid");
 const marketStatus = $("marketStatus");
 const marketResultsCount = $("marketResultsCount");
@@ -56,6 +56,10 @@ const muroReclamoAviso = $("muroReclamoAviso");
 const muroDetalleModal = $("muroDetalleModal");
 const muroDetalleOverlay = $("muroDetalleOverlay");
 const muroDetalleCerrar = $("muroDetalleCerrar");
+const muroDetalleKicker = $("muroDetalleKicker");
+const muroDetalleTitulo = $("muroDetalleTitulo");
+const muroDetalleEmpresaDatos = $("muroDetalleEmpresaDatos");
+const muroComentariosSection = $("muroComentariosSection");
 const muroDetalleTipo = $("muroDetalleTipo");
 const muroDetalleFecha = $("muroDetalleFecha");
 const muroDetalleAnuncioTitulo = $("muroDetalleAnuncioTitulo");
@@ -593,8 +597,8 @@ function crearTarjetaComercianteMuro(
             return;
         }
 
-        abrirMercado(
-            negocio.slug
+        abrirDetalleComercianteMuro(
+            negocio
         );
     };
 
@@ -628,6 +632,42 @@ function crearTarjetaMuro(
         document.createElement(
             "article"
         );
+
+    muroDetalleModal.classList.remove(
+        "muro-detalle-comerciante"
+    );
+
+    if (muroDetalleKicker) {
+        muroDetalleKicker.textContent =
+            "EL MURO";
+    }
+
+    if (muroDetalleTitulo) {
+        muroDetalleTitulo.textContent =
+            "Detalle del anuncio";
+    }
+
+    if (muroDetalleEmpresaDatos) {
+        muroDetalleEmpresaDatos.hidden =
+            true;
+
+        muroDetalleEmpresaDatos.innerHTML =
+            "";
+    }
+
+    if (muroComentariosSection) {
+        muroComentariosSection.hidden =
+            false;
+    }
+
+    const autorLabel =
+        muroDetalleAutorWrap
+            ?.querySelector("strong");
+
+    if (autorLabel) {
+        autorLabel.textContent =
+            "Publicado por";
+    }
 
     const tipo =
         publicacion.tipo ||
@@ -976,6 +1016,265 @@ function subirAlMuro() {
 /* =========================================================
    DETALLE ANUNCIO
 ========================================================= */
+
+async function abrirDetalleComercianteMuro(
+    negocioResumen
+) {
+
+    if (!muroDetalleModal) {
+        return;
+    }
+
+    let negocio = negocioResumen;
+
+    if (negocioResumen?.slug) {
+        try {
+            const detalle =
+                await TECNICOM_API.getMercadoItem(
+                    negocioResumen.slug
+                );
+
+            if (detalle) {
+                negocio = detalle;
+            }
+        } catch (error) {
+            console.warn(
+                "No fue posible ampliar la ficha del comerciante.",
+                error
+            );
+        }
+    }
+
+    muroDetalleModal.classList.add(
+        "muro-detalle-comerciante"
+    );
+
+    if (muroDetalleKicker) {
+        muroDetalleKicker.textContent =
+            "COMERCIANTE LOCAL";
+    }
+
+    if (muroDetalleTitulo) {
+        muroDetalleTitulo.textContent =
+            "Ficha del comerciante";
+    }
+
+    muroDetalleTipo.className =
+        "muro-tipo muro-tipo-comerciante";
+
+    muroDetalleTipo.textContent =
+        "Comerciante";
+
+    muroDetalleFecha.textContent =
+        negocio.comuna ||
+        "Santa Cruz";
+
+    muroDetalleAnuncioTitulo.textContent =
+        negocio.nombre ||
+        "Comerciante";
+
+    muroDetalleMensaje.textContent =
+        negocio.descripcion_larga ||
+        negocio.descripcion ||
+        "Comerciante local de Santa Cruz.";
+
+    muroDetalleAutorWrap.hidden =
+        !negocio.categoria;
+
+    const autorLabel =
+        muroDetalleAutorWrap
+            ?.querySelector("strong");
+
+    if (autorLabel) {
+        autorLabel.textContent =
+            "Categoría";
+    }
+
+    muroDetalleAutor.textContent =
+        negocio.categoria ||
+        "";
+
+    muroDetalleContactoWrap.hidden =
+        true;
+
+    muroDetalleContacto.textContent =
+        "";
+
+    renderDatosComercianteModal(
+        negocio
+    );
+
+    if (muroComentariosSection) {
+        muroComentariosSection.hidden =
+            true;
+    }
+
+    muroDetalleModal.hidden =
+        false;
+
+    actualizarBloqueoBody();
+}
+
+
+function renderDatosComercianteModal(
+    negocio
+) {
+
+    if (!muroDetalleEmpresaDatos) {
+        return;
+    }
+
+    muroDetalleEmpresaDatos.innerHTML =
+        "";
+
+    const datos = [
+        ["Dirección", negocio.direccion],
+        ["Comuna", negocio.comuna],
+        ["Teléfono", negocio.telefono],
+        ["WhatsApp", negocio.whatsapp],
+        ["Correo", negocio.email],
+        ["Sitio web", negocio.sitio_web],
+        ["Horario", negocio.horario]
+    ];
+
+    datos.forEach(
+        ([etiqueta, valor]) => {
+
+            if (!valor) {
+                return;
+            }
+
+            const fila =
+                document.createElement(
+                    "div"
+                );
+
+            fila.className =
+                "muro-detalle-empresa-fila";
+
+            const titulo =
+                document.createElement(
+                    "strong"
+                );
+
+            titulo.textContent =
+                etiqueta;
+
+            let contenido;
+
+            if (
+                etiqueta === "WhatsApp"
+            ) {
+                contenido =
+                    document.createElement(
+                        "a"
+                    );
+
+                contenido.href =
+                    crearUrlWhatsApp(
+                        valor,
+                        `Hola, vi tu ficha en Mercado Santa Cruz y quisiera comunicarme con ${negocio.nombre || "tu negocio"}.`
+                    );
+
+                contenido.target =
+                    "_blank";
+
+                contenido.rel =
+                    "noopener noreferrer";
+
+                contenido.textContent =
+                    valor;
+
+            } else if (
+                etiqueta === "Correo"
+            ) {
+                contenido =
+                    document.createElement(
+                        "a"
+                    );
+
+                contenido.href =
+                    `mailto:${valor}`;
+
+                contenido.textContent =
+                    valor;
+
+            } else if (
+                etiqueta === "Sitio web"
+            ) {
+                contenido =
+                    document.createElement(
+                        "a"
+                    );
+
+                contenido.href =
+                    /^https?:\/\//i.test(valor)
+                        ? valor
+                        : `https://${valor}`;
+
+                contenido.target =
+                    "_blank";
+
+                contenido.rel =
+                    "noopener noreferrer";
+
+                contenido.textContent =
+                    valor;
+
+            } else {
+                contenido =
+                    document.createElement(
+                        "span"
+                    );
+
+                contenido.textContent =
+                    valor;
+            }
+
+            fila.append(
+                titulo,
+                contenido
+            );
+
+            muroDetalleEmpresaDatos.appendChild(
+                fila
+            );
+        }
+    );
+
+    muroDetalleEmpresaDatos.hidden =
+        !muroDetalleEmpresaDatos.children.length;
+}
+
+
+function crearUrlWhatsApp(
+    numero,
+    mensaje = ""
+) {
+
+    let limpio =
+        String(numero || "")
+            .replace(/\D/g, "");
+
+    if (!limpio) {
+        return "#";
+    }
+
+    if (
+        limpio.length === 9 &&
+        limpio.startsWith("9")
+    ) {
+        limpio =
+            `56${limpio}`;
+    }
+
+    return `https://wa.me/${limpio}${
+        mensaje
+            ? `?text=${encodeURIComponent(mensaje)}`
+            : ""
+    }`;
+}
+
 
 async function abrirDetalleMuro(
     publicacion
@@ -1966,66 +2265,22 @@ function renderMercado(
             ? items
             : [];
 
+    if (!marketGrid) {
+        return;
+    }
+
     marketGrid.innerHTML =
         "";
 
-    marketFeatured.innerHTML =
-        "";
-
-
-    /* =====================================================
-       TIENDAS ONLINE
-
-       Esta sección es EXCLUSIVA para el plan Full.
-       Los planes Gratis y Básico nunca aparecen aquí.
-    ====================================================== */
-
-    const tiendasOnline =
-        lista.filter(
-            item =>
-                normalizarPlan(
-                    item.plan
-                ) === "full"
-        );
-
-
-    if (
-        tiendasOnline.length
-    ) {
-
-        tiendasOnline
-            .slice(
-                0,
-                6
-            )
-            .forEach(
-                item => {
-
-                    marketFeatured.appendChild(
-                        crearTarjetaMercado(
-                            item
-                        )
-                    );
-                }
-            );
-
-    } else {
-
-        marketFeatured.innerHTML =
-            '<p class="market-empty">Todavía no hay tiendas online publicadas.</p>';
-    }
-
-
-    /* =====================================================
-       COMERCIOS Y SERVICIOS
-
-       Aquí aparecen EXCLUSIVAMENTE las Tiendas Online.
-
-       - Gratis  -> El Muro
-       - Básico  -> La Tiendita
-       - Full    -> Comercios y servicios + Tiendas Online
-    ====================================================== */
-
+    /*
+     * ÚNICO DIRECTORIO VISIBLE:
+     * Comercios y servicios muestra exclusivamente
+     * negocios Full / Tienda Online.
+     *
+     * Gratis  -> El Muro
+     * Básico  -> La Tiendita
+     * Full    -> Comercios y servicios + La Tiendita
+     */
     const directorio =
         lista.filter(
             item =>
@@ -2034,29 +2289,24 @@ function renderMercado(
                 ) === "full"
         );
 
+    if (marketResultsCount) {
+        marketResultsCount.textContent =
+            `${directorio.length} resultado${
+                directorio.length === 1
+                    ? ""
+                    : "s"
+            }`;
+    }
 
-    marketResultsCount.textContent =
-        `${directorio.length} resultado${
-            directorio.length === 1
-                ? ""
-                : "s"
-        }`;
-
-
-    if (
-        !directorio.length
-    ) {
-
+    if (!directorio.length) {
         marketGrid.innerHTML =
             '<p class="market-empty">No encontramos Tiendas Online para esta búsqueda.</p>';
 
         return;
     }
 
-
     directorio.forEach(
         item => {
-
             marketGrid.appendChild(
                 crearTarjetaMercado(
                     item
@@ -2065,7 +2315,6 @@ function renderMercado(
         }
     );
 }
-
 
 function crearTarjetaMercado(
     item
@@ -2515,7 +2764,6 @@ function ocultarSeccionesListado() {
         ".muro-section",
         ".market-search-section",
         ".market-categories-section",
-        ".market-featured-section",
         ".market-business-section",
         ".market-tiendita-section"
     ]
@@ -2547,7 +2795,6 @@ function mostrarListadoMercado() {
         ".muro-section",
         ".market-search-section",
         ".market-categories-section",
-        ".market-featured-section",
         ".market-business-section",
         ".market-tiendita-section"
     ]

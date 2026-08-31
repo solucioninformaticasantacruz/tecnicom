@@ -24,3 +24,12 @@
     border-color: #10203a;
     color: #ffffff;
 }
+
+
+.btn-whatsapp {
+    background: #1f8f4d;
+}
+
+.btn-whatsapp:hover {
+    filter: brightness(.94);
+}

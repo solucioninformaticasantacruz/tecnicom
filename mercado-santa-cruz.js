@@ -1,276 +1,93 @@
 "use strict";
 
+document.addEventListener("DOMContentLoaded", iniciarMercadoSantaCruz);
 
-document.addEventListener(
-    "DOMContentLoaded",
-    iniciarMercadoSantaCruz
-);
-
-
-/* =========================================================
-   CONFIGURACIÓN
-========================================================= */
-
-const API_MEDIA_BASE =
-    "https://www.carnesdiaz.cl/";
-
-const MURO_CANTIDAD_INICIAL =
-    12;
-
-const MURO_INCREMENTO =
-    12;
-
-
-/* =========================================================
-   ESTADO MERCADO
-========================================================= */
+const API_MEDIA_BASE = "https://www.carnesdiaz.cl/";
+const MURO_POR_PAGINA = 6;
 
 let mercadoItems = [];
-
 let mercadoCategorias = [];
-
-let categoriaSeleccionada =
-    "todos";
-
-
-/* =========================================================
-   ESTADO MURO
-========================================================= */
+let categoriaSeleccionada = "todos";
 
 let muroPublicaciones = [];
+let muroTipoSeleccionado = "todos";
+let muroPaginaActual = 1;
+let muroEnviando = false;
+let muroComentarioEnviando = false;
 
-let muroTipoSeleccionado =
-    "todos";
+const $ = id => document.getElementById(id);
 
-let muroCantidadVisible =
-    MURO_CANTIDAD_INICIAL;
+const marketSearch = $("marketSearch");
+const marketSearchButton = $("marketSearchButton");
+const marketCategories = $("marketCategories");
+const marketFeatured = $("marketFeatured");
+const marketGrid = $("marketGrid");
+const marketStatus = $("marketStatus");
+const marketResultsCount = $("marketResultsCount");
+const marketEvents = $("marketEvents");
+const marketEventsSection = $("marketEventsSection");
+const marketDetailView = $("marketDetailView");
+const marketBackButton = $("marketBackButton");
+const marketMenuButton = $("marketMenuButton");
+const marketNav = $("marketNav");
 
-let muroEnviando =
-    false;
+const muroGrid = $("muroGrid");
+const muroStatus = $("muroStatus");
+const muroFiltros = $("muroFiltros");
+const muroPaginacion = $("muroPaginacion");
+const muroPublicarButton = $("muroPublicarButton");
 
+const muroModal = $("muroModal");
+const muroModalOverlay = $("muroModalOverlay");
+const muroModalClose = $("muroModalClose");
+const muroCancelarButton = $("muroCancelarButton");
+const muroForm = $("muroForm");
+const muroTipo = $("muroTipo");
+const muroTitulo = $("muroTitulo");
+const muroMensaje = $("muroMensaje");
+const muroNombre = $("muroNombre");
+const muroContacto = $("muroContacto");
+const muroTituloContador = $("muroTituloContador");
+const muroMensajeContador = $("muroMensajeContador");
+const muroEnviarButton = $("muroEnviarButton");
+const muroFormStatus = $("muroFormStatus");
+const muroReclamoAviso = $("muroReclamoAviso");
 
-/* =========================================================
-   ELEMENTOS MERCADO
-========================================================= */
+const muroDetalleModal = $("muroDetalleModal");
+const muroDetalleOverlay = $("muroDetalleOverlay");
+const muroDetalleCerrar = $("muroDetalleCerrar");
+const muroDetalleTipo = $("muroDetalleTipo");
+const muroDetalleFecha = $("muroDetalleFecha");
+const muroDetalleAnuncioTitulo = $("muroDetalleAnuncioTitulo");
+const muroDetalleMensaje = $("muroDetalleMensaje");
+const muroDetalleAutorWrap = $("muroDetalleAutorWrap");
+const muroDetalleAutor = $("muroDetalleAutor");
+const muroDetalleContactoWrap = $("muroDetalleContactoWrap");
+const muroDetalleContacto = $("muroDetalleContacto");
 
-const marketSearch =
-    document.getElementById(
-        "marketSearch"
-    );
+const muroComentariosCantidad = $("muroComentariosCantidad");
+const muroComentariosStatus = $("muroComentariosStatus");
+const muroComentariosLista = $("muroComentariosLista");
+const muroComentarioForm = $("muroComentarioForm");
+const muroComentarioPublicacionId = $("muroComentarioPublicacionId");
+const muroComentarioNombre = $("muroComentarioNombre");
+const muroComentarioTexto = $("muroComentarioTexto");
+const muroComentarioContador = $("muroComentarioContador");
+const muroComentarioStatus = $("muroComentarioStatus");
+const muroComentarioEnviar = $("muroComentarioEnviar");
 
-const marketSearchButton =
-    document.getElementById(
-        "marketSearchButton"
-    );
-
-const marketCategories =
-    document.getElementById(
-        "marketCategories"
-    );
-
-const marketFeatured =
-    document.getElementById(
-        "marketFeatured"
-    );
-
-const marketGrid =
-    document.getElementById(
-        "marketGrid"
-    );
-
-const marketStatus =
-    document.getElementById(
-        "marketStatus"
-    );
-
-const marketResultsCount =
-    document.getElementById(
-        "marketResultsCount"
-    );
-
-const marketEvents =
-    document.getElementById(
-        "marketEvents"
-    );
-
-const marketEventsSection =
-    document.getElementById(
-        "marketEventsSection"
-    );
-
-const marketDetailView =
-    document.getElementById(
-        "marketDetailView"
-    );
-
-const marketBackButton =
-    document.getElementById(
-        "marketBackButton"
-    );
-
-const marketMenuButton =
-    document.getElementById(
-        "marketMenuButton"
-    );
-
-const marketNav =
-    document.getElementById(
-        "marketNav"
-    );
-
-
-/* =========================================================
-   ELEMENTOS MURO
-========================================================= */
-
-const muroGrid =
-    document.getElementById(
-        "muroGrid"
-    );
-
-const muroStatus =
-    document.getElementById(
-        "muroStatus"
-    );
-
-const muroFiltros =
-    document.getElementById(
-        "muroFiltros"
-    );
-
-const muroVerMasButton =
-    document.getElementById(
-        "muroVerMasButton"
-    );
-
-const muroPublicarButton =
-    document.getElementById(
-        "muroPublicarButton"
-    );
-
-
-/* =========================================================
-   MODAL MURO
-========================================================= */
-
-const muroModal =
-    document.getElementById(
-        "muroModal"
-    );
-
-const muroModalOverlay =
-    document.getElementById(
-        "muroModalOverlay"
-    );
-
-const muroModalClose =
-    document.getElementById(
-        "muroModalClose"
-    );
-
-const muroCancelarButton =
-    document.getElementById(
-        "muroCancelarButton"
-    );
-
-const muroForm =
-    document.getElementById(
-        "muroForm"
-    );
-
-const muroTipo =
-    document.getElementById(
-        "muroTipo"
-    );
-
-const muroTitulo =
-    document.getElementById(
-        "muroTitulo"
-    );
-
-const muroMensaje =
-    document.getElementById(
-        "muroMensaje"
-    );
-
-const muroNombre =
-    document.getElementById(
-        "muroNombre"
-    );
-
-const muroContacto =
-    document.getElementById(
-        "muroContacto"
-    );
-
-const muroTituloContador =
-    document.getElementById(
-        "muroTituloContador"
-    );
-
-const muroMensajeContador =
-    document.getElementById(
-        "muroMensajeContador"
-    );
-
-const muroEnviarButton =
-    document.getElementById(
-        "muroEnviarButton"
-    );
-
-const muroFormStatus =
-    document.getElementById(
-        "muroFormStatus"
-    );
-
-const muroReclamoAviso =
-    document.getElementById(
-        "muroReclamoAviso"
-    );
-
-
-/* =========================================================
-   INICIALIZAR
-========================================================= */
 
 async function iniciarMercadoSantaCruz() {
 
     configurarEventos();
 
-
-    const parametros =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    const slug =
-        parametros.get(
-            "slug"
-        );
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Si viene un comercio específico
-    |--------------------------------------------------------------------------
-    */
+    const parametros = new URLSearchParams(window.location.search);
+    const slug = parametros.get("slug");
 
     if (slug) {
-
-        await cargarDetalleMercado(
-            slug
-        );
-
+        await cargarDetalleMercado(slug);
         return;
     }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Página normal
-    |--------------------------------------------------------------------------
-    */
 
     await Promise.allSettled([
         cargarMuro(),
@@ -279,184 +96,129 @@ async function iniciarMercadoSantaCruz() {
 }
 
 
-/* =========================================================
-   CONFIGURAR EVENTOS
-========================================================= */
-
 function configurarEventos() {
 
+    marketSearch?.addEventListener("input", filtrarMercado);
+    marketSearchButton?.addEventListener("click", filtrarMercado);
 
-    /* =====================================================
-       BUSCADOR MERCADO
-    ====================================================== */
-
-    marketSearch?.addEventListener(
-        "input",
-        filtrarMercado
-    );
-
-
-    marketSearchButton?.addEventListener(
-        "click",
-        filtrarMercado
-    );
-
-
-    marketSearch?.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                event.preventDefault();
-
-                filtrarMercado();
-            }
+    marketSearch?.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            filtrarMercado();
         }
-    );
+    });
 
+    marketBackButton?.addEventListener("click", () => {
+        history.pushState({}, "", "mercado-santa-cruz.html");
+        mostrarListadoMercado();
+    });
 
-    /* =====================================================
-       VOLVER DESDE DETALLE
-    ====================================================== */
+    marketMenuButton?.addEventListener("click", () => {
+        const abierto = marketNav?.classList.toggle("open");
 
-    marketBackButton?.addEventListener(
-        "click",
-        () => {
+        marketMenuButton.setAttribute(
+            "aria-expanded",
+            abierto ? "true" : "false"
+        );
+    });
 
-            history.pushState(
-                {},
-                "",
-                "mercado-santa-cruz.html"
-            );
+    muroFiltros?.addEventListener("click", event => {
 
+        const boton = event.target.closest("[data-tipo]");
 
-            mostrarListadoMercado();
+        if (!boton) {
+            return;
         }
-    );
 
-
-    /* =====================================================
-       MENÚ MÓVIL
-    ====================================================== */
-
-    marketMenuButton?.addEventListener(
-        "click",
-        () => {
-
-            const abierto =
-                marketNav?.classList.toggle(
-                    "open"
-                );
-
-
-            marketMenuButton.setAttribute(
-                "aria-expanded",
-                abierto
-                    ? "true"
-                    : "false"
-            );
-        }
-    );
-
-
-    /* =====================================================
-       HISTORIAL
-    ====================================================== */
-
-    window.addEventListener(
-        "popstate",
-        manejarHistorial
-    );
-
-
-    /* =====================================================
-       FILTROS MURO
-    ====================================================== */
-
-    muroFiltros?.addEventListener(
-        "click",
-        event => {
-
-            const boton =
-                event.target.closest(
-                    "[data-tipo]"
-                );
-
-
-            if (!boton) {
-                return;
-            }
-
-
-            seleccionarTipoMuro(
-                boton.dataset.tipo
-            );
-        }
-    );
-
-
-    /* =====================================================
-       VER MÁS MURO
-    ====================================================== */
-
-    muroVerMasButton?.addEventListener(
-        "click",
-        () => {
-
-            muroCantidadVisible +=
-                MURO_INCREMENTO;
-
-
-            renderMuro();
-        }
-    );
-
-
-    /* =====================================================
-       ABRIR MODAL
-    ====================================================== */
+        seleccionarTipoMuro(
+            boton.dataset.tipo
+        );
+    });
 
     muroPublicarButton?.addEventListener(
         "click",
         abrirModalMuro
     );
 
-
-    /* =====================================================
-       CERRAR MODAL
-    ====================================================== */
-
     muroModalClose?.addEventListener(
         "click",
         cerrarModalMuro
     );
-
 
     muroCancelarButton?.addEventListener(
         "click",
         cerrarModalMuro
     );
 
-
     muroModalOverlay?.addEventListener(
         "click",
         cerrarModalMuro
     );
 
+    muroDetalleCerrar?.addEventListener(
+        "click",
+        cerrarDetalleMuro
+    );
 
-    /* =====================================================
-       ESCAPE
-    ====================================================== */
+    muroDetalleOverlay?.addEventListener(
+        "click",
+        cerrarDetalleMuro
+    );
+
+    muroTitulo?.addEventListener(
+        "input",
+        actualizarContadorTitulo
+    );
+
+    muroMensaje?.addEventListener(
+        "input",
+        actualizarContadorMensaje
+    );
+
+    muroTipo?.addEventListener(
+        "change",
+        actualizarAvisoReclamo
+    );
+
+    muroForm?.addEventListener(
+        "submit",
+        enviarPublicacionMuro
+    );
+
+    muroComentarioTexto?.addEventListener(
+        "input",
+        actualizarContadorComentario
+    );
+
+    muroComentarioForm?.addEventListener(
+        "submit",
+        enviarComentarioMuro
+    );
+
+    window.addEventListener(
+        "popstate",
+        manejarHistorial
+    );
 
     document.addEventListener(
         "keydown",
         event => {
 
+            if (event.key !== "Escape") {
+                return;
+            }
+
             if (
-                event.key === "Escape" &&
+                muroDetalleModal &&
+                !muroDetalleModal.hidden
+            ) {
+
+                cerrarDetalleMuro();
+
+                return;
+            }
+
+            if (
                 muroModal &&
                 !muroModal.hidden
             ) {
@@ -465,47 +227,11 @@ function configurarEventos() {
             }
         }
     );
-
-
-    /* =====================================================
-       CONTADORES
-    ====================================================== */
-
-    muroTitulo?.addEventListener(
-        "input",
-        actualizarContadorTitulo
-    );
-
-
-    muroMensaje?.addEventListener(
-        "input",
-        actualizarContadorMensaje
-    );
-
-
-    /* =====================================================
-       TIPO PUBLICACIÓN
-    ====================================================== */
-
-    muroTipo?.addEventListener(
-        "change",
-        actualizarAvisoReclamo
-    );
-
-
-    /* =====================================================
-       ENVIAR PUBLICACIÓN
-    ====================================================== */
-
-    muroForm?.addEventListener(
-        "submit",
-        enviarPublicacionMuro
-    );
 }
 
 
 /* =========================================================
-   CARGAR EL MURO
+   EL MURO
 ========================================================= */
 
 async function cargarMuro() {
@@ -516,12 +242,10 @@ async function cargarMuro() {
             "Cargando publicaciones..."
         );
 
-
         muroPublicaciones =
             await TECNICOM_API.getMuro(
                 100
             );
-
 
         if (
             !Array.isArray(
@@ -532,17 +256,11 @@ async function cargarMuro() {
             muroPublicaciones = [];
         }
 
-
         renderMuro();
-
 
     } catch (error) {
 
-        console.error(
-            "Error cargando El Muro:",
-            error
-        );
-
+        console.error(error);
 
         mostrarEstadoMuro(
             "No fue posible cargar las publicaciones de El Muro."
@@ -551,13 +269,9 @@ async function cargarMuro() {
 }
 
 
-/* =========================================================
-   SELECCIONAR FILTRO MURO
-========================================================= */
-
 function seleccionarTipoMuro(tipo) {
 
-    const tiposValidos = [
+    const validos = [
         "todos",
         "informacion",
         "reclamo",
@@ -565,57 +279,32 @@ function seleccionarTipoMuro(tipo) {
         "ofrezco"
     ];
 
-
-    if (
-        !tiposValidos.includes(tipo)
-    ) {
-
-        tipo = "todos";
-    }
-
-
     muroTipoSeleccionado =
-        tipo;
+        validos.includes(tipo)
+            ? tipo
+            : "todos";
 
+    muroPaginaActual =
+        1;
 
-    muroCantidadVisible =
-        MURO_CANTIDAD_INICIAL;
+    muroFiltros
+        ?.querySelectorAll(
+            "[data-tipo]"
+        )
+        .forEach(
+            boton => {
 
-
-    actualizarFiltrosMuro();
+                boton.classList.toggle(
+                    "active",
+                    boton.dataset.tipo ===
+                        muroTipoSeleccionado
+                );
+            }
+        );
 
     renderMuro();
 }
 
-
-/* =========================================================
-   ACTUALIZAR FILTROS
-========================================================= */
-
-function actualizarFiltrosMuro() {
-
-    const botones =
-        muroFiltros?.querySelectorAll(
-            "[data-tipo]"
-        );
-
-
-    botones?.forEach(
-        boton => {
-
-            boton.classList.toggle(
-                "active",
-                boton.dataset.tipo ===
-                    muroTipoSeleccionado
-            );
-        }
-    );
-}
-
-
-/* =========================================================
-   FILTRAR PUBLICACIONES MURO
-========================================================= */
 
 function obtenerPublicacionesFiltradas() {
 
@@ -627,18 +316,13 @@ function obtenerPublicacionesFiltradas() {
         return muroPublicaciones;
     }
 
-
     return muroPublicaciones.filter(
-        publicacion =>
-            publicacion.tipo ===
+        item =>
+            item.tipo ===
             muroTipoSeleccionado
     );
 }
 
-
-/* =========================================================
-   RENDER MURO
-========================================================= */
 
 function renderMuro() {
 
@@ -646,17 +330,14 @@ function renderMuro() {
         return;
     }
 
-
     muroGrid.innerHTML =
         "";
-
 
     const filtradas =
         obtenerPublicacionesFiltradas();
 
-
     if (
-        filtradas.length === 0
+        !filtradas.length
     ) {
 
         mostrarEstadoMuro(
@@ -665,52 +346,57 @@ function renderMuro() {
                 : "No hay publicaciones en esta categoría."
         );
 
-
-        if (muroVerMasButton) {
-
-            muroVerMasButton.hidden =
-                true;
-        }
-
+        renderPaginacionMuro(
+            0
+        );
 
         return;
     }
 
-
     ocultarEstadoMuro();
 
-
-    const visibles =
-        filtradas.slice(
-            0,
-            muroCantidadVisible
+    const totalPaginas =
+        Math.ceil(
+            filtradas.length /
+            MURO_POR_PAGINA
         );
 
+    muroPaginaActual =
+        Math.min(
+            Math.max(
+                muroPaginaActual,
+                1
+            ),
+            totalPaginas
+        );
 
-    visibles.forEach(
-        publicacion => {
+    const inicio =
+        (
+            muroPaginaActual - 1
+        ) *
+        MURO_POR_PAGINA;
 
-            muroGrid.appendChild(
-                crearTarjetaMuro(
-                    publicacion
-                )
-            );
-        }
+    filtradas
+        .slice(
+            inicio,
+            inicio + MURO_POR_PAGINA
+        )
+        .forEach(
+            publicacion => {
+
+                muroGrid.appendChild(
+                    crearTarjetaMuro(
+                        publicacion
+                    )
+                );
+            }
+        );
+
+    renderPaginacionMuro(
+        totalPaginas
     );
-
-
-    if (muroVerMasButton) {
-
-        muroVerMasButton.hidden =
-            muroCantidadVisible >=
-            filtradas.length;
-    }
 }
 
-
-/* =========================================================
-   CREAR PUBLICACIÓN MURO
-========================================================= */
 
 function crearTarjetaMuro(
     publicacion
@@ -721,57 +407,49 @@ function crearTarjetaMuro(
             "article"
         );
 
-
     const tipo =
         publicacion.tipo ||
         "informacion";
 
-
     articulo.className =
         `muro-card muro-card-${tipo}`;
 
+    articulo.tabIndex =
+        0;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Cabecera
-    |--------------------------------------------------------------------------
-    */
+    articulo.setAttribute(
+        "role",
+        "button"
+    );
 
     const cabecera =
         document.createElement(
             "div"
         );
 
-
     cabecera.className =
         "muro-card-header";
-
 
     const etiqueta =
         document.createElement(
             "span"
         );
 
-
     etiqueta.className =
         `muro-tipo muro-tipo-${tipo}`;
 
-
     etiqueta.textContent =
-        obtenerNombreTipoMuro(
+        nombreTipo(
             tipo
         );
-
 
     const fecha =
         document.createElement(
             "time"
         );
 
-
     fecha.className =
         "muro-fecha";
-
 
     fecha.textContent =
         formatearFechaRelativa(
@@ -779,66 +457,39 @@ function crearTarjetaMuro(
             publicacion.fecha_creacion
         );
 
-
     cabecera.append(
         etiqueta,
         fecha
     );
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Título
-    |--------------------------------------------------------------------------
-    */
 
     const titulo =
         document.createElement(
             "h3"
         );
 
-
     titulo.textContent =
         publicacion.titulo ||
         "";
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Mensaje
-    |--------------------------------------------------------------------------
-    */
 
     const mensaje =
         document.createElement(
             "p"
         );
 
-
     mensaje.className =
         "muro-mensaje";
-
 
     mensaje.textContent =
         publicacion.mensaje ||
         "";
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Footer
-    |--------------------------------------------------------------------------
-    */
 
     const footer =
         document.createElement(
             "div"
         );
 
-
     footer.className =
         "muro-card-footer";
-
 
     if (
         publicacion.nombre
@@ -849,20 +500,16 @@ function crearTarjetaMuro(
                 "span"
             );
 
-
         autor.className =
             "muro-autor";
 
-
         autor.textContent =
             publicacion.nombre;
-
 
         footer.appendChild(
             autor
         );
     }
-
 
     if (
         publicacion.contacto
@@ -873,212 +520,633 @@ function crearTarjetaMuro(
                 "span"
             );
 
-
         contacto.className =
             "muro-contacto";
 
-
         contacto.textContent =
             publicacion.contacto;
-
 
         footer.appendChild(
             contacto
         );
     }
 
+    const hint =
+        document.createElement(
+            "span"
+        );
+
+    hint.className =
+        "muro-card-hint";
+
+    hint.textContent =
+        "Ver detalle y comentarios";
+
+    footer.appendChild(
+        hint
+    );
 
     articulo.append(
         cabecera,
         titulo,
-        mensaje
+        mensaje,
+        footer
     );
 
+    const abrir =
+        () =>
+            abrirDetalleMuro(
+                publicacion
+            );
 
-    if (
-        footer.children.length > 0
-    ) {
+    articulo.addEventListener(
+        "click",
+        abrir
+    );
 
-        articulo.appendChild(
-            footer
-        );
-    }
+    articulo.addEventListener(
+        "keydown",
+        event => {
 
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+
+                event.preventDefault();
+
+                abrir();
+            }
+        }
+    );
 
     return articulo;
 }
 
 
 /* =========================================================
-   NOMBRE TIPO
+   PAGINACIÓN MURO
 ========================================================= */
 
-function obtenerNombreTipoMuro(
-    tipo
+function renderPaginacionMuro(
+    totalPaginas
 ) {
 
-    const nombres = {
+    if (!muroPaginacion) {
+        return;
+    }
 
-        informacion:
-            "Información",
+    muroPaginacion.innerHTML =
+        "";
 
-        reclamo:
-            "Reclamo",
+    if (
+        totalPaginas <= 1
+    ) {
 
-        necesito:
-            "Necesito",
+        muroPaginacion.hidden =
+            true;
 
-        ofrezco:
-            "Ofrezco"
-    };
+        return;
+    }
+
+    muroPaginacion.hidden =
+        false;
+
+    const anterior =
+        crearBotonPagina(
+            "← Anterior",
+            muroPaginaActual === 1,
+            () => {
+
+                muroPaginaActual--;
+
+                renderMuro();
+
+                subirAlMuro();
+            },
+            "muro-pagina-control"
+        );
+
+    muroPaginacion.appendChild(
+        anterior
+    );
+
+    for (
+        let pagina = 1;
+        pagina <= totalPaginas;
+        pagina++
+    ) {
+
+        const boton =
+            crearBotonPagina(
+                String(pagina),
+                false,
+                () => {
+
+                    muroPaginaActual =
+                        pagina;
+
+                    renderMuro();
+
+                    subirAlMuro();
+                },
+                "muro-pagina-numero"
+            );
+
+        if (
+            pagina ===
+            muroPaginaActual
+        ) {
+
+            boton.classList.add(
+                "active"
+            );
+
+            boton.setAttribute(
+                "aria-current",
+                "page"
+            );
+        }
+
+        muroPaginacion.appendChild(
+            boton
+        );
+    }
+
+    const siguiente =
+        crearBotonPagina(
+            "Siguiente →",
+            muroPaginaActual ===
+                totalPaginas,
+            () => {
+
+                muroPaginaActual++;
+
+                renderMuro();
+
+                subirAlMuro();
+            },
+            "muro-pagina-control"
+        );
+
+    muroPaginacion.appendChild(
+        siguiente
+    );
+}
 
 
-    return nombres[tipo] ||
-        "Información";
+function crearBotonPagina(
+    texto,
+    disabled,
+    accion,
+    clase
+) {
+
+    const boton =
+        document.createElement(
+            "button"
+        );
+
+    boton.type =
+        "button";
+
+    boton.className =
+        clase;
+
+    boton.textContent =
+        texto;
+
+    boton.disabled =
+        disabled;
+
+    boton.addEventListener(
+        "click",
+        () => {
+
+            if (
+                !boton.disabled
+            ) {
+
+                accion();
+            }
+        }
+    );
+
+    return boton;
+}
+
+
+function subirAlMuro() {
+
+    $("muro")
+        ?.scrollIntoView(
+            {
+                behavior:
+                    "smooth",
+
+                block:
+                    "start"
+            }
+        );
 }
 
 
 /* =========================================================
-   MODAL MURO
+   DETALLE ANUNCIO
+========================================================= */
+
+async function abrirDetalleMuro(
+    publicacion
+) {
+
+    if (
+        !muroDetalleModal
+    ) {
+
+        return;
+    }
+
+    const tipo =
+        publicacion.tipo ||
+        "informacion";
+
+    muroDetalleTipo.className =
+        `muro-tipo muro-tipo-${tipo}`;
+
+    muroDetalleTipo.textContent =
+        nombreTipo(
+            tipo
+        );
+
+    muroDetalleFecha.textContent =
+        formatearFechaRelativa(
+            publicacion.fecha_publicacion ||
+            publicacion.fecha_creacion
+        );
+
+    muroDetalleAnuncioTitulo.textContent =
+        publicacion.titulo ||
+        "";
+
+    muroDetalleMensaje.textContent =
+        publicacion.mensaje ||
+        "";
+
+    muroDetalleAutorWrap.hidden =
+        !publicacion.nombre;
+
+    muroDetalleAutor.textContent =
+        publicacion.nombre ||
+        "";
+
+    muroDetalleContactoWrap.hidden =
+        !publicacion.contacto;
+
+    muroDetalleContacto.textContent =
+        publicacion.contacto ||
+        "";
+
+    muroComentarioPublicacionId.value =
+        String(
+            publicacion.id ||
+            ""
+        );
+
+    muroComentarioForm
+        ?.reset();
+
+    actualizarContadorComentario();
+
+    limpiarEstadoComentario();
+
+    muroDetalleModal.hidden =
+        false;
+
+    actualizarBloqueoBody();
+
+    await cargarComentariosMuro(
+        publicacion.id
+    );
+}
+
+
+function cerrarDetalleMuro() {
+
+    if (
+        !muroDetalleModal ||
+        muroComentarioEnviando
+    ) {
+
+        return;
+    }
+
+    muroDetalleModal.hidden =
+        true;
+
+    actualizarBloqueoBody();
+}
+
+
+/* =========================================================
+   COMENTARIOS
+========================================================= */
+
+async function cargarComentariosMuro(
+    publicacionId
+) {
+
+    muroComentariosLista.innerHTML =
+        "";
+
+    muroComentariosCantidad.textContent =
+        "";
+
+    if (
+        !publicacionId
+    ) {
+
+        muroComentariosStatus.textContent =
+            "No fue posible identificar la publicación.";
+
+        return;
+    }
+
+    muroComentariosStatus.textContent =
+        "Cargando comentarios...";
+
+    try {
+
+        const respuesta =
+            await TECNICOM_API.request(
+                `muro/${encodeURIComponent(publicacionId)}/comentarios`
+            );
+
+        const comentarios =
+            Array.isArray(
+                respuesta?.data
+            )
+                ? respuesta.data
+                : [];
+
+        muroComentariosCantidad.textContent =
+            `${comentarios.length} comentario${
+                comentarios.length === 1
+                    ? ""
+                    : "s"
+            }`;
+
+        muroComentariosStatus.textContent =
+            comentarios.length
+                ? ""
+                : "Todavía no hay comentarios.";
+
+        comentarios.forEach(
+            comentario => {
+
+                muroComentariosLista.appendChild(
+                    crearComentarioMuro(
+                        comentario
+                    )
+                );
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            error
+        );
+
+        muroComentariosStatus.textContent =
+            "Los comentarios aún deben habilitarse en la API.";
+    }
+}
+
+
+function crearComentarioMuro(
+    comentario
+) {
+
+    const articulo =
+        document.createElement(
+            "article"
+        );
+
+    articulo.className =
+        "muro-comentario";
+
+    const header =
+        document.createElement(
+            "div"
+        );
+
+    header.className =
+        "muro-comentario-header";
+
+    const nombre =
+        document.createElement(
+            "strong"
+        );
+
+    nombre.textContent =
+        comentario.nombre ||
+        "Usuario";
+
+    const fecha =
+        document.createElement(
+            "time"
+        );
+
+    fecha.textContent =
+        formatearFechaRelativa(
+            comentario.fecha_publicacion ||
+            comentario.fecha_creacion
+        );
+
+    const texto =
+        document.createElement(
+            "p"
+        );
+
+    texto.textContent =
+        comentario.comentario ||
+        comentario.mensaje ||
+        "";
+
+    header.append(
+        nombre,
+        fecha
+    );
+
+    articulo.append(
+        header,
+        texto
+    );
+
+    return articulo;
+}
+
+
+async function enviarComentarioMuro(
+    event
+) {
+
+    event.preventDefault();
+
+    if (
+        muroComentarioEnviando
+    ) {
+
+        return;
+    }
+
+    if (
+        !muroComentarioForm.checkValidity()
+    ) {
+
+        muroComentarioForm.reportValidity();
+
+        return;
+    }
+
+    const publicacionId =
+        muroComentarioPublicacionId.value.trim();
+
+    const datos = {
+
+        nombre:
+            muroComentarioNombre.value.trim(),
+
+        comentario:
+            muroComentarioTexto.value.trim()
+    };
+
+    try {
+
+        muroComentarioEnviando =
+            true;
+
+        muroComentarioEnviar.disabled =
+            true;
+
+        muroComentarioEnviar.textContent =
+            "Enviando...";
+
+        mostrarEstadoComentario(
+            "Enviando comentario...",
+            "cargando"
+        );
+
+        const respuesta =
+            await TECNICOM_API.request(
+                `muro/${encodeURIComponent(publicacionId)}/comentarios`,
+                {
+                    method:
+                        "POST",
+
+                    body:
+                        datos
+                }
+            );
+
+        mostrarEstadoComentario(
+            respuesta?.data?.mensaje ||
+            "Comentario recibido.",
+            "exito"
+        );
+
+        muroComentarioForm.reset();
+
+        actualizarContadorComentario();
+
+        await cargarComentariosMuro(
+            publicacionId
+        );
+
+    } catch (error) {
+
+        mostrarEstadoComentario(
+            error.message ||
+            "Los comentarios todavía no están habilitados en la API.",
+            "error"
+        );
+
+    } finally {
+
+        muroComentarioEnviando =
+            false;
+
+        muroComentarioEnviar.disabled =
+            false;
+
+        muroComentarioEnviar.textContent =
+            "Publicar comentario";
+    }
+}
+
+
+function actualizarContadorComentario() {
+
+    muroComentarioContador.textContent =
+        `${
+            muroComentarioTexto
+                ?.value.length ||
+            0
+        } / 300`;
+}
+
+
+function mostrarEstadoComentario(
+    mensaje,
+    tipo
+) {
+
+    muroComentarioStatus.hidden =
+        false;
+
+    muroComentarioStatus.className =
+        `muro-form-status ${tipo || ""}`;
+
+    muroComentarioStatus.textContent =
+        mensaje;
+}
+
+
+function limpiarEstadoComentario() {
+
+    muroComentarioStatus.hidden =
+        true;
+
+    muroComentarioStatus.className =
+        "muro-form-status";
+
+    muroComentarioStatus.textContent =
+        "";
+}
+
+
+/* =========================================================
+   PUBLICAR EN EL MURO
 ========================================================= */
 
 function abrirModalMuro() {
 
-    if (!muroModal) {
-        return;
-    }
-
-
     muroModal.hidden =
         false;
 
-
-    document.body.classList.add(
-        "muro-modal-abierto"
-    );
-
+    actualizarBloqueoBody();
 
     limpiarEstadoFormularioMuro();
-
 
     actualizarContadorTitulo();
 
     actualizarContadorMensaje();
 
     actualizarAvisoReclamo();
-
-
-    setTimeout(
-        () => {
-
-            muroTipo?.focus();
-
-        },
-        50
-    );
 }
 
-
-/* =========================================================
-   CERRAR MODAL
-========================================================= */
 
 function cerrarModalMuro() {
-
-    if (!muroModal) {
-        return;
-    }
-
-
-    if (muroEnviando) {
-        return;
-    }
-
-
-    muroModal.hidden =
-        true;
-
-
-    document.body.classList.remove(
-        "muro-modal-abierto"
-    );
-
-
-    muroPublicarButton?.focus();
-}
-
-
-/* =========================================================
-   CONTADOR TÍTULO
-========================================================= */
-
-function actualizarContadorTitulo() {
-
-    if (
-        !muroTitulo ||
-        !muroTituloContador
-    ) {
-
-        return;
-    }
-
-
-    muroTituloContador.textContent =
-        `${muroTitulo.value.length} / 120`;
-}
-
-
-/* =========================================================
-   CONTADOR MENSAJE
-========================================================= */
-
-function actualizarContadorMensaje() {
-
-    if (
-        !muroMensaje ||
-        !muroMensajeContador
-    ) {
-
-        return;
-    }
-
-
-    muroMensajeContador.textContent =
-        `${muroMensaje.value.length} / 500`;
-}
-
-
-/* =========================================================
-   AVISO RECLAMOS
-========================================================= */
-
-function actualizarAvisoReclamo() {
-
-    if (
-        !muroTipo ||
-        !muroReclamoAviso
-    ) {
-
-        return;
-    }
-
-
-    muroReclamoAviso.hidden =
-        muroTipo.value !==
-        "reclamo";
-}
-
-
-/* =========================================================
-   ENVIAR PUBLICACIÓN
-========================================================= */
-
-async function enviarPublicacionMuro(
-    event
-) {
-
-    event.preventDefault();
-
 
     if (
         muroEnviando
@@ -1087,12 +1155,77 @@ async function enviarPublicacionMuro(
         return;
     }
 
+    muroModal.hidden =
+        true;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Validación HTML
-    |--------------------------------------------------------------------------
-    */
+    actualizarBloqueoBody();
+}
+
+
+function actualizarBloqueoBody() {
+
+    const abierto =
+        (
+            muroModal &&
+            !muroModal.hidden
+        )
+        ||
+        (
+            muroDetalleModal &&
+            !muroDetalleModal.hidden
+        );
+
+    document.body.classList.toggle(
+        "muro-modal-abierto",
+        Boolean(
+            abierto
+        )
+    );
+}
+
+
+function actualizarContadorTitulo() {
+
+    muroTituloContador.textContent =
+        `${
+            muroTitulo
+                ?.value.length ||
+            0
+        } / 120`;
+}
+
+
+function actualizarContadorMensaje() {
+
+    muroMensajeContador.textContent =
+        `${
+            muroMensaje
+                ?.value.length ||
+            0
+        } / 500`;
+}
+
+
+function actualizarAvisoReclamo() {
+
+    muroReclamoAviso.hidden =
+        muroTipo.value !==
+        "reclamo";
+}
+
+
+async function enviarPublicacionMuro(
+    event
+) {
+
+    event.preventDefault();
+
+    if (
+        muroEnviando
+    ) {
+
+        return;
+    }
 
     if (
         !muroForm.checkValidity()
@@ -1102,7 +1235,6 @@ async function enviarPublicacionMuro(
 
         return;
     }
-
 
     const datos = {
 
@@ -1122,82 +1254,34 @@ async function enviarPublicacionMuro(
             muroContacto.value.trim()
     };
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Validación adicional
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-        datos.titulo.length < 3 ||
-        datos.titulo.length > 120
-    ) {
-
-        mostrarEstadoFormularioMuro(
-            "El título debe tener entre 3 y 120 caracteres.",
-            "error"
-        );
-
-        return;
-    }
-
-
-    if (
-        datos.mensaje.length < 5 ||
-        datos.mensaje.length > 500
-    ) {
-
-        mostrarEstadoFormularioMuro(
-            "El mensaje debe tener entre 5 y 500 caracteres.",
-            "error"
-        );
-
-        return;
-    }
-
-
     try {
 
         muroEnviando =
             true;
 
-
         muroEnviarButton.disabled =
             true;
 
-
         muroEnviarButton.textContent =
             "Enviando...";
-
 
         mostrarEstadoFormularioMuro(
             "Enviando publicación...",
             "cargando"
         );
 
-
         const respuesta =
             await TECNICOM_API.publicarMuro(
                 datos
             );
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Éxito
-        |--------------------------------------------------------------------------
-        */
-
         mostrarEstadoFormularioMuro(
             respuesta?.data?.mensaje ||
-            "Tu publicación fue recibida y será revisada antes de aparecer en El Muro.",
+            "Tu publicación fue recibida y será revisada.",
             "exito"
         );
 
-
         muroForm.reset();
-
 
         actualizarContadorTitulo();
 
@@ -1205,38 +1289,7 @@ async function enviarPublicacionMuro(
 
         actualizarAvisoReclamo();
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | No agregamos manualmente la publicación al muro.
-        |
-        | Esto es intencional porque acaba de quedar
-        | en estado PENDIENTE.
-        |--------------------------------------------------------------------------
-        */
-
-        setTimeout(
-            () => {
-
-                if (
-                    !muroEnviando
-                ) {
-
-                    cerrarModalMuro();
-                }
-
-            },
-            2500
-        );
-
-
     } catch (error) {
-
-        console.error(
-            "Error publicando en El Muro:",
-            error
-        );
-
 
         mostrarEstadoFormularioMuro(
             error.message ||
@@ -1244,16 +1297,13 @@ async function enviarPublicacionMuro(
             "error"
         );
 
-
     } finally {
 
         muroEnviando =
             false;
 
-
         muroEnviarButton.disabled =
             false;
-
 
         muroEnviarButton.textContent =
             "Enviar publicación";
@@ -1261,97 +1311,79 @@ async function enviarPublicacionMuro(
 }
 
 
-/* =========================================================
-   ESTADO FORMULARIO
-========================================================= */
-
 function mostrarEstadoFormularioMuro(
     mensaje,
     tipo
 ) {
 
-    if (!muroFormStatus) {
-        return;
-    }
-
-
     muroFormStatus.hidden =
         false;
 
-
     muroFormStatus.className =
         `muro-form-status ${tipo || ""}`;
-
 
     muroFormStatus.textContent =
         mensaje;
 }
 
 
-/* =========================================================
-   LIMPIAR ESTADO FORMULARIO
-========================================================= */
-
 function limpiarEstadoFormularioMuro() {
-
-    if (!muroFormStatus) {
-        return;
-    }
-
 
     muroFormStatus.hidden =
         true;
 
-
     muroFormStatus.className =
         "muro-form-status";
-
 
     muroFormStatus.textContent =
         "";
 }
 
 
-/* =========================================================
-   ESTADO MURO
-========================================================= */
-
 function mostrarEstadoMuro(
     texto
 ) {
 
-    if (!muroStatus) {
-        return;
-    }
-
-
     muroStatus.hidden =
         false;
-
 
     muroStatus.textContent =
         texto;
 }
 
 
-/* =========================================================
-   OCULTAR ESTADO MURO
-========================================================= */
-
 function ocultarEstadoMuro() {
-
-    if (!muroStatus) {
-        return;
-    }
-
 
     muroStatus.hidden =
         true;
 }
 
 
+function nombreTipo(
+    tipo
+) {
+
+    return {
+        informacion:
+            "Información",
+
+        reclamo:
+            "Reclamo",
+
+        necesito:
+            "Necesito",
+
+        ofrezco:
+            "Ofrezco"
+
+    }[tipo]
+    ||
+    "Información";
+}
+
+
 /* =========================================================
-   CARGAR MERCADO
+   MERCADO
 ========================================================= */
 
 async function cargarMercado() {
@@ -1362,7 +1394,6 @@ async function cargarMercado() {
             "Cargando información..."
         );
 
-
         const resultados =
             await Promise.allSettled([
                 TECNICOM_API.getMercado(),
@@ -1370,66 +1401,21 @@ async function cargarMercado() {
                 TECNICOM_API.getEventosMercado()
             ]);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Comercios
-        |--------------------------------------------------------------------------
-        */
-
-        if (
+        mercadoItems =
             resultados[0].status ===
             "fulfilled"
-        ) {
-
-            mercadoItems =
-                normalizarArray(
+                ? normalizarArray(
                     resultados[0].value
-                );
+                )
+                : [];
 
-        } else {
-
-            console.error(
-                resultados[0].reason
-            );
-
-
-            mercadoItems = [];
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Categorías
-        |--------------------------------------------------------------------------
-        */
-
-        if (
+        mercadoCategorias =
             resultados[1].status ===
             "fulfilled"
-        ) {
-
-            mercadoCategorias =
-                normalizarArray(
+                ? normalizarArray(
                     resultados[1].value
-                );
-
-        } else {
-
-            console.error(
-                resultados[1].reason
-            );
-
-
-            mercadoCategorias = [];
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Eventos
-        |--------------------------------------------------------------------------
-        */
+                )
+                : [];
 
         if (
             resultados[2].status ===
@@ -1444,14 +1430,8 @@ async function cargarMercado() {
 
         } else {
 
-            console.error(
-                resultados[2].reason
-            );
-
-
             ocultarEventos();
         }
-
 
         renderCategorias();
 
@@ -1459,17 +1439,13 @@ async function cargarMercado() {
             mercadoItems
         );
 
-
         ocultarEstadoMercado();
-
 
     } catch (error) {
 
         console.error(
-            "Error cargando Mercado Santa Cruz:",
             error
         );
-
 
         mostrarEstadoMercado(
             "No fue posible cargar Mercado Santa Cruz."
@@ -1478,21 +1454,18 @@ async function cargarMercado() {
 }
 
 
-/* =========================================================
-   NORMALIZAR ARRAY
-========================================================= */
-
 function normalizarArray(
     valor
 ) {
 
     if (
-        Array.isArray(valor)
+        Array.isArray(
+            valor
+        )
     ) {
 
         return valor;
     }
-
 
     if (
         valor &&
@@ -1504,44 +1477,36 @@ function normalizarArray(
         return valor.data;
     }
 
-
     return [];
 }
 
 
-/* =========================================================
-   CATEGORÍAS MERCADO
-========================================================= */
-
 function renderCategorias() {
 
-    if (!marketCategories) {
+    if (
+        !marketCategories
+    ) {
+
         return;
     }
-
 
     marketCategories.innerHTML =
         "";
 
-
-    const todas =
-        crearCategoriaMercado({
-
-            nombre:
-                "Todos",
-
-            slug:
-                "todos",
-
-            descripcion:
-                "Ver todos los comercios y servicios"
-        });
-
-
     marketCategories.appendChild(
-        todas
-    );
+        crearCategoriaMercado(
+            {
+                nombre:
+                    "Todos",
 
+                slug:
+                    "todos",
+
+                descripcion:
+                    "Ver todos los comercios y servicios"
+            }
+        )
+    );
 
     mercadoCategorias.forEach(
         categoria => {
@@ -1556,10 +1521,6 @@ function renderCategorias() {
 }
 
 
-/* =========================================================
-   CREAR CATEGORÍA
-========================================================= */
-
 function crearCategoriaMercado(
     categoria
 ) {
@@ -1569,21 +1530,18 @@ function crearCategoriaMercado(
             "button"
         );
 
-
     boton.type =
         "button";
-
 
     boton.className =
         "market-category-card";
 
-
     const slug =
         categoria.slug ||
         slugificar(
-            categoria.nombre || ""
+            categoria.nombre ||
+            ""
         );
-
 
     if (
         slug ===
@@ -1595,34 +1553,28 @@ function crearCategoriaMercado(
         );
     }
 
-
     const nombre =
         document.createElement(
             "strong"
         );
 
-
     nombre.textContent =
         categoria.nombre ||
         "";
-
 
     const descripcion =
         document.createElement(
             "span"
         );
 
-
     descripcion.textContent =
         categoria.descripcion ||
         "";
-
 
     boton.append(
         nombre,
         descripcion
     );
-
 
     boton.addEventListener(
         "click",
@@ -1631,37 +1583,30 @@ function crearCategoriaMercado(
             categoriaSeleccionada =
                 slug;
 
-
             renderCategorias();
 
             filtrarMercado();
         }
     );
 
-
     return boton;
 }
 
-
-/* =========================================================
-   FILTRAR MERCADO
-========================================================= */
 
 function filtrarMercado() {
 
     const busqueda =
         (
-            marketSearch?.value ||
+            marketSearch
+                ?.value ||
             ""
         )
         .trim()
         .toLowerCase();
 
-
     const resultados =
         mercadoItems.filter(
             item => {
-
 
                 const categoria =
                     slugificar(
@@ -1670,46 +1615,40 @@ function filtrarMercado() {
                         ""
                     );
 
-
                 const coincideCategoria =
                     categoriaSeleccionada ===
                         "todos"
-
                     ||
-
                     categoria ===
                         categoriaSeleccionada;
 
-
                 const texto = [
-
                     item.nombre,
                     item.titulo,
                     item.descripcion,
                     item.resumen,
                     item.categoria,
                     item.direccion
-
                 ]
-                .filter(Boolean)
-                .join(" ")
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " "
+                )
                 .toLowerCase();
-
-
-                const coincideBusqueda =
-                    !busqueda ||
-                    texto.includes(
-                        busqueda
-                    );
-
 
                 return (
                     coincideCategoria &&
-                    coincideBusqueda
+                    (
+                        !busqueda ||
+                        texto.includes(
+                            busqueda
+                        )
+                    )
                 );
             }
         );
-
 
     renderMercado(
         resultados
@@ -1717,116 +1656,54 @@ function filtrarMercado() {
 }
 
 
-/* =========================================================
-   RENDER MERCADO
-========================================================= */
-
 function renderMercado(
     items
 ) {
 
-    if (!marketGrid) {
-        return;
-    }
-
-
     marketGrid.innerHTML =
         "";
 
+    marketFeatured.innerHTML =
+        "";
 
-    if (marketFeatured) {
-
-        marketFeatured.innerHTML =
-            "";
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Contador
-    |--------------------------------------------------------------------------
-    */
+    marketResultsCount.textContent =
+        `${items.length} resultado${
+            items.length === 1
+                ? ""
+                : "s"
+        }`;
 
     if (
-        marketResultsCount
+        !items.length
     ) {
 
-        marketResultsCount.textContent =
-            `${items.length} resultado${
-                items.length === 1
-                    ? ""
-                    : "s"
-            }`;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Sin resultados
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-        items.length === 0
-    ) {
-
-        const mensaje =
-            document.createElement(
-                "p"
-            );
-
-
-        mensaje.className =
-            "market-empty";
-
-
-        mensaje.textContent =
-            "No encontramos resultados.";
-
-
-        marketGrid.appendChild(
-            mensaje
-        );
-
+        marketGrid.innerHTML =
+            '<p class="market-empty">No encontramos resultados.</p>';
 
         return;
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Destacados
-    |--------------------------------------------------------------------------
-    */
-
-    const destacados =
-        items.filter(
+    items
+        .filter(
             item =>
                 item.destacado === true ||
                 item.destacado === 1 ||
                 item.destacado === "1"
-        );
-
-
-    destacados
-        .slice(0, 3)
+        )
+        .slice(
+            0,
+            3
+        )
         .forEach(
             item => {
 
-                marketFeatured?.appendChild(
+                marketFeatured.appendChild(
                     crearTarjetaMercado(
                         item
                     )
                 );
             }
         );
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Todos
-    |--------------------------------------------------------------------------
-    */
 
     items.forEach(
         item => {
@@ -1841,10 +1718,6 @@ function renderMercado(
 }
 
 
-/* =========================================================
-   CREAR TARJETA MERCADO
-========================================================= */
-
 function crearTarjetaMercado(
     item
 ) {
@@ -1854,42 +1727,24 @@ function crearTarjetaMercado(
             "article"
         );
 
-
     tarjeta.className =
         "market-card";
 
-
     tarjeta.tabIndex =
         0;
-
-
-    tarjeta.setAttribute(
-        "role",
-        "button"
-    );
-
 
     const nombre =
         item.nombre ||
         item.titulo ||
         "Comercio";
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Imagen
-    |--------------------------------------------------------------------------
-    */
-
     const imagenContenedor =
         document.createElement(
             "div"
         );
 
-
     imagenContenedor.className =
         "market-card-image";
-
 
     const rutaImagen =
         resolverImagen(
@@ -1897,102 +1752,75 @@ function crearTarjetaMercado(
             item.imagen_portada
         );
 
-
-    if (rutaImagen) {
+    if (
+        rutaImagen
+    ) {
 
         const imagen =
             document.createElement(
                 "img"
             );
 
-
         imagen.src =
             rutaImagen;
-
 
         imagen.alt =
             nombre;
 
-
         imagen.loading =
             "lazy";
-
 
         imagenContenedor.appendChild(
             imagen
         );
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Contenido
-    |--------------------------------------------------------------------------
-    */
-
     const contenido =
         document.createElement(
             "div"
         );
 
-
     contenido.className =
         "market-card-content";
-
 
     const categoria =
         document.createElement(
             "p"
         );
 
-
     categoria.className =
         "market-card-category";
-
 
     categoria.textContent =
         item.categoria ||
         "";
-
 
     const titulo =
         document.createElement(
             "h3"
         );
 
-
     titulo.textContent =
         nombre;
-
 
     const descripcion =
         document.createElement(
             "p"
         );
 
-
     descripcion.className =
         "market-card-description";
-
 
     descripcion.textContent =
         item.descripcion ||
         item.resumen ||
         "";
 
-
     contenido.append(
         categoria,
         titulo,
         descripcion
     );
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Dirección
-    |--------------------------------------------------------------------------
-    */
 
     if (
         item.direccion
@@ -2003,52 +1831,39 @@ function crearTarjetaMercado(
                 "p"
             );
 
-
         direccion.className =
             "market-card-address";
 
-
         direccion.textContent =
             item.direccion;
-
 
         contenido.appendChild(
             direccion
         );
     }
 
-
     tarjeta.append(
         imagenContenedor,
         contenido
     );
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Abrir detalle
-    |--------------------------------------------------------------------------
-    */
-
     const abrir =
         () => {
 
-            if (!item.slug) {
-                return;
-            }
-
-
-            abrirDetalleMercado(
+            if (
                 item.slug
-            );
-        };
+            ) {
 
+                abrirDetalleMercado(
+                    item.slug
+                );
+            }
+        };
 
     tarjeta.addEventListener(
         "click",
         abrir
     );
-
 
     tarjeta.addEventListener(
         "keydown",
@@ -2066,14 +1881,9 @@ function crearTarjetaMercado(
         }
     );
 
-
     return tarjeta;
 }
 
-
-/* =========================================================
-   ABRIR DETALLE
-========================================================= */
 
 async function abrirDetalleMercado(
     slug
@@ -2087,22 +1897,21 @@ async function abrirDetalleMercado(
         `mercado-santa-cruz.html?slug=${encodeURIComponent(slug)}`
     );
 
-
     await cargarDetalleMercado(
         slug
     );
 
+    window.scrollTo(
+        {
+            top:
+                0,
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+            behavior:
+                "smooth"
+        }
+    );
 }
 
-
-/* =========================================================
-   CARGAR DETALLE
-========================================================= */
 
 async function cargarDetalleMercado(
     slug
@@ -2115,58 +1924,27 @@ async function cargarDetalleMercado(
                 slug
             );
 
-
-        if (!item) {
+        if (
+            !item
+        ) {
 
             throw new Error(
                 "No se encontró el comercio."
             );
         }
 
-
         mostrarDetalleMercado(
             item
         );
 
-
     } catch (error) {
 
         console.error(
-            "Error cargando comercio:",
             error
         );
-
-
-        if (!marketDetailView) {
-            return;
-        }
-
-
-        marketDetailView.hidden =
-            false;
-
-
-        marketDetailView.innerHTML = `
-            <div class="market-detail-container">
-                <a
-                    href="mercado-santa-cruz.html"
-                    class="market-back-button"
-                >
-                    ← Volver a Mercado Santa Cruz
-                </a>
-
-                <p>
-                    No fue posible cargar esta información.
-                </p>
-            </div>
-        `;
     }
 }
 
-
-/* =========================================================
-   MOSTRAR DETALLE
-========================================================= */
 
 function mostrarDetalleMercado(
     item
@@ -2174,28 +1952,20 @@ function mostrarDetalleMercado(
 
     ocultarSeccionesListado();
 
-
     marketDetailView.hidden =
         false;
-
-
-    const nombre =
-        item.nombre ||
-        item.titulo ||
-        "";
-
 
     establecerTexto(
         "marketDetailCategory",
         item.categoria
     );
 
-
     establecerTexto(
         "marketDetailTitle",
-        nombre
+        item.nombre ||
+        item.titulo ||
+        ""
     );
-
 
     establecerTexto(
         "marketDetailSummary",
@@ -2203,19 +1973,11 @@ function mostrarDetalleMercado(
         item.resumen
     );
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Datos
-    |--------------------------------------------------------------------------
-    */
-
     establecerDatoDetalle(
         "marketDetailAddressRow",
         "marketDetailAddress",
         item.direccion
     );
-
 
     establecerDatoDetalle(
         "marketDetailPhoneRow",
@@ -2223,51 +1985,24 @@ function mostrarDetalleMercado(
         item.telefono
     );
 
-
     establecerDatoDetalle(
         "marketDetailScheduleRow",
         "marketDetailSchedule",
         item.horario
     );
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Contenido HTML administrado
-    |--------------------------------------------------------------------------
-    */
-
     const contenido =
-        document.getElementById(
-            "marketDetailContent"
-        );
+        $("marketDetailContent");
 
-
-    if (contenido) {
-
-        contenido.innerHTML =
-            item.contenido ||
-            "";
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Imagen
-    |--------------------------------------------------------------------------
-    */
+    contenido.innerHTML =
+        item.contenido ||
+        "";
 
     const imageWrap =
-        document.getElementById(
-            "marketDetailImageWrap"
-        );
-
+        $("marketDetailImageWrap");
 
     const image =
-        document.getElementById(
-            "marketDetailImage"
-        );
-
+        $("marketDetailImage");
 
     const rutaImagen =
         resolverImagen(
@@ -2275,54 +2010,35 @@ function mostrarDetalleMercado(
             item.imagen_portada
         );
 
+    imageWrap.hidden =
+        !rutaImagen;
 
     if (
-        rutaImagen &&
-        image &&
-        imageWrap
+        rutaImagen
     ) {
 
         image.src =
             rutaImagen;
 
-
         image.alt =
-            nombre;
-
-
-        imageWrap.hidden =
-            false;
-
-
-    } else if (
-        imageWrap
-    ) {
-
-        imageWrap.hidden =
-            true;
+            item.nombre ||
+            item.titulo ||
+            "";
     }
 }
 
 
-/* =========================================================
-   OCULTAR SECCIONES DEL LISTADO
-========================================================= */
-
 function ocultarSeccionesListado() {
 
-    const selectores = [
-
+    [
         ".muro-section",
         ".market-search-section",
         ".market-categories-section",
         ".market-featured-section",
         ".market-business-section",
         ".market-events-section"
-
-    ];
-
-
-    selectores.forEach(
+    ]
+    .forEach(
         selector => {
 
             document
@@ -2341,33 +2057,19 @@ function ocultarSeccionesListado() {
 }
 
 
-/* =========================================================
-   MOSTRAR LISTADO
-========================================================= */
-
 function mostrarListadoMercado() {
 
-    if (
-        marketDetailView
-    ) {
+    marketDetailView.hidden =
+        true;
 
-        marketDetailView.hidden =
-            true;
-    }
-
-
-    const selectores = [
-
+    [
         ".muro-section",
         ".market-search-section",
         ".market-categories-section",
         ".market-featured-section",
         ".market-business-section"
-
-    ];
-
-
-    selectores.forEach(
+    ]
+    .forEach(
         selector => {
 
             document
@@ -2384,57 +2086,40 @@ function mostrarListadoMercado() {
         }
     );
 
-
     if (
-        marketEvents &&
-        marketEvents.children.length > 0 &&
-        marketEventsSection
+        marketEvents
+            ?.children.length
     ) {
 
         marketEventsSection.hidden =
             false;
     }
 
-
     renderMercado(
         mercadoItems
     );
 
-
     renderMuro();
-
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
 }
 
 
-/* =========================================================
-   HISTORIAL
-========================================================= */
-
 async function manejarHistorial() {
 
-    const parametros =
+    const slug =
         new URLSearchParams(
             window.location.search
-        );
-
-
-    const slug =
-        parametros.get(
+        )
+        .get(
             "slug"
         );
 
-
-    if (slug) {
+    if (
+        slug
+    ) {
 
         await cargarDetalleMercado(
             slug
         );
-
 
     } else {
 
@@ -2452,8 +2137,7 @@ function renderEventos(
 ) {
 
     if (
-        !marketEvents ||
-        eventos.length === 0
+        !eventos.length
     ) {
 
         ocultarEventos();
@@ -2461,10 +2145,8 @@ function renderEventos(
         return;
     }
 
-
     marketEvents.innerHTML =
         "";
-
 
     eventos.forEach(
         evento => {
@@ -2474,20 +2156,16 @@ function renderEventos(
                     "article"
                 );
 
-
             articulo.className =
                 "market-event";
-
 
             const fecha =
                 document.createElement(
                     "div"
                 );
 
-
             fecha.className =
                 "market-event-date";
-
 
             fecha.textContent =
                 formatearFecha(
@@ -2495,30 +2173,25 @@ function renderEventos(
                     evento.fecha_evento
                 );
 
-
             const titulo =
                 document.createElement(
                     "h3"
                 );
-
 
             titulo.textContent =
                 evento.titulo ||
                 evento.nombre ||
                 "";
 
-
             const descripcion =
                 document.createElement(
                     "p"
                 );
 
-
             descripcion.textContent =
                 evento.descripcion ||
                 evento.resumen ||
                 "";
-
 
             articulo.append(
                 fecha,
@@ -2526,42 +2199,26 @@ function renderEventos(
                 descripcion
             );
 
-
             marketEvents.appendChild(
                 articulo
             );
         }
     );
 
-
-    if (
-        marketEventsSection
-    ) {
-
-        marketEventsSection.hidden =
-            false;
-    }
+    marketEventsSection.hidden =
+        false;
 }
 
-
-/* =========================================================
-   OCULTAR EVENTOS
-========================================================= */
 
 function ocultarEventos() {
 
-    if (
-        marketEventsSection
-    ) {
-
-        marketEventsSection.hidden =
-            true;
-    }
+    marketEventsSection.hidden =
+        true;
 }
 
 
 /* =========================================================
-   DATO DETALLE
+   UTILIDADES
 ========================================================= */
 
 function establecerDatoDetalle(
@@ -2571,16 +2228,14 @@ function establecerDatoDetalle(
 ) {
 
     const fila =
-        document.getElementById(
+        $(
             filaId
         );
 
-
     const elemento =
-        document.getElementById(
+        $(
             valorId
         );
-
 
     if (
         !fila ||
@@ -2590,28 +2245,14 @@ function establecerDatoDetalle(
         return;
     }
 
-
-    if (!valor) {
-
-        fila.hidden =
-            true;
-
-        return;
-    }
-
-
     fila.hidden =
-        false;
-
+        !valor;
 
     elemento.textContent =
-        valor;
+        valor ||
+        "";
 }
 
-
-/* =========================================================
-   ESTABLECER TEXTO
-========================================================= */
 
 function establecerTexto(
     id,
@@ -2619,37 +2260,37 @@ function establecerTexto(
 ) {
 
     const elemento =
-        document.getElementById(
+        $(
             id
         );
 
+    if (
+        elemento
+    ) {
 
-    if (!elemento) {
-        return;
+        elemento.textContent =
+            texto ||
+            "";
     }
-
-
-    elemento.textContent =
-        texto || "";
 }
 
-
-/* =========================================================
-   IMAGEN
-========================================================= */
 
 function resolverImagen(
     ruta
 ) {
 
-    if (!ruta) {
+    if (
+        !ruta
+    ) {
+
         return "";
     }
 
-
     ruta =
-        String(ruta).trim();
-
+        String(
+            ruta
+        )
+        .trim();
 
     if (
         /^https?:\/\//i.test(
@@ -2659,7 +2300,6 @@ function resolverImagen(
 
         return ruta;
     }
-
 
     return (
         API_MEDIA_BASE +
@@ -2671,10 +2311,6 @@ function resolverImagen(
 }
 
 
-/* =========================================================
-   FECHA NORMAL
-========================================================= */
-
 function formatearFecha(
     fecha
 ) {
@@ -2684,17 +2320,17 @@ function formatearFecha(
             fecha
         );
 
+    if (
+        !date
+    ) {
 
-    if (!date) {
-
-        return fecha || "";
+        return fecha ||
+            "";
     }
-
 
     return new Intl.DateTimeFormat(
         "es-CL",
         {
-
             day:
                 "numeric",
 
@@ -2704,13 +2340,12 @@ function formatearFecha(
             year:
                 "numeric"
         }
-    ).format(date);
+    )
+    .format(
+        date
+    );
 }
 
-
-/* =========================================================
-   FECHA RELATIVA MURO
-========================================================= */
 
 function formatearFechaRelativa(
     fecha
@@ -2721,27 +2356,25 @@ function formatearFechaRelativa(
             fecha
         );
 
-
-    if (!date) {
+    if (
+        !date
+    ) {
 
         return "";
     }
 
-
     const ahora =
         new Date();
 
-
-    const diferencia =
-        ahora.getTime() -
-        date.getTime();
-
-
     const segundos =
         Math.floor(
-            diferencia / 1000
+            (
+                ahora.getTime() -
+                date.getTime()
+            )
+            /
+            1000
         );
-
 
     if (
         segundos < 60
@@ -2750,12 +2383,11 @@ function formatearFechaRelativa(
         return "Hace un momento";
     }
 
-
     const minutos =
         Math.floor(
-            segundos / 60
+            segundos /
+            60
         );
-
 
     if (
         minutos < 60
@@ -2764,12 +2396,11 @@ function formatearFechaRelativa(
         return `Hace ${minutos} min`;
     }
 
-
     const horas =
         Math.floor(
-            minutos / 60
+            minutos /
+            60
         );
-
 
     if (
         horas < 24
@@ -2780,12 +2411,11 @@ function formatearFechaRelativa(
             : `Hace ${horas} horas`;
     }
 
-
     const dias =
         Math.floor(
-            horas / 24
+            horas /
+            24
         );
-
 
     if (
         dias === 1
@@ -2794,7 +2424,6 @@ function formatearFechaRelativa(
         return "Ayer";
     }
 
-
     if (
         dias < 7
     ) {
@@ -2802,86 +2431,50 @@ function formatearFechaRelativa(
         return `Hace ${dias} días`;
     }
 
-
-    return new Intl.DateTimeFormat(
-        "es-CL",
-        {
-
-            day:
-                "numeric",
-
-            month:
-                "short",
-
-            year:
-                date.getFullYear() !==
-                ahora.getFullYear()
-                    ? "numeric"
-                    : undefined
-        }
-    ).format(date);
+    return formatearFecha(
+        fecha
+    );
 }
 
-
-/* =========================================================
-   CREAR FECHA
-========================================================= */
 
 function crearFecha(
     fecha
 ) {
 
-    if (!fecha) {
-        return null;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | MySQL:
-    | 2026-08-31 13:20:00
-    |--------------------------------------------------------------------------
-    */
-
-    const normalizada =
-        String(fecha)
-            .trim()
-            .replace(
-                " ",
-                "T"
-            );
-
-
-    const date =
-        new Date(
-            normalizada
-        );
-
-
     if (
-        Number.isNaN(
-            date.getTime()
-        )
+        !fecha
     ) {
 
         return null;
     }
 
+    const date =
+        new Date(
+            String(
+                fecha
+            )
+            .trim()
+            .replace(
+                " ",
+                "T"
+            )
+        );
 
-    return date;
+    return Number.isNaN(
+        date.getTime()
+    )
+        ? null
+        : date;
 }
 
-
-/* =========================================================
-   SLUG
-========================================================= */
 
 function slugificar(
     texto
 ) {
 
     return String(
-        texto || ""
+        texto ||
+        ""
     )
     .normalize(
         "NFD"
@@ -2903,38 +2496,19 @@ function slugificar(
 }
 
 
-/* =========================================================
-   ESTADO MERCADO
-========================================================= */
-
 function mostrarEstadoMercado(
     texto
 ) {
 
-    if (!marketStatus) {
-        return;
-    }
-
-
     marketStatus.hidden =
         false;
-
 
     marketStatus.textContent =
         texto;
 }
 
 
-/* =========================================================
-   OCULTAR ESTADO MERCADO
-========================================================= */
-
 function ocultarEstadoMercado() {
-
-    if (!marketStatus) {
-        return;
-    }
-
 
     marketStatus.hidden =
         true;

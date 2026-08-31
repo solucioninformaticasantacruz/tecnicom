@@ -1,0 +1,1114 @@
+/* =========================================================
+   TECNICOM
+   MERCADO SANTA CRUZ
+========================================================= */
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+html {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+}
+
+.container {
+    width: min(1180px, calc(100% - 40px));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sr-only {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+    margin: -1px;
+
+    overflow: hidden;
+
+    clip: rect(0, 0, 0, 0);
+
+    white-space: nowrap;
+
+    border: 0;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.market-body {
+    min-height: 100vh;
+
+    background: #f4f1eb;
+
+    color: #172033;
+
+    font-family:
+        "Inter",
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.market-header {
+    width: 100%;
+
+    background: #0f1d34;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.market-topbar {
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.12);
+}
+
+.market-topbar-inner {
+    position: relative;
+
+    min-height: 74px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 28px;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.market-logo {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    text-decoration: none;
+}
+
+.market-logo img {
+    width: 150px;
+
+    max-width: 150px;
+
+    max-height: 48px;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+.market-nav {
+    margin-left: auto;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 22px;
+
+    flex-wrap: wrap;
+}
+
+.market-nav a {
+    position: relative;
+
+    color: #e8edf5;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.market-nav a:hover,
+.market-nav a.active {
+    color: #ffffff;
+}
+
+.market-nav a.active::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    bottom: -10px;
+
+    height: 2px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   MENÚ MÓVIL
+========================================================= */
+
+.market-menu-button {
+    display: none;
+
+    margin-left: auto;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 28px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.market-hero {
+    padding:
+        68px
+        0
+        72px;
+
+    text-align: center;
+}
+
+.market-hero-content {
+    max-width: 900px;
+}
+
+.market-kicker {
+    margin:
+        0
+        0
+        13px;
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: .15em;
+}
+
+.market-hero h1 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-family:
+        "Merriweather",
+        Georgia,
+        serif;
+
+    font-size:
+        clamp(
+            42px,
+            6vw,
+            70px
+        );
+
+    line-height: 1.1;
+}
+
+.market-hero-description {
+    max-width: 680px;
+
+    margin:
+        22px
+        auto
+        30px;
+
+    color: #d3dce8;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   BUSCADOR
+========================================================= */
+
+.market-search {
+    width:
+        min(
+            680px,
+            100%
+        );
+
+    margin:
+        0
+        auto;
+
+    display: flex;
+
+    background: #ffffff;
+
+    border-radius: 4px;
+
+    overflow: hidden;
+}
+
+.market-search input {
+    flex: 1;
+
+    min-width: 0;
+
+    padding:
+        16px
+        18px;
+
+    border: 0;
+
+    outline: 0;
+
+    color: #172033;
+
+    font-size: 15px;
+}
+
+.market-search button {
+    padding:
+        0
+        26px;
+
+    border: 0;
+
+    background: #315e9e;
+
+    color: #ffffff;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.market-search button:hover {
+    background: #244d87;
+}
+
+
+/* =========================================================
+   TÍTULOS DE SECCIÓN
+========================================================= */
+
+.market-section-heading {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 28px;
+
+    padding-bottom: 18px;
+
+    border-bottom:
+        2px solid #172033;
+}
+
+.market-section-label {
+    margin:
+        0
+        0
+        8px;
+
+    color: #50617a;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: .14em;
+}
+
+.market-section-heading h2 {
+    margin: 0;
+
+    font-family:
+        "Merriweather",
+        Georgia,
+        serif;
+
+    font-size:
+        clamp(
+            28px,
+            4vw,
+            40px
+        );
+}
+
+.market-section-heading > p {
+    max-width: 420px;
+
+    margin: 0;
+
+    color: #69717c;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   CATEGORÍAS
+========================================================= */
+
+.market-categories-section {
+    padding:
+        55px
+        0
+        45px;
+
+    background: #ffffff;
+}
+
+.market-categories {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
+
+    gap: 14px;
+}
+
+.market-category-card {
+    padding: 22px;
+
+    border:
+        1px solid #d5d8dd;
+
+    background: #ffffff;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+.market-category-card:hover,
+.market-category-card.active {
+    transform:
+        translateY(-2px);
+
+    border-color: #315e9e;
+
+    box-shadow:
+        0 8px 25px
+        rgba(15,29,52,.08);
+}
+
+.market-category-card strong {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #172033;
+
+    font-size: 15px;
+}
+
+.market-category-card span {
+    color: #727984;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   DESTACADOS
+========================================================= */
+
+.market-featured-section {
+    padding:
+        55px
+        0;
+
+    background: #f4f1eb;
+}
+
+.market-status {
+    padding:
+        20px
+        0;
+
+    color: #737b86;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+.market-featured-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0,1fr)
+        );
+
+    gap: 22px;
+}
+
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+.market-card {
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border:
+        1px solid #d6d4ce;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.market-card:hover {
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 12px 32px
+        rgba(15,29,52,.10);
+}
+
+.market-card-image {
+    width: 100%;
+
+    aspect-ratio:
+        16 / 9;
+
+    overflow: hidden;
+
+    background: #d9d6cf;
+}
+
+.market-card-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.market-card-content {
+    padding: 22px;
+}
+
+.market-card-category {
+    margin:
+        0
+        0
+        9px;
+
+    color: #50617a;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+}
+
+.market-card h3 {
+    margin:
+        0
+        0
+        11px;
+
+    color: #172033;
+
+    font-family:
+        "Merriweather",
+        Georgia,
+        serif;
+
+    font-size: 22px;
+
+    line-height: 1.3;
+}
+
+.market-card-description {
+    margin: 0;
+
+    color: #646d79;
+
+    font-size: 14px;
+
+    line-height: 1.65;
+}
+
+.market-card-address {
+    margin:
+        15px
+        0
+        0;
+
+    color: #858b94;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   COMERCIOS
+========================================================= */
+
+.market-business-section {
+    padding:
+        60px
+        0
+        80px;
+
+    background: #ffffff;
+}
+
+.market-results-count {
+    color: #777e88;
+
+    font-size: 13px;
+}
+
+.market-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0,1fr)
+        );
+
+    gap: 22px;
+}
+
+
+/* =========================================================
+   EVENTOS
+========================================================= */
+
+.market-events-section {
+    padding:
+        60px
+        0
+        80px;
+
+    background: #f4f1eb;
+}
+
+.market-events {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0,1fr)
+        );
+
+    gap: 18px;
+}
+
+.market-event {
+    padding: 24px;
+
+    background: #ffffff;
+
+    border-left:
+        4px solid #315e9e;
+}
+
+.market-event-date {
+    margin-bottom: 10px;
+
+    color: #50617a;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.market-event h3 {
+    margin:
+        0
+        0
+        10px;
+
+    font-family:
+        "Merriweather",
+        Georgia,
+        serif;
+
+    font-size: 20px;
+}
+
+.market-event p {
+    margin: 0;
+
+    color: #666e79;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   DETALLE
+========================================================= */
+
+.market-detail-view {
+    padding:
+        55px
+        0
+        90px;
+
+    background: #f4f1eb;
+}
+
+.market-detail-container {
+    width:
+        min(
+            1050px,
+            calc(100% - 40px)
+        );
+
+    margin:
+        0
+        auto;
+}
+
+.market-back-button {
+    margin-bottom: 35px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #33435b;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.market-detail-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(350px,.85fr);
+
+    gap: 48px;
+
+    align-items: start;
+}
+
+.market-detail-image {
+    overflow: hidden;
+
+    background: #d9d6cf;
+
+    aspect-ratio:
+        4 / 3;
+}
+
+.market-detail-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.market-detail-category {
+    margin:
+        0
+        0
+        12px;
+
+    color: #50617a;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+}
+
+.market-detail-information h1 {
+    margin:
+        0
+        0
+        18px;
+
+    color: #172033;
+
+    font-family:
+        "Merriweather",
+        Georgia,
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            5vw,
+            54px
+        );
+
+    line-height: 1.15;
+}
+
+.market-detail-summary {
+    margin:
+        0
+        0
+        28px;
+
+    color: #596270;
+
+    font-size: 16px;
+
+    line-height: 1.75;
+}
+
+.market-detail-data {
+    margin:
+        25px
+        0;
+
+    border-top:
+        1px solid #ccc9c2;
+}
+
+.market-detail-row {
+    display: grid;
+
+    grid-template-columns:
+        110px
+        1fr;
+
+    gap: 15px;
+
+    padding:
+        14px
+        0;
+
+    border-bottom:
+        1px solid #ccc9c2;
+
+    font-size: 14px;
+}
+
+.market-detail-content {
+    margin-top: 28px;
+
+    color: #333c49;
+
+    font-family:
+        "Merriweather",
+        Georgia,
+        serif;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.market-footer {
+    padding:
+        40px
+        0;
+
+    background: #101a2b;
+
+    color: #dce3ed;
+}
+
+.market-footer-inner {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 30px;
+}
+
+.market-footer strong {
+    color: #ffffff;
+}
+
+.market-footer p {
+    margin:
+        7px
+        0
+        0;
+
+    color: #aeb8c7;
+
+    font-size: 13px;
+}
+
+.market-footer-links {
+    display: flex;
+
+    gap: 22px;
+}
+
+.market-footer a {
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    .market-menu-button {
+        display: block;
+    }
+
+    .market-nav {
+        position: absolute;
+
+        top: 74px;
+        left: 0;
+        right: 0;
+
+        z-index: 100;
+
+        display: none;
+
+        margin: 0;
+
+        padding: 20px;
+
+        background: #0f1d34;
+    }
+
+    .market-nav.open {
+        display: grid;
+
+        gap: 16px;
+    }
+
+    .market-nav a.active::after {
+        display: none;
+    }
+
+    .market-categories {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+    }
+
+    .market-featured-grid,
+    .market-grid,
+    .market-events {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+    }
+
+    .market-detail-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   MÓVIL
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        width:
+            calc(
+                100% - 30px
+            );
+    }
+
+    .market-topbar-inner {
+        min-height: 68px;
+    }
+
+    .market-logo img {
+        width: 125px;
+    }
+
+    .market-nav {
+        top: 68px;
+    }
+
+    .market-hero {
+        padding:
+            48px
+            0
+            52px;
+    }
+
+    .market-hero h1 {
+        font-size: 43px;
+    }
+
+    .market-search {
+        display: block;
+
+        overflow: visible;
+
+        background: transparent;
+    }
+
+    .market-search input {
+        width: 100%;
+
+        border-radius: 3px;
+    }
+
+    .market-search button {
+        width: 100%;
+
+        margin-top: 10px;
+
+        padding: 14px;
+
+        border-radius: 3px;
+    }
+
+    .market-section-heading {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .market-categories,
+    .market-featured-grid,
+    .market-grid,
+    .market-events {
+        grid-template-columns: 1fr;
+    }
+
+    .market-detail-container {
+        width:
+            calc(
+                100% - 30px
+            );
+    }
+
+    .market-detail-information h1 {
+        font-size: 36px;
+    }
+
+    .market-detail-row {
+        grid-template-columns: 1fr;
+
+        gap: 5px;
+    }
+
+    .market-footer-inner {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Noticias | TECNICOM</title>
+
+    <meta name="description"
+          content="Noticias de TECNICOM sobre tecnología, software, automatización, infraestructura TI y transformación digital.">
+
+    <meta name="robots" content="index,follow">
+
+    <link rel="canonical"
+          href="https://solucioninformaticasantacruz.github.io/tecnicom/noticias.html">
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="noticias.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700;900&display=swap"
+          rel="stylesheet">
+</head>
+
+<body class="news-body">
+
+<header class="news-header">
+
+    <div class="news-topbar">
+
+        <div class="container news-topbar-inner">
+
+            <a class="news-logo" href="index.html">
+                <img src="img/logo.svg" alt="TECNICOM">
+            </a>
+
+            <button
+                id="newsMenuButton"
+                class="news-menu-button"
+                type="button"
+                aria-label="Abrir menú"
+                aria-expanded="false">
+                ☰
+            </button>
+
+            <nav id="newsNav" class="news-nav">
+                <a href="index.html">Inicio</a>
+                <a href="index.html#soluciones">Soluciones</a>
+                <a href="index.html#pos">Sistemas POS</a>
+                <a href="index.html#desarrollo">Desarrollo</a>
+                <a href="index.html#soporte">Soporte TI</a>
+                <a href="index.html#tecnologias">Tecnologías</a>
+                <a class="active" href="noticias.html">Noticias</a>
+                <a href="mercado-santa-cruz.html">Mercado Santa Cruz</a>
+                <a href="index.html#nosotros">Nosotros</a>
+                <a href="index.html#contacto">Contacto</a>
+            </nav>
+
+        </div>
+
+    </div>
+
+    <div class="news-masthead container">
+        <p class="news-kicker">TECNICOM</p>
+        <h1>Noticias</h1>
+        <p>
+            Tecnología, software, automatización e infraestructura
+            explicadas de forma clara y útil.
+        </p>
+    </div>
+
+</header>
+
+
+<main>
+
+    <!-- =====================================================
+         VISTA LISTADO
+    ====================================================== -->
+    <section id="newsListingView" class="news-section">
+
+        <div class="container">
+
+            <div class="news-toolbar">
+
+                <div>
+                    <p class="news-section-label">ACTUALIDAD TECNOLÓGICA</p>
+                    <h2>Últimas noticias</h2>
+                </div>
+
+                <div class="news-search">
+                    <label for="newsSearch">Buscar noticias</label>
+                    <input
+                        id="newsSearch"
+                        type="search"
+                        placeholder="Buscar por título o tema">
+                </div>
+
+            </div>
+
+
+            <div
+                id="newsCategories"
+                class="news-categories"
+                aria-label="Categorías de noticias">
+            </div>
+
+
+            <div
+                id="newsStatus"
+                class="news-status"
+                role="status">
+                Cargando noticias...
+            </div>
+
+
+            <section
+                id="newsFeatured"
+                class="news-featured"
+                hidden>
+            </section>
+
+
+            <section
+                id="newsGrid"
+                class="news-grid"
+                aria-live="polite">
+            </section>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         VISTA ARTÍCULO
+    ====================================================== -->
+    <article
+        id="newsArticleView"
+        class="news-article-view"
+        hidden>
+
+        <div class="container news-article-container">
+
+            <button
+                id="newsBackButton"
+                class="news-back-button"
+                type="button">
+                ← Volver a Noticias
+            </button>
+
+
+            <header class="news-article-header">
+
+                <p
+                    id="articleCategory"
+                    class="news-article-category">
+                </p>
+
+                <h1 id="articleTitle"></h1>
+
+                <p
+                    id="articleSummary"
+                    class="news-article-summary">
+                </p>
+
+                <div class="news-article-meta">
+                    <time id="articleDate"></time>
+                    <span id="articleViews"></span>
+                </div>
+
+            </header>
+
+
+            <figure
+                id="articleImageWrap"
+                class="news-article-image-wrap"
+                hidden>
+
+                <img
+                    id="articleImage"
+                    src=""
+                    alt="">
+
+            </figure>
+
+
+            <div
+                id="articleContent"
+                class="news-article-content">
+            </div>
+
+        </div>
+
+    </article>
+
+</main>
+
+
+<footer class="news-footer">
+
+    <div class="container news-footer-inner">
+
+        <div>
+            <strong>TECNICOM</strong>
+            <p>Soluciones Informáticas Profesionales</p>
+        </div>
+
+        <div>
+            <a href="index.html">Volver al sitio principal</a>
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="api.js"></script>
+<script src="noticias.js"></script>
+
+</body>
+</html>

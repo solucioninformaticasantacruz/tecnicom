@@ -3220,6 +3220,10 @@ function mostrarEstadoMercado(
     texto
 ) {
 
+    if (!marketStatus) {
+        return;
+    }
+
     marketStatus.hidden =
         false;
 
@@ -3229,6 +3233,10 @@ function mostrarEstadoMercado(
 
 
 function ocultarEstadoMercado() {
+
+    if (!marketStatus) {
+        return;
+    }
 
     marketStatus.hidden =
         true;

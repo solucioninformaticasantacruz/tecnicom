@@ -1682,9 +1682,86 @@ function filtrarMercado() {
 }
 
 
+function normalizarPlan(plan) {
+
+    const valor =
+        String(
+            plan ||
+            "gratis"
+        )
+        .trim()
+        .toLowerCase();
+
+    if (
+        valor === "full"
+    ) {
+        return "full";
+    }
+
+    if (
+        valor === "basico"
+    ) {
+        return "basico";
+    }
+
+    return "gratis";
+}
+
+
+function obtenerNombreNivel(plan) {
+
+    const nivel =
+        normalizarPlan(
+            plan
+        );
+
+    if (
+        nivel === "full"
+    ) {
+        return "Tienda Online";
+    }
+
+    if (
+        nivel === "basico"
+    ) {
+        return "Emprendedor";
+    }
+
+    return "Comerciante";
+}
+
+
+function obtenerClaseNivel(plan) {
+
+    const nivel =
+        normalizarPlan(
+            plan
+        );
+
+    if (
+        nivel === "full"
+    ) {
+        return "market-level-full";
+    }
+
+    if (
+        nivel === "basico"
+    ) {
+        return "market-level-basico";
+    }
+
+    return "market-level-gratis";
+}
+
+
 function renderMercado(
     items
 ) {
+
+    const lista =
+        Array.isArray(items)
+            ? items
+            : [];
 
     marketGrid.innerHTML =
         "";
@@ -1692,46 +1769,89 @@ function renderMercado(
     marketFeatured.innerHTML =
         "";
 
+
+    /* =====================================================
+       TIENDAS ONLINE
+
+       Esta sección es EXCLUSIVA para el plan Full.
+       Los planes Gratis y Básico nunca aparecen aquí.
+    ====================================================== */
+
+    const tiendasOnline =
+        lista.filter(
+            item =>
+                normalizarPlan(
+                    item.plan
+                ) === "full"
+        );
+
+
+    if (
+        tiendasOnline.length
+    ) {
+
+        tiendasOnline
+            .slice(
+                0,
+                6
+            )
+            .forEach(
+                item => {
+
+                    marketFeatured.appendChild(
+                        crearTarjetaMercado(
+                            item
+                        )
+                    );
+                }
+            );
+
+    } else {
+
+        marketFeatured.innerHTML =
+            '<p class="market-empty">Todavía no hay tiendas online publicadas.</p>';
+    }
+
+
+    /* =====================================================
+       DIRECTORIO
+
+       Aquí aparecen solamente:
+       - Comerciante  = Gratis
+       - Emprendedor  = Básico
+
+       Las Tiendas Online ya tienen su espacio exclusivo arriba.
+    ====================================================== */
+
+    const directorio =
+        lista.filter(
+            item =>
+                normalizarPlan(
+                    item.plan
+                ) !== "full"
+        );
+
+
     marketResultsCount.textContent =
-        `${items.length} resultado${
-            items.length === 1
+        `${directorio.length} resultado${
+            directorio.length === 1
                 ? ""
                 : "s"
         }`;
 
+
     if (
-        !items.length
+        !directorio.length
     ) {
 
         marketGrid.innerHTML =
-            '<p class="market-empty">No encontramos resultados.</p>';
+            '<p class="market-empty">No encontramos comercios o emprendedores para esta búsqueda.</p>';
 
         return;
     }
 
-    items
-        .filter(
-            item =>
-                item.destacado === true ||
-                item.destacado === 1 ||
-                item.destacado === "1"
-        )
-        .slice(
-            0,
-            3
-        )
-        .forEach(
-            item => {
 
-                marketFeatured.appendChild(
-                    crearTarjetaMercado(
-                        item
-                    )
-                );
-            }
-        );
-
-    items.forEach(
+    directorio.forEach(
         item => {
 
             marketGrid.appendChild(
@@ -1748,23 +1868,37 @@ function crearTarjetaMercado(
     item
 ) {
 
+    const plan =
+        normalizarPlan(
+            item.plan
+        );
+
     const tarjeta =
         document.createElement(
             "article"
         );
 
     tarjeta.className =
-        "market-card";
+        `market-card ${obtenerClaseNivel(plan)}`;
 
-    if (item.plan === "full") tarjeta.classList.add("market-card-full");
+    if (
+        plan === "full"
+    ) {
+
+        tarjeta.classList.add(
+            "market-card-full"
+        );
+    }
 
     tarjeta.tabIndex =
         0;
+
 
     const nombre =
         item.nombre ||
         item.titulo ||
         "Comercio";
+
 
     const imagenContenedor =
         document.createElement(
@@ -1774,11 +1908,13 @@ function crearTarjetaMercado(
     imagenContenedor.className =
         "market-card-image";
 
+
     const rutaImagen =
         resolverImagen(
             item.imagen ||
             item.imagen_portada
         );
+
 
     if (
         rutaImagen
@@ -1803,6 +1939,7 @@ function crearTarjetaMercado(
         );
     }
 
+
     const contenido =
         document.createElement(
             "div"
@@ -1810,6 +1947,25 @@ function crearTarjetaMercado(
 
     contenido.className =
         "market-card-content";
+
+
+    /* =====================================================
+       ETIQUETA DEL NIVEL
+    ====================================================== */
+
+    const nivel =
+        document.createElement(
+            "span"
+        );
+
+    nivel.className =
+        `market-card-level ${obtenerClaseNivel(plan)}`;
+
+    nivel.textContent =
+        obtenerNombreNivel(
+            plan
+        );
+
 
     const categoria =
         document.createElement(
@@ -1823,6 +1979,7 @@ function crearTarjetaMercado(
         item.categoria ||
         "";
 
+
     const titulo =
         document.createElement(
             "h3"
@@ -1830,6 +1987,7 @@ function crearTarjetaMercado(
 
     titulo.textContent =
         nombre;
+
 
     const descripcion =
         document.createElement(
@@ -1844,11 +2002,14 @@ function crearTarjetaMercado(
         item.resumen ||
         "";
 
+
     contenido.append(
+        nivel,
         categoria,
         titulo,
         descripcion
     );
+
 
     if (
         item.direccion
@@ -1870,28 +2031,98 @@ function crearTarjetaMercado(
         );
     }
 
+
+    if (
+        plan === "basico"
+    ) {
+
+        const beneficio =
+            document.createElement(
+                "p"
+            );
+
+        beneficio.className =
+            "market-card-plan-note";
+
+        beneficio.textContent =
+            "También publica productos en La Tiendita";
+
+        contenido.appendChild(
+            beneficio
+        );
+    }
+
+
+    if (
+        plan === "full"
+    ) {
+
+        const beneficio =
+            document.createElement(
+                "p"
+            );
+
+        beneficio.className =
+            "market-card-plan-note market-card-plan-note-full";
+
+        beneficio.textContent =
+            "Visitar tienda online";
+
+        contenido.appendChild(
+            beneficio
+        );
+    }
+
+
     tarjeta.append(
         imagenContenedor,
         contenido
     );
 
+
     const abrir =
         () => {
 
             if (
-                item.slug
+                !item.slug
             ) {
 
-                abrirDetalleMercado(
-                    item.slug
-                );
+                return;
             }
+
+
+            /* =================================================
+               FULL
+               Abre la vitrina independiente.
+            ================================================== */
+
+            if (
+                plan === "full"
+            ) {
+
+                window.location.href =
+                    `tienda.html?slug=${encodeURIComponent(item.slug)}`;
+
+                return;
+            }
+
+
+            /* =================================================
+               GRATIS + BÁSICO
+               Mantienen la ficha de presentación completa.
+            ================================================== */
+
+            abrirDetalleMercado(
+                item.slug
+            );
         };
+
 
     tarjeta.addEventListener(
         "click",
         abrir
     );
+
 
     tarjeta.addEventListener(
         "keydown",
@@ -1908,6 +2139,7 @@ function crearTarjetaMercado(
             }
         }
     );
+
 
     return tarjeta;
 }
@@ -1982,6 +2214,24 @@ function mostrarDetalleMercado(
 
     marketDetailView.hidden =
         false;
+
+    establecerTexto(
+        "marketDetailLevel",
+        obtenerNombreNivel(
+            item.plan
+        )
+    );
+
+    const detalleNivel =
+        $("marketDetailLevel");
+
+    if (
+        detalleNivel
+    ) {
+
+        detalleNivel.className =
+            `market-detail-level ${obtenerClaseNivel(item.plan)}`;
+    }
 
     establecerTexto(
         "marketDetailCategory",
@@ -2095,7 +2345,8 @@ function mostrarListadoMercado() {
         ".market-search-section",
         ".market-categories-section",
         ".market-featured-section",
-        ".market-business-section"
+        ".market-business-section",
+        ".market-tiendita-section"
     ]
     .forEach(
         selector => {
@@ -2537,7 +2788,201 @@ function ocultarEstadoMercado() {
    LA TIENDITA
 ========================================================= */
 function renderTiendita(productos){if(!tienditaGrid)return;tienditaGrid.innerHTML="";if(!Array.isArray(productos)||!productos.length){mostrarEstadoTiendita("Todavía no hay productos publicados.");return}ocultarEstadoTiendita();productos.slice(0,8).forEach(p=>tienditaGrid.appendChild(crearTarjetaProducto(p)))}
-function crearTarjetaProducto(producto){const a=document.createElement("article");a.className="tiendita-product-card";a.tabIndex=0;const w=document.createElement("div");w.className="tiendita-product-image";const ruta=resolverImagen(producto.imagen||producto.imagen_portada);if(ruta){const i=document.createElement("img");i.src=ruta;i.alt=producto.nombre||"Producto";i.loading="lazy";w.appendChild(i)}const c=document.createElement("div");c.className="tiendita-product-content";const cat=document.createElement("p");cat.className="tiendita-product-category";cat.textContent=producto.categoria||"Producto";const h=document.createElement("h3");h.className="tiendita-product-title";h.textContent=producto.nombre||producto.titulo||"";const pr=document.createElement("strong");pr.className="tiendita-product-price";pr.textContent=formatearPrecio(producto.precio);const v=document.createElement("p");v.className="tiendita-product-seller";v.textContent=producto.negocio_nombre?`Vendido por ${producto.negocio_nombre}`:"";c.append(cat,h,pr,v);a.append(w,c);const abrir=()=>{if(producto.slug)location.href=`producto.html?slug=${encodeURIComponent(producto.slug)}`};a.addEventListener("click",abrir);a.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();abrir()}});return a}
+function crearTarjetaProducto(
+    producto
+) {
+
+    const tarjeta =
+        document.createElement(
+            "article"
+        );
+
+    tarjeta.className =
+        "tiendita-product-card";
+
+    tarjeta.tabIndex =
+        0;
+
+
+    const imagenWrap =
+        document.createElement(
+            "div"
+        );
+
+    imagenWrap.className =
+        "tiendita-product-image";
+
+
+    const ruta =
+        resolverImagen(
+            producto.imagen ||
+            producto.imagen_portada
+        );
+
+
+    if (
+        ruta
+    ) {
+
+        const imagen =
+            document.createElement(
+                "img"
+            );
+
+        imagen.src =
+            ruta;
+
+        imagen.alt =
+            producto.nombre ||
+            "Producto";
+
+        imagen.loading =
+            "lazy";
+
+        imagenWrap.appendChild(
+            imagen
+        );
+    }
+
+
+    const contenido =
+        document.createElement(
+            "div"
+        );
+
+    contenido.className =
+        "tiendita-product-content";
+
+
+    const nivel =
+        document.createElement(
+            "span"
+        );
+
+    const plan =
+        normalizarPlan(
+            producto.plan
+        );
+
+    nivel.className =
+        `tiendita-seller-level ${
+            plan === "full"
+                ? "tiendita-seller-full"
+                : "tiendita-seller-basico"
+        }`;
+
+    nivel.textContent =
+        plan === "full"
+            ? "Tienda Online"
+            : "Emprendedor";
+
+
+    const categoria =
+        document.createElement(
+            "p"
+        );
+
+    categoria.className =
+        "tiendita-product-category";
+
+    categoria.textContent =
+        producto.categoria ||
+        "Producto";
+
+
+    const titulo =
+        document.createElement(
+            "h3"
+        );
+
+    titulo.className =
+        "tiendita-product-title";
+
+    titulo.textContent =
+        producto.nombre ||
+        producto.titulo ||
+        "";
+
+
+    const precio =
+        document.createElement(
+            "strong"
+        );
+
+    precio.className =
+        "tiendita-product-price";
+
+    precio.textContent =
+        formatearPrecio(
+            producto.precio
+        );
+
+
+    const vendedor =
+        document.createElement(
+            "p"
+        );
+
+    vendedor.className =
+        "tiendita-product-seller";
+
+    vendedor.textContent =
+        producto.negocio_nombre
+            ? `Vendido por ${producto.negocio_nombre}`
+            : "";
+
+
+    contenido.append(
+        nivel,
+        categoria,
+        titulo,
+        precio,
+        vendedor
+    );
+
+    tarjeta.append(
+        imagenWrap,
+        contenido
+    );
+
+
+    const abrir =
+        () => {
+
+            if (
+                producto.slug
+            ) {
+
+                location.href =
+                    `producto.html?slug=${encodeURIComponent(producto.slug)}`;
+            }
+        };
+
+
+    tarjeta.addEventListener(
+        "click",
+        abrir
+    );
+
+    tarjeta.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+
+                event.preventDefault();
+                abrir();
+            }
+        }
+    );
+
+
+    return tarjeta;
+}
+
 function formatearPrecio(precio){const n=Number(precio);return Number.isFinite(n)?new Intl.NumberFormat("es-CL",{style:"currency",currency:"CLP",maximumFractionDigits:0}).format(n):""}
 function mostrarEstadoTiendita(texto){if(!tienditaStatus)return;tienditaStatus.hidden=false;tienditaStatus.textContent=texto}
 function ocultarEstadoTiendita(){if(tienditaStatus)tienditaStatus.hidden=true}

@@ -1,1 +1,26 @@
 *{box-sizing:border-box}body{margin:0;background:#f4f1eb;color:#172033;font-family:Inter,Arial,sans-serif}a{color:inherit}.container{width:min(1180px,calc(100% - 40px));margin:auto}.shop-header{background:#0f1d34;color:#fff}.shop-nav{min-height:74px;display:flex;align-items:center;gap:20px}.shop-nav img{width:150px;max-height:48px}.shop-links{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}.shop-links a{text-decoration:none;font-weight:700;font-size:14px}.shop-hero{padding:56px 0;background:#0f1d34;color:#fff}.shop-hero h1{font-family:Merriweather,Georgia,serif;font-size:clamp(34px,6vw,62px);margin:0 0 12px}.shop-hero p{max-width:700px;line-height:1.7;color:#d9e2ef}.section{padding:56px 0}.toolbar{display:flex;gap:12px;margin:0 0 28px}.toolbar input,.form input,.form textarea,.form select{width:100%;padding:13px 14px;border:1px solid #ccd2dc;background:#fff;font:inherit}.toolbar button,.btn{border:0;background:#245da8;color:#fff;padding:13px 20px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}.card{background:#fff;border:1px solid #ddd8cf;overflow:hidden}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#ddd}.card-body{padding:18px}.card h2,.card h3{font-family:Merriweather,Georgia,serif}.price{font-size:21px;font-weight:800}.muted{color:#667085}.status{padding:16px;background:#fff;border:1px solid #ddd8cf;margin-bottom:20px}.detail{display:grid;grid-template-columns:1fr 1fr;gap:36px}.detail img{width:100%;background:#ddd}.form{max-width:620px;background:#fff;padding:28px;border:1px solid #ddd8cf}.form label{display:block;font-weight:700;margin:16px 0 7px}.form-status{margin-top:15px}.panel{background:#fff;border:1px solid #ddd8cf;padding:24px;margin-bottom:22px}.footer{padding:30px 0;background:#0f1d34;color:#fff}.actions{display:flex;gap:12px;flex-wrap:wrap}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.detail{grid-template-columns:1fr}}@media(max-width:560px){.grid{grid-template-columns:1fr}.shop-links{gap:10px}.toolbar{flex-direction:column}}
+
+.seller-level {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 10px;
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.seller-level-basic {
+    background: #fff8e7;
+    border-color: #e9d49b;
+    color: #7a5a13;
+}
+
+.seller-level-full {
+    background: #10203a;
+    border-color: #10203a;
+    color: #ffffff;
+}

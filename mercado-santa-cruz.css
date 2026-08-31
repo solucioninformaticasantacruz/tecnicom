@@ -1951,3 +1951,108 @@ a {
    LA TIENDITA / PLAN FULL
 ========================================================= */
 .market-tiendita-section{padding:72px 0;background:#f4f1eb}.market-tiendita-heading{align-items:flex-end}.market-tiendita-description{max-width:620px;margin-top:12px;color:#667085;line-height:1.7}.market-tiendita-link{color:#245da8;font-size:14px;font-weight:700;text-decoration:none}.market-tiendita-link:hover{text-decoration:underline}.tiendita-preview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;margin-top:28px}.tiendita-product-card{overflow:hidden;background:#fff;border:1px solid #ddd8cf;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer}.tiendita-product-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(15,29,52,.10)}.tiendita-product-image{width:100%;aspect-ratio:1/1;overflow:hidden;background:#dedbd5}.tiendita-product-image img{width:100%;height:100%;object-fit:cover}.tiendita-product-content{padding:20px}.tiendita-product-category{margin:0 0 8px;color:#315f9f;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.10em}.tiendita-product-title{margin:0 0 12px;color:#10203a;font-family:"Merriweather",Georgia,serif;font-size:19px;line-height:1.35}.tiendita-product-price{display:block;margin-bottom:14px;color:#10203a;font-size:20px;font-weight:800}.tiendita-product-seller{margin:0;color:#667085;font-size:13px;line-height:1.5}.tiendita-preview-footer{display:flex;justify-content:center;margin-top:36px}.tiendita-ver-todos{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 26px;background:#245da8;color:#fff;font-size:14px;font-weight:700;text-decoration:none}.tiendita-ver-todos:hover{background:#194a88}.market-card-full{position:relative;border:1px solid #315f9f}.market-card-full::before{content:"TIENDA ONLINE";position:absolute;z-index:3;top:14px;left:14px;padding:7px 10px;background:#10203a;color:#fff;font-size:10px;font-weight:800;letter-spacing:.08em}@media(max-width:1000px){.tiendita-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.tiendita-preview-grid{grid-template-columns:1fr}.market-tiendita-heading{align-items:flex-start}}
+
+
+/* =========================================================
+   NIVELES DE PRESENCIA - MERCADO SANTA CRUZ
+
+   gratis  -> Comerciante
+   basico  -> Emprendedor
+   full    -> Tienda Online
+========================================================= */
+
+.market-card-level,
+.market-detail-level {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0 0 10px;
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.market-card-level.market-level-gratis,
+.market-detail-level.market-level-gratis {
+    background: #f2f4f7;
+    border-color: #d9dee7;
+    color: #475467;
+}
+
+.market-card-level.market-level-basico,
+.market-detail-level.market-level-basico {
+    background: #fff8e7;
+    border-color: #e9d49b;
+    color: #7a5a13;
+}
+
+.market-card-level.market-level-full,
+.market-detail-level.market-level-full {
+    background: #10203a;
+    border-color: #10203a;
+    color: #ffffff;
+}
+
+.market-card-plan-note {
+    margin: 16px 0 0;
+    padding-top: 13px;
+    border-top: 1px solid #e6e8ec;
+    color: #7a5a13;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.market-card-plan-note-full {
+    color: #245da8;
+}
+
+/* La etiqueta ahora se genera dentro del contenido de la tarjeta. */
+.market-card-full::before {
+    display: none;
+}
+
+.market-card-full {
+    border-color: #315f9f;
+    box-shadow: 0 10px 30px rgba(16, 32, 58, .08);
+}
+
+.market-level-basico.market-card {
+    border-color: #dfd3b2;
+}
+
+.market-detail-level {
+    margin-bottom: 12px;
+}
+
+.tiendita-seller-level {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 10px;
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.tiendita-seller-basico {
+    background: #fff8e7;
+    border-color: #e9d49b;
+    color: #7a5a13;
+}
+
+.tiendita-seller-full {
+    background: #10203a;
+    border-color: #10203a;
+    color: #ffffff;
+}

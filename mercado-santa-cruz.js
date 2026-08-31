@@ -1,495 +1,6 @@
-"use strict";
-
-document.addEventListener("DOMContentLoaded", iniciarMercadoSantaCruz);
-
-const API_MEDIA_BASE = "https://www.carnesdiaz.cl/";
-const MURO_POR_PAGINA = 6;
-
-let mercadoItems = [];
-let mercadoCategorias = [];
-let categoriaSeleccionada = "todos";
-
-let muroPublicaciones = [];
-let muroTipoSeleccionado = "todos";
-let muroPaginaActual = 1;
-let muroEnviando = false;
-let muroComentarioEnviando = false;
-
-const $ = id => document.getElementById(id);
-
-const marketSearch = $("marketSearch");
-const marketSearchButton = $("marketSearchButton");
-const marketCategories = $("marketCategories");
-const marketFeatured = $("marketFeatured");
-const marketGrid = $("marketGrid");
-const marketStatus = $("marketStatus");
-const marketResultsCount = $("marketResultsCount");
-const marketEvents = $("marketEvents");
-const marketEventsSection = $("marketEventsSection");
-const marketDetailView = $("marketDetailView");
-const marketBackButton = $("marketBackButton");
-const marketMenuButton = $("marketMenuButton");
-const marketNav = $("marketNav");
-
-const muroGrid = $("muroGrid");
-const muroStatus = $("muroStatus");
-const muroFiltros = $("muroFiltros");
-const muroPaginacion = $("muroPaginacion");
-const muroPublicarButton = $("muroPublicarButton");
-
-const muroModal = $("muroModal");
-const muroModalOverlay = $("muroModalOverlay");
-const muroModalClose = $("muroModalClose");
-const muroCancelarButton = $("muroCancelarButton");
-const muroForm = $("muroForm");
-const muroTipo = $("muroTipo");
-const muroTitulo = $("muroTitulo");
-const muroMensaje = $("muroMensaje");
-const muroNombre = $("muroNombre");
-const muroContacto = $("muroContacto");
-const muroTituloContador = $("muroTituloContador");
-const muroMensajeContador = $("muroMensajeContador");
-const muroEnviarButton = $("muroEnviarButton");
-const muroFormStatus = $("muroFormStatus");
-const muroReclamoAviso = $("muroReclamoAviso");
-
-const muroDetalleModal = $("muroDetalleModal");
-const muroDetalleOverlay = $("muroDetalleOverlay");
-const muroDetalleCerrar = $("muroDetalleCerrar");
-const muroDetalleTipo = $("muroDetalleTipo");
-const muroDetalleFecha = $("muroDetalleFecha");
-const muroDetalleAnuncioTitulo = $("muroDetalleAnuncioTitulo");
-const muroDetalleMensaje = $("muroDetalleMensaje");
-const muroDetalleAutorWrap = $("muroDetalleAutorWrap");
-const muroDetalleAutor = $("muroDetalleAutor");
-const muroDetalleContactoWrap = $("muroDetalleContactoWrap");
-const muroDetalleContacto = $("muroDetalleContacto");
-
-const muroComentariosCantidad = $("muroComentariosCantidad");
-const muroComentariosStatus = $("muroComentariosStatus");
-const muroComentariosLista = $("muroComentariosLista");
-const muroComentarioForm = $("muroComentarioForm");
-const muroComentarioPublicacionId = $("muroComentarioPublicacionId");
-const muroComentarioNombre = $("muroComentarioNombre");
-const muroComentarioTexto = $("muroComentarioTexto");
-const muroComentarioContador = $("muroComentarioContador");
-const muroComentarioStatus = $("muroComentarioStatus");
-const muroComentarioEnviar = $("muroComentarioEnviar");
-
-
-async function iniciarMercadoSantaCruz() {
-
-    configurarEventos();
-
-    const parametros = new URLSearchParams(window.location.search);
-    const slug = parametros.get("slug");
-
-    if (slug) {
-        await cargarDetalleMercado(slug);
-        return;
-    }
-
-    await Promise.allSettled([
-        cargarMuro(),
-        cargarMercado()
-    ]);
-}
-
-
-function configurarEventos() {
-
-    marketSearch?.addEventListener("input", filtrarMercado);
-    marketSearchButton?.addEventListener("click", filtrarMercado);
-
-    marketSearch?.addEventListener("keydown", event => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            filtrarMercado();
-        }
-    });
-
-    marketBackButton?.addEventListener("click", () => {
-        history.pushState({}, "", "mercado-santa-cruz.html");
-        mostrarListadoMercado();
-    });
-
-    marketMenuButton?.addEventListener("click", () => {
-        const abierto = marketNav?.classList.toggle("open");
-
-        marketMenuButton.setAttribute(
-            "aria-expanded",
-            abierto ? "true" : "false"
-        );
-    });
-
-    muroFiltros?.addEventListener("click", event => {
-
-        const boton = event.target.closest("[data-tipo]");
-
-        if (!boton) {
-            return;
-        }
-
-        seleccionarTipoMuro(
-            boton.dataset.tipo
-        );
-    });
-
-    muroPublicarButton?.addEventListener(
-        "click",
-        abrirModalMuro
-    );
-
-    muroModalClose?.addEventListener(
-        "click",
-        cerrarModalMuro
-    );
-
-    muroCancelarButton?.addEventListener(
-        "click",
-        cerrarModalMuro
-    );
-
-    muroModalOverlay?.addEventListener(
-        "click",
-        cerrarModalMuro
-    );
-
-    muroDetalleCerrar?.addEventListener(
-        "click",
-        cerrarDetalleMuro
-    );
-
-    muroDetalleOverlay?.addEventListener(
-        "click",
-        cerrarDetalleMuro
-    );
-
-    muroTitulo?.addEventListener(
-        "input",
-        actualizarContadorTitulo
-    );
-
-    muroMensaje?.addEventListener(
-        "input",
-        actualizarContadorMensaje
-    );
-
-    muroTipo?.addEventListener(
-        "change",
-        actualizarAvisoReclamo
-    );
-
-    muroForm?.addEventListener(
-        "submit",
-        enviarPublicacionMuro
-    );
-
-    muroComentarioTexto?.addEventListener(
-        "input",
-        actualizarContadorComentario
-    );
-
-    muroComentarioForm?.addEventListener(
-        "submit",
-        enviarComentarioMuro
-    );
-
-    window.addEventListener(
-        "popstate",
-        manejarHistorial
-    );
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key !== "Escape") {
-                return;
-            }
-
-            if (
-                muroDetalleModal &&
-                !muroDetalleModal.hidden
-            ) {
-
-                cerrarDetalleMuro();
-
-                return;
-            }
-
-            if (
-                muroModal &&
-                !muroModal.hidden
-            ) {
-
-                cerrarModalMuro();
-            }
-        }
-    );
-}
-
-
-/* =========================================================
-   EL MURO
-========================================================= */
-
-async function cargarMuro() {
-
-    try {
-
-        mostrarEstadoMuro(
-            "Cargando publicaciones..."
-        );
-
-        muroPublicaciones =
-            await TECNICOM_API.getMuro(
-                100
-            );
-
-        if (
-            !Array.isArray(
-                muroPublicaciones
-            )
-        ) {
-
-            muroPublicaciones = [];
-        }
-
-        renderMuro();
-
-    } catch (error) {
-
-        console.error(error);
-
-        mostrarEstadoMuro(
-            "No fue posible cargar las publicaciones de El Muro."
-        );
-    }
-}
-
-
-function seleccionarTipoMuro(tipo) {
-
-    const validos = [
-        "todos",
-        "informacion",
-        "reclamo",
-        "necesito",
-        "ofrezco"
-    ];
-
-    muroTipoSeleccionado =
-        validos.includes(tipo)
-            ? tipo
-            : "todos";
-
-    muroPaginaActual =
-        1;
-
-    muroFiltros
-        ?.querySelectorAll(
-            "[data-tipo]"
-        )
-        .forEach(
-            boton => {
-
-                boton.classList.toggle(
-                    "active",
-                    boton.dataset.tipo ===
-                        muroTipoSeleccionado
-                );
-            }
-        );
-
-    renderMuro();
-}
-
-
-function obtenerPublicacionesFiltradas() {
-
-    if (
-        muroTipoSeleccionado ===
-        "todos"
-    ) {
-
-        return muroPublicaciones;
-    }
-
-    return muroPublicaciones.filter(
-        item =>
-            item.tipo ===
-            muroTipoSeleccionado
-    );
-}
-
-
-function renderMuro() {
-
-    if (!muroGrid) {
-        return;
-    }
-
-    muroGrid.innerHTML =
-        "";
-
-    const filtradas =
-        obtenerPublicacionesFiltradas();
-
-    if (
-        !filtradas.length
-    ) {
-
-        mostrarEstadoMuro(
-            muroTipoSeleccionado === "todos"
-                ? "Todavía no hay publicaciones en El Muro."
-                : "No hay publicaciones en esta categoría."
-        );
-
-        renderPaginacionMuro(
-            0
-        );
-
-        return;
-    }
-
-    ocultarEstadoMuro();
-
-    const totalPaginas =
-        Math.ceil(
-            filtradas.length /
-            MURO_POR_PAGINA
-        );
-
-    muroPaginaActual =
-        Math.min(
-            Math.max(
-                muroPaginaActual,
-                1
-            ),
-            totalPaginas
-        );
-
-    const inicio =
-        (
-            muroPaginaActual - 1
-        ) *
-        MURO_POR_PAGINA;
-
-    filtradas
-        .slice(
-            inicio,
-            inicio + MURO_POR_PAGINA
-        )
-        .forEach(
-            publicacion => {
-
-                muroGrid.appendChild(
-                    crearTarjetaMuro(
-                        publicacion
-                    )
-                );
-            }
-        );
-
-    renderPaginacionMuro(
-        totalPaginas
-    );
-}
-
-
-function crearTarjetaMuro(
-    publicacion
-) {
-
-    const articulo =
-        document.createElement(
-            "article"
-        );
-
-    const tipo =
-        publicacion.tipo ||
-        "informacion";
-
-    articulo.className =
-        `muro-card muro-card-${tipo}`;
-
-    articulo.tabIndex =
-        0;
-
-    articulo.setAttribute(
-        "role",
-        "button"
-    );
-
-    const cabecera =
-        document.createElement(
-            "div"
-        );
-
-    cabecera.className =
-        "muro-card-header";
-
-    const etiqueta =
-        document.createElement(
-            "span"
-        );
-
-    etiqueta.className =
-        `muro-tipo muro-tipo-${tipo}`;
-
-    etiqueta.textContent =
-        nombreTipo(
-            tipo
-        );
-
-    const fecha =
-        document.createElement(
-            "time"
-        );
-
-    fecha.className =
-        "muro-fecha";
-
-    fecha.textContent =
-        formatearFechaRelativa(
-            publicacion.fecha_publicacion ||
-            publicacion.fecha_creacion
-        );
-
-    cabecera.append(
-        etiqueta,
-        fecha
-    );
-
-    const titulo =
-        document.createElement(
-            "h3"
-        );
-
-    titulo.textContent =
-        publicacion.titulo ||
-        "";
-
-    const mensaje =
-        document.createElement(
-            "p"
-        );
-
-    mensaje.className =
-        "muro-mensaje";
-
-    mensaje.textContent =
-        publicacion.mensaje ||
-        "";
-
-    const footer =
-        document.createElement(
-            "div"
-        );
-
     footer.className =
         "muro-card-footer";
+
 
     if (
         publicacion.nombre
@@ -511,6 +22,7 @@ function crearTarjetaMuro(
         );
     }
 
+
     if (
         publicacion.contacto
     ) {
@@ -531,73 +43,80 @@ function crearTarjetaMuro(
         );
     }
 
-    const hint =
-        document.createElement(
-            "span"
-        );
-
-    hint.className =
-        "muro-card-hint";
-
-    hint.textContent =
-        "Ver detalle y comentarios";
-
-    footer.appendChild(
-        hint
-    );
 
     articulo.append(
         cabecera,
         titulo,
-        mensaje,
-        footer
+        mensaje
     );
 
-    const abrir =
-        () =>
-            abrirDetalleMuro(
-                publicacion
-            );
+
+    if (
+        footer.children.length
+    ) {
+
+        articulo.appendChild(
+            footer
+        );
+    }
+
 
     articulo.addEventListener(
         "click",
-        abrir
+        () => {
+            abrirDetalleMuro(
+                publicacion.id
+            );
+        }
     );
+
 
     articulo.addEventListener(
         "keydown",
         event => {
 
             if (
-                event.key === "Enter" ||
-                event.key === " "
+                event.key !== "Enter" &&
+                event.key !== " "
             ) {
 
-                event.preventDefault();
-
-                abrir();
+                return;
             }
+
+
+            event.preventDefault();
+
+
+            abrirDetalleMuro(
+                publicacion.id
+            );
         }
     );
+
 
     return articulo;
 }
 
 
 /* =========================================================
-   PAGINACIÓN MURO
+   PAGINACIÓN DEL MURO
 ========================================================= */
 
 function renderPaginacionMuro(
     totalPaginas
 ) {
 
-    if (!muroPaginacion) {
+    if (
+        !muroPaginacion
+    ) {
+
         return;
     }
 
+
     muroPaginacion.innerHTML =
         "";
+
 
     if (
         totalPaginas <= 1
@@ -609,85 +128,203 @@ function renderPaginacionMuro(
         return;
     }
 
+
     muroPaginacion.hidden =
         false;
 
+
     const anterior =
-        crearBotonPagina(
-            "← Anterior",
-            muroPaginaActual === 1,
-            () => {
-
-                muroPaginaActual--;
-
-                renderMuro();
-
-                subirAlMuro();
-            },
-            "muro-pagina-control"
+        document.createElement(
+            "button"
         );
+
+
+    anterior.type =
+        "button";
+
+
+    anterior.className =
+        "muro-pagina-button muro-pagina-anterior";
+
+
+    anterior.textContent =
+        "← Anterior";
+
+
+    anterior.disabled =
+        muroPaginaActual <= 1;
+
+
+    anterior.addEventListener(
+        "click",
+        () => {
+
+            if (
+                muroPaginaActual <= 1
+            ) {
+
+                return;
+            }
+
+
+            muroPaginaActual--;
+
+
+            renderMuro();
+
+
+            desplazarAlMuro();
+        }
+    );
+
 
     muroPaginacion.appendChild(
         anterior
     );
 
-    for (
-        let pagina = 1;
-        pagina <= totalPaginas;
-        pagina++
-    ) {
 
-        const boton =
-            crearBotonPagina(
-                String(pagina),
-                false,
+    const paginas =
+        obtenerPaginasVisiblesMuro(
+            totalPaginas
+        );
+
+
+    paginas.forEach(
+        pagina => {
+
+            if (
+                pagina === "..."
+            ) {
+
+                const puntos =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                puntos.className =
+                    "muro-pagina-puntos";
+
+
+                puntos.textContent =
+                    "...";
+
+
+                muroPaginacion.appendChild(
+                    puntos
+                );
+
+
+                return;
+            }
+
+
+            const boton =
+                document.createElement(
+                    "button"
+                );
+
+
+            boton.type =
+                "button";
+
+
+            boton.className =
+                "muro-pagina-button";
+
+
+            boton.textContent =
+                String(
+                    pagina
+                );
+
+
+            if (
+                pagina ===
+                muroPaginaActual
+            ) {
+
+                boton.classList.add(
+                    "active"
+                );
+
+
+                boton.setAttribute(
+                    "aria-current",
+                    "page"
+                );
+            }
+
+
+            boton.addEventListener(
+                "click",
                 () => {
 
                     muroPaginaActual =
                         pagina;
 
+
                     renderMuro();
 
-                    subirAlMuro();
-                },
-                "muro-pagina-numero"
+
+                    desplazarAlMuro();
+                }
             );
 
-        if (
-            pagina ===
-            muroPaginaActual
-        ) {
 
-            boton.classList.add(
-                "active"
-            );
-
-            boton.setAttribute(
-                "aria-current",
-                "page"
+            muroPaginacion.appendChild(
+                boton
             );
         }
+    );
 
-        muroPaginacion.appendChild(
-            boton
-        );
-    }
 
     const siguiente =
-        crearBotonPagina(
-            "Siguiente →",
-            muroPaginaActual ===
-                totalPaginas,
-            () => {
-
-                muroPaginaActual++;
-
-                renderMuro();
-
-                subirAlMuro();
-            },
-            "muro-pagina-control"
+        document.createElement(
+            "button"
         );
+
+
+    siguiente.type =
+        "button";
+
+
+    siguiente.className =
+        "muro-pagina-button muro-pagina-siguiente";
+
+
+    siguiente.textContent =
+        "Siguiente →";
+
+
+    siguiente.disabled =
+        muroPaginaActual >=
+        totalPaginas;
+
+
+    siguiente.addEventListener(
+        "click",
+        () => {
+
+            if (
+                muroPaginaActual >=
+                totalPaginas
+            ) {
+
+                return;
+            }
+
+
+            muroPaginaActual++;
+
+
+            renderMuro();
+
+
+            desplazarAlMuro();
+        }
+    );
+
 
     muroPaginacion.appendChild(
         siguiente
@@ -695,675 +332,189 @@ function renderPaginacionMuro(
 }
 
 
-function crearBotonPagina(
-    texto,
-    disabled,
-    accion,
-    clase
+/* =========================================================
+   PÁGINAS VISIBLES
+========================================================= */
+
+function obtenerPaginasVisiblesMuro(
+    totalPaginas
 ) {
 
-    const boton =
-        document.createElement(
-            "button"
-        );
+    if (
+        totalPaginas <= 7
+    ) {
 
-    boton.type =
-        "button";
-
-    boton.className =
-        clase;
-
-    boton.textContent =
-        texto;
-
-    boton.disabled =
-        disabled;
-
-    boton.addEventListener(
-        "click",
-        () => {
-
-            if (
-                !boton.disabled
-            ) {
-
-                accion();
-            }
-        }
-    );
-
-    return boton;
-}
-
-
-function subirAlMuro() {
-
-    $("muro")
-        ?.scrollIntoView(
+        return Array.from(
             {
-                behavior:
-                    "smooth",
-
-                block:
-                    "start"
-            }
+                length:
+                    totalPaginas
+            },
+            (
+                _,
+                indice
+            ) =>
+                indice + 1
         );
+    }
+
+
+    const paginas =
+        [];
+
+
+    paginas.push(
+        1
+    );
+
+
+    if (
+        muroPaginaActual > 4
+    ) {
+
+        paginas.push(
+            "..."
+        );
+    }
+
+
+    const inicio =
+        Math.max(
+            2,
+            muroPaginaActual - 1
+        );
+
+
+    const fin =
+        Math.min(
+            totalPaginas - 1,
+            muroPaginaActual + 1
+        );
+
+
+    for (
+        let pagina = inicio;
+        pagina <= fin;
+        pagina++
+    ) {
+
+        paginas.push(
+            pagina
+        );
+    }
+
+
+    if (
+        muroPaginaActual <
+        totalPaginas - 3
+    ) {
+
+        paginas.push(
+            "..."
+        );
+    }
+
+
+    paginas.push(
+        totalPaginas
+    );
+
+
+    return paginas;
 }
 
 
 /* =========================================================
-   DETALLE ANUNCIO
+   DESPLAZAR HACIA EL MURO
 ========================================================= */
 
-async function abrirDetalleMuro(
-    publicacion
-) {
+function desplazarAlMuro() {
+
+    const seccion =
+        document.querySelector(
+            ".muro-section"
+        );
+
 
     if (
-        !muroDetalleModal
+        !seccion
     ) {
 
         return;
     }
 
-    const tipo =
-        publicacion.tipo ||
-        "informacion";
 
-    muroDetalleTipo.className =
-        `muro-tipo muro-tipo-${tipo}`;
-
-    muroDetalleTipo.textContent =
-        nombreTipo(
-            tipo
-        );
-
-    muroDetalleFecha.textContent =
-        formatearFechaRelativa(
-            publicacion.fecha_publicacion ||
-            publicacion.fecha_creacion
-        );
-
-    muroDetalleAnuncioTitulo.textContent =
-        publicacion.titulo ||
-        "";
-
-    muroDetalleMensaje.textContent =
-        publicacion.mensaje ||
-        "";
-
-    muroDetalleAutorWrap.hidden =
-        !publicacion.nombre;
-
-    muroDetalleAutor.textContent =
-        publicacion.nombre ||
-        "";
-
-    muroDetalleContactoWrap.hidden =
-        !publicacion.contacto;
-
-    muroDetalleContacto.textContent =
-        publicacion.contacto ||
-        "";
-
-    muroComentarioPublicacionId.value =
-        String(
-            publicacion.id ||
-            ""
-        );
-
-    muroComentarioForm
-        ?.reset();
-
-    actualizarContadorComentario();
-
-    limpiarEstadoComentario();
-
-    muroDetalleModal.hidden =
-        false;
-
-    actualizarBloqueoBody();
-
-    await cargarComentariosMuro(
-        publicacion.id
-    );
-}
+    const posicion =
+        seccion.getBoundingClientRect().top +
+        window.scrollY -
+        20;
 
 
-function cerrarDetalleMuro() {
+    window.scrollTo({
+        top:
+            posicion,
 
-    if (
-        !muroDetalleModal ||
-        muroComentarioEnviando
-    ) {
-
-        return;
-    }
-
-    muroDetalleModal.hidden =
-        true;
-
-    actualizarBloqueoBody();
+        behavior:
+            "smooth"
+    });
 }
 
 
 /* =========================================================
-   COMENTARIOS
+   ESTADO DEL MURO
 ========================================================= */
-
-async function cargarComentariosMuro(
-    publicacionId
-) {
-
-    muroComentariosLista.innerHTML =
-        "";
-
-    muroComentariosCantidad.textContent =
-        "";
-
-    if (
-        !publicacionId
-    ) {
-
-        muroComentariosStatus.textContent =
-            "No fue posible identificar la publicación.";
-
-        return;
-    }
-
-    muroComentariosStatus.textContent =
-        "Cargando comentarios...";
-
-    try {
-
-        const respuesta =
-            await TECNICOM_API.request(
-                `muro/${encodeURIComponent(publicacionId)}/comentarios`
-            );
-
-        const comentarios =
-            Array.isArray(
-                respuesta?.data
-            )
-                ? respuesta.data
-                : [];
-
-        muroComentariosCantidad.textContent =
-            `${comentarios.length} comentario${
-                comentarios.length === 1
-                    ? ""
-                    : "s"
-            }`;
-
-        muroComentariosStatus.textContent =
-            comentarios.length
-                ? ""
-                : "Todavía no hay comentarios.";
-
-        comentarios.forEach(
-            comentario => {
-
-                muroComentariosLista.appendChild(
-                    crearComentarioMuro(
-                        comentario
-                    )
-                );
-            }
-        );
-
-    } catch (error) {
-
-        console.warn(
-            error
-        );
-
-        muroComentariosStatus.textContent =
-            "Los comentarios aún deben habilitarse en la API.";
-    }
-}
-
-
-function crearComentarioMuro(
-    comentario
-) {
-
-    const articulo =
-        document.createElement(
-            "article"
-        );
-
-    articulo.className =
-        "muro-comentario";
-
-    const header =
-        document.createElement(
-            "div"
-        );
-
-    header.className =
-        "muro-comentario-header";
-
-    const nombre =
-        document.createElement(
-            "strong"
-        );
-
-    nombre.textContent =
-        comentario.nombre ||
-        "Usuario";
-
-    const fecha =
-        document.createElement(
-            "time"
-        );
-
-    fecha.textContent =
-        formatearFechaRelativa(
-            comentario.fecha_publicacion ||
-            comentario.fecha_creacion
-        );
-
-    const texto =
-        document.createElement(
-            "p"
-        );
-
-    texto.textContent =
-        comentario.comentario ||
-        comentario.mensaje ||
-        "";
-
-    header.append(
-        nombre,
-        fecha
-    );
-
-    articulo.append(
-        header,
-        texto
-    );
-
-    return articulo;
-}
-
-
-async function enviarComentarioMuro(
-    event
-) {
-
-    event.preventDefault();
-
-    if (
-        muroComentarioEnviando
-    ) {
-
-        return;
-    }
-
-    if (
-        !muroComentarioForm.checkValidity()
-    ) {
-
-        muroComentarioForm.reportValidity();
-
-        return;
-    }
-
-    const publicacionId =
-        muroComentarioPublicacionId.value.trim();
-
-    const datos = {
-
-        nombre:
-            muroComentarioNombre.value.trim(),
-
-        comentario:
-            muroComentarioTexto.value.trim()
-    };
-
-    try {
-
-        muroComentarioEnviando =
-            true;
-
-        muroComentarioEnviar.disabled =
-            true;
-
-        muroComentarioEnviar.textContent =
-            "Enviando...";
-
-        mostrarEstadoComentario(
-            "Enviando comentario...",
-            "cargando"
-        );
-
-        const respuesta =
-            await TECNICOM_API.request(
-                `muro/${encodeURIComponent(publicacionId)}/comentarios`,
-                {
-                    method:
-                        "POST",
-
-                    body:
-                        datos
-                }
-            );
-
-        mostrarEstadoComentario(
-            respuesta?.data?.mensaje ||
-            "Comentario recibido.",
-            "exito"
-        );
-
-        muroComentarioForm.reset();
-
-        actualizarContadorComentario();
-
-        await cargarComentariosMuro(
-            publicacionId
-        );
-
-    } catch (error) {
-
-        mostrarEstadoComentario(
-            error.message ||
-            "Los comentarios todavía no están habilitados en la API.",
-            "error"
-        );
-
-    } finally {
-
-        muroComentarioEnviando =
-            false;
-
-        muroComentarioEnviar.disabled =
-            false;
-
-        muroComentarioEnviar.textContent =
-            "Publicar comentario";
-    }
-}
-
-
-function actualizarContadorComentario() {
-
-    muroComentarioContador.textContent =
-        `${
-            muroComentarioTexto
-                ?.value.length ||
-            0
-        } / 300`;
-}
-
-
-function mostrarEstadoComentario(
-    mensaje,
-    tipo
-) {
-
-    muroComentarioStatus.hidden =
-        false;
-
-    muroComentarioStatus.className =
-        `muro-form-status ${tipo || ""}`;
-
-    muroComentarioStatus.textContent =
-        mensaje;
-}
-
-
-function limpiarEstadoComentario() {
-
-    muroComentarioStatus.hidden =
-        true;
-
-    muroComentarioStatus.className =
-        "muro-form-status";
-
-    muroComentarioStatus.textContent =
-        "";
-}
-
-
-/* =========================================================
-   PUBLICAR EN EL MURO
-========================================================= */
-
-function abrirModalMuro() {
-
-    muroModal.hidden =
-        false;
-
-    actualizarBloqueoBody();
-
-    limpiarEstadoFormularioMuro();
-
-    actualizarContadorTitulo();
-
-    actualizarContadorMensaje();
-
-    actualizarAvisoReclamo();
-}
-
-
-function cerrarModalMuro() {
-
-    if (
-        muroEnviando
-    ) {
-
-        return;
-    }
-
-    muroModal.hidden =
-        true;
-
-    actualizarBloqueoBody();
-}
-
-
-function actualizarBloqueoBody() {
-
-    const abierto =
-        (
-            muroModal &&
-            !muroModal.hidden
-        )
-        ||
-        (
-            muroDetalleModal &&
-            !muroDetalleModal.hidden
-        );
-
-    document.body.classList.toggle(
-        "muro-modal-abierto",
-        Boolean(
-            abierto
-        )
-    );
-}
-
-
-function actualizarContadorTitulo() {
-
-    muroTituloContador.textContent =
-        `${
-            muroTitulo
-                ?.value.length ||
-            0
-        } / 120`;
-}
-
-
-function actualizarContadorMensaje() {
-
-    muroMensajeContador.textContent =
-        `${
-            muroMensaje
-                ?.value.length ||
-            0
-        } / 500`;
-}
-
-
-function actualizarAvisoReclamo() {
-
-    muroReclamoAviso.hidden =
-        muroTipo.value !==
-        "reclamo";
-}
-
-
-async function enviarPublicacionMuro(
-    event
-) {
-
-    event.preventDefault();
-
-    if (
-        muroEnviando
-    ) {
-
-        return;
-    }
-
-    if (
-        !muroForm.checkValidity()
-    ) {
-
-        muroForm.reportValidity();
-
-        return;
-    }
-
-    const datos = {
-
-        tipo:
-            muroTipo.value.trim(),
-
-        titulo:
-            muroTitulo.value.trim(),
-
-        mensaje:
-            muroMensaje.value.trim(),
-
-        nombre:
-            muroNombre.value.trim(),
-
-        contacto:
-            muroContacto.value.trim()
-    };
-
-    try {
-
-        muroEnviando =
-            true;
-
-        muroEnviarButton.disabled =
-            true;
-
-        muroEnviarButton.textContent =
-            "Enviando...";
-
-        mostrarEstadoFormularioMuro(
-            "Enviando publicación...",
-            "cargando"
-        );
-
-        const respuesta =
-            await TECNICOM_API.publicarMuro(
-                datos
-            );
-
-        mostrarEstadoFormularioMuro(
-            respuesta?.data?.mensaje ||
-            "Tu publicación fue recibida y será revisada.",
-            "exito"
-        );
-
-        muroForm.reset();
-
-        actualizarContadorTitulo();
-
-        actualizarContadorMensaje();
-
-        actualizarAvisoReclamo();
-
-    } catch (error) {
-
-        mostrarEstadoFormularioMuro(
-            error.message ||
-            "No fue posible enviar la publicación.",
-            "error"
-        );
-
-    } finally {
-
-        muroEnviando =
-            false;
-
-        muroEnviarButton.disabled =
-            false;
-
-        muroEnviarButton.textContent =
-            "Enviar publicación";
-    }
-}
-
-
-function mostrarEstadoFormularioMuro(
-    mensaje,
-    tipo
-) {
-
-    muroFormStatus.hidden =
-        false;
-
-    muroFormStatus.className =
-        `muro-form-status ${tipo || ""}`;
-
-    muroFormStatus.textContent =
-        mensaje;
-}
-
-
-function limpiarEstadoFormularioMuro() {
-
-    muroFormStatus.hidden =
-        true;
-
-    muroFormStatus.className =
-        "muro-form-status";
-
-    muroFormStatus.textContent =
-        "";
-}
-
 
 function mostrarEstadoMuro(
-    texto
+    mensaje
 ) {
+
+    if (
+        !muroStatus
+    ) {
+
+        return;
+    }
+
+
+    muroStatus.textContent =
+        mensaje;
+
 
     muroStatus.hidden =
         false;
 
-    muroStatus.textContent =
-        texto;
+
+    if (
+        muroGrid
+    ) {
+
+        muroGrid.innerHTML =
+            "";
+    }
 }
 
 
 function ocultarEstadoMuro() {
 
-    muroStatus.hidden =
-        true;
+    if (
+        muroStatus
+    ) {
+
+        muroStatus.hidden =
+            true;
+    }
 }
 
+
+/* =========================================================
+   NOMBRE DEL TIPO
+========================================================= */
 
 function nombreTipo(
     tipo
 ) {
 
-    return {
+    const nombres = {
+
         informacion:
             "Información",
 
@@ -1376,12 +527,1364 @@ function nombreTipo(
         ofrezco:
             "Ofrezco"
 
-    }[tipo]
-    ||
-    "Información";
+    };
+
+
+    return nombres[tipo] ||
+        "Información";
 }
 
 
+/* =========================================================
+   MODAL DETALLE DEL MURO
+========================================================= */
+
+async function abrirDetalleMuro(
+    publicacionId
+) {
+
+    if (
+        !muroDetalleModal
+    ) {
+
+        return;
+    }
+
+
+    publicacionId =
+        Number.parseInt(
+            publicacionId,
+            10
+        );
+
+
+    if (
+        !Number.isFinite(
+            publicacionId
+        ) ||
+        publicacionId < 1
+    ) {
+
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | BUSCAR PRIMERO EN LAS PUBLICACIONES YA CARGADAS
+    |--------------------------------------------------------------------------
+    */
+
+    let publicacion =
+        muroPublicaciones.find(
+            item =>
+                Number(
+                    item.id
+                ) ===
+                publicacionId
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SI NO ESTÁ EN MEMORIA, CONSULTAR API
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        !publicacion
+    ) {
+
+        try {
+
+            publicacion =
+                await TECNICOM_API
+                    .getMuroPublicacion(
+                        publicacionId
+                    );
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            return;
+        }
+    }
+
+
+    if (
+        !publicacion
+    ) {
+
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TIPO
+    |--------------------------------------------------------------------------
+    */
+
+    const tipo =
+        publicacion.tipo ||
+        "informacion";
+
+
+    if (
+        muroDetalleTipo
+    ) {
+
+        muroDetalleTipo.className =
+            `muro-tipo muro-tipo-${tipo}`;
+
+
+        muroDetalleTipo.textContent =
+            nombreTipo(
+                tipo
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FECHA
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        muroDetalleFecha
+    ) {
+
+        muroDetalleFecha.textContent =
+            formatearFechaCompleta(
+                publicacion.fecha_publicacion ||
+                publicacion.fecha_creacion
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TÍTULO
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        muroDetalleAnuncioTitulo
+    ) {
+
+        muroDetalleAnuncioTitulo.textContent =
+            publicacion.titulo ||
+            "";
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MENSAJE
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        muroDetalleMensaje
+    ) {
+
+        muroDetalleMensaje.textContent =
+            publicacion.mensaje ||
+            "";
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | AUTOR
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        muroDetalleAutorWrap
+    ) {
+
+        if (
+            publicacion.nombre
+        ) {
+
+            muroDetalleAutorWrap.hidden =
+                false;
+
+
+            if (
+                muroDetalleAutor
+            ) {
+
+                muroDetalleAutor.textContent =
+                    publicacion.nombre;
+            }
+
+        } else {
+
+            muroDetalleAutorWrap.hidden =
+                true;
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONTACTO
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        muroDetalleContactoWrap
+    ) {
+
+        if (
+            publicacion.contacto
+        ) {
+
+            muroDetalleContactoWrap.hidden =
+                false;
+
+
+            if (
+                muroDetalleContacto
+            ) {
+
+                muroDetalleContacto.textContent =
+                    publicacion.contacto;
+            }
+
+        } else {
+
+            muroDetalleContactoWrap.hidden =
+                true;
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PREPARAR FORMULARIO DE COMENTARIO
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        muroComentarioPublicacionId
+    ) {
+
+        muroComentarioPublicacionId.value =
+            String(
+                publicacionId
+            );
+    }
+
+
+    if (
+        muroComentarioForm
+    ) {
+
+        muroComentarioForm.reset();
+    }
+
+
+    if (
+        muroComentarioPublicacionId
+    ) {
+
+        muroComentarioPublicacionId.value =
+            String(
+                publicacionId
+            );
+    }
+
+
+    actualizarContadorComentario();
+
+
+    ocultarEstadoComentario();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MOSTRAR MODAL
+    |--------------------------------------------------------------------------
+    */
+
+    muroDetalleModal.hidden =
+        false;
+
+
+    document.body.classList.add(
+        "muro-modal-abierto"
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CARGAR COMENTARIOS
+    |--------------------------------------------------------------------------
+    */
+
+    await cargarComentariosMuro(
+        publicacionId
+    );
+}
+
+
+/* =========================================================
+   CERRAR DETALLE
+========================================================= */
+
+function cerrarDetalleMuro() {
+
+    if (
+        !muroDetalleModal
+    ) {
+
+        return;
+    }
+
+
+    muroDetalleModal.hidden =
+        true;
+
+
+    document.body.classList.remove(
+        "muro-modal-abierto"
+    );
+
+
+    if (
+        muroComentariosLista
+    ) {
+
+        muroComentariosLista.innerHTML =
+            "";
+    }
+
+
+    if (
+        muroComentarioForm
+    ) {
+
+        muroComentarioForm.reset();
+    }
+
+
+    actualizarContadorComentario();
+
+
+    ocultarEstadoComentario();
+}
+
+
+/* =========================================================
+   CARGAR COMENTARIOS
+========================================================= */
+
+async function cargarComentariosMuro(
+    publicacionId
+) {
+
+    if (
+        muroComentariosStatus
+    ) {
+
+        muroComentariosStatus.hidden =
+            false;
+
+
+        muroComentariosStatus.textContent =
+            "Cargando comentarios...";
+    }
+
+
+    if (
+        muroComentariosLista
+    ) {
+
+        muroComentariosLista.innerHTML =
+            "";
+    }
+
+
+    try {
+
+        const comentarios =
+            await TECNICOM_API
+                .getMuroComentarios(
+                    publicacionId
+                );
+
+
+        renderComentariosMuro(
+            comentarios
+        );
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        if (
+            muroComentariosStatus
+        ) {
+
+            muroComentariosStatus.hidden =
+                false;
+
+
+            muroComentariosStatus.textContent =
+                "No fue posible cargar los comentarios.";
+        }
+
+
+        if (
+            muroComentariosCantidad
+        ) {
+
+            muroComentariosCantidad.textContent =
+                "0 comentarios";
+        }
+    }
+}
+
+
+/* =========================================================
+   MOSTRAR COMENTARIOS
+========================================================= */
+
+function renderComentariosMuro(
+    comentarios
+) {
+
+    comentarios =
+        Array.isArray(
+            comentarios
+        )
+            ? comentarios
+            : [];
+
+
+    if (
+        muroComentariosCantidad
+    ) {
+
+        const cantidad =
+            comentarios.length;
+
+
+        muroComentariosCantidad.textContent =
+            cantidad === 1
+                ? "1 comentario"
+                : `${cantidad} comentarios`;
+    }
+
+
+    if (
+        !muroComentariosLista
+    ) {
+
+        return;
+    }
+
+
+    muroComentariosLista.innerHTML =
+        "";
+
+
+    if (
+        !comentarios.length
+    ) {
+
+        if (
+            muroComentariosStatus
+        ) {
+
+            muroComentariosStatus.hidden =
+                false;
+
+
+            muroComentariosStatus.textContent =
+                "Todavía no hay comentarios. Puedes ser el primero en comentar.";
+        }
+
+
+        return;
+    }
+
+
+    if (
+        muroComentariosStatus
+    ) {
+
+        muroComentariosStatus.hidden =
+            true;
+    }
+
+
+    comentarios.forEach(
+        comentario => {
+
+            muroComentariosLista.appendChild(
+                crearComentarioMuro(
+                    comentario
+                )
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   CREAR COMENTARIO
+========================================================= */
+
+function crearComentarioMuro(
+    comentario
+) {
+
+    const articulo =
+        document.createElement(
+            "article"
+        );
+
+
+    articulo.className =
+        "muro-comentario";
+
+
+    const cabecera =
+        document.createElement(
+            "div"
+        );
+
+
+    cabecera.className =
+        "muro-comentario-header";
+
+
+    const nombre =
+        document.createElement(
+            "strong"
+        );
+
+
+    nombre.className =
+        "muro-comentario-nombre";
+
+
+    nombre.textContent =
+        comentario.nombre ||
+        "Anónimo";
+
+
+    const fecha =
+        document.createElement(
+            "time"
+        );
+
+
+    fecha.className =
+        "muro-comentario-fecha";
+
+
+    fecha.textContent =
+        formatearFechaRelativa(
+            comentario.fecha_publicacion ||
+            comentario.fecha_creacion
+        );
+
+
+    cabecera.append(
+        nombre,
+        fecha
+    );
+
+
+    const texto =
+        document.createElement(
+            "p"
+        );
+
+
+    texto.className =
+        "muro-comentario-texto";
+
+
+    texto.textContent =
+        comentario.comentario ||
+        "";
+
+
+    articulo.append(
+        cabecera,
+        texto
+    );
+
+
+    return articulo;
+}
+
+
+/* =========================================================
+   ENVIAR COMENTARIO
+========================================================= */
+
+async function enviarComentarioMuro(
+    event
+) {
+
+    event.preventDefault();
+
+
+    if (
+        muroComentarioEnviando
+    ) {
+
+        return;
+    }
+
+
+    const publicacionId =
+        Number.parseInt(
+            muroComentarioPublicacionId?.value ||
+            "",
+            10
+        );
+
+
+    if (
+        !Number.isFinite(
+            publicacionId
+        ) ||
+        publicacionId < 1
+    ) {
+
+        mostrarEstadoComentario(
+            "No fue posible identificar la publicación.",
+            "error"
+        );
+
+
+        return;
+    }
+
+
+    const nombre =
+        (
+            muroComentarioNombre?.value ||
+            ""
+        ).trim();
+
+
+    const comentario =
+        (
+            muroComentarioTexto?.value ||
+            ""
+        ).trim();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDACIÓN NOMBRE
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        nombre.length < 2 ||
+        nombre.length > 80
+    ) {
+
+        mostrarEstadoComentario(
+            "Escribe un nombre de entre 2 y 80 caracteres.",
+            "error"
+        );
+
+
+        muroComentarioNombre?.focus();
+
+
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDACIÓN COMENTARIO
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        comentario.length < 2 ||
+        comentario.length > 300
+    ) {
+
+        mostrarEstadoComentario(
+            "El comentario debe tener entre 2 y 300 caracteres.",
+            "error"
+        );
+
+
+        muroComentarioTexto?.focus();
+
+
+        return;
+    }
+
+
+    muroComentarioEnviando =
+        true;
+
+
+    if (
+        muroComentarioEnviar
+    ) {
+
+        muroComentarioEnviar.disabled =
+            true;
+
+
+        muroComentarioEnviar.textContent =
+            "Enviando...";
+    }
+
+
+    mostrarEstadoComentario(
+        "Enviando comentario...",
+        "cargando"
+    );
+
+
+    try {
+
+        const resultado =
+            await TECNICOM_API
+                .publicarMuroComentario(
+                    publicacionId,
+                    {
+                        nombre,
+                        comentario
+                    }
+                );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | EL BACKEND DEJA EL COMENTARIO PENDIENTE
+        |--------------------------------------------------------------------------
+        */
+
+        muroComentarioForm?.reset();
+
+
+        if (
+            muroComentarioPublicacionId
+        ) {
+
+            muroComentarioPublicacionId.value =
+                String(
+                    publicacionId
+                );
+        }
+
+
+        actualizarContadorComentario();
+
+
+        mostrarEstadoComentario(
+            resultado?.data?.mensaje ||
+            resultado?.message ||
+            "Tu comentario fue recibido y será revisado antes de aparecer públicamente.",
+            "exito"
+        );
+
+
+        /*
+        | Volvemos a consultar los comentarios publicados.
+        | Como el nuevo queda pendiente, normalmente no
+        | aparecerá hasta ser aprobado.
+        */
+
+        await cargarComentariosMuro(
+            publicacionId
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        mostrarEstadoComentario(
+            error.message ||
+            "No fue posible enviar el comentario.",
+            "error"
+        );
+
+    } finally {
+
+        muroComentarioEnviando =
+            false;
+
+
+        if (
+            muroComentarioEnviar
+        ) {
+
+            muroComentarioEnviar.disabled =
+                false;
+
+
+            muroComentarioEnviar.textContent =
+                "Publicar comentario";
+        }
+    }
+}
+
+
+/* =========================================================
+   CONTADOR COMENTARIO
+========================================================= */
+
+function actualizarContadorComentario() {
+
+    if (
+        !muroComentarioContador
+    ) {
+
+        return;
+    }
+
+
+    const cantidad =
+        muroComentarioTexto?.value.length ||
+        0;
+
+
+    muroComentarioContador.textContent =
+        `${cantidad}/300`;
+}
+
+
+/* =========================================================
+   ESTADO COMENTARIO
+========================================================= */
+
+function mostrarEstadoComentario(
+    mensaje,
+    tipo = ""
+) {
+
+    if (
+        !muroComentarioStatus
+    ) {
+
+        return;
+    }
+
+
+    muroComentarioStatus.hidden =
+        false;
+
+
+    muroComentarioStatus.className =
+        "muro-form-status";
+
+
+    if (
+        tipo
+    ) {
+
+        muroComentarioStatus.classList.add(
+            tipo
+        );
+    }
+
+
+    muroComentarioStatus.textContent =
+        mensaje;
+}
+
+
+function ocultarEstadoComentario() {
+
+    if (
+        !muroComentarioStatus
+    ) {
+
+        return;
+    }
+
+
+    muroComentarioStatus.hidden =
+        true;
+
+
+    muroComentarioStatus.textContent =
+        "";
+
+
+    muroComentarioStatus.className =
+        "muro-form-status";
+}
+
+
+/* =========================================================
+   MODAL PUBLICAR EN EL MURO
+========================================================= */
+
+function abrirModalMuro() {
+
+    if (
+        !muroModal
+    ) {
+
+        return;
+    }
+
+
+    muroForm?.reset();
+
+
+    actualizarContadorTitulo();
+
+    actualizarContadorMensaje();
+
+    actualizarAvisoReclamo();
+
+    ocultarEstadoFormularioMuro();
+
+
+    muroModal.hidden =
+        false;
+
+
+    document.body.classList.add(
+        "muro-modal-abierto"
+    );
+
+
+    window.setTimeout(
+        () => {
+
+            muroTipo?.focus();
+
+        },
+        50
+    );
+}
+
+
+/* =========================================================
+   CERRAR MODAL PUBLICACIÓN
+========================================================= */
+
+function cerrarModalMuro() {
+
+    if (
+        !muroModal
+    ) {
+
+        return;
+    }
+
+
+    if (
+        muroEnviando
+    ) {
+
+        return;
+    }
+
+
+    muroModal.hidden =
+        true;
+
+
+    document.body.classList.remove(
+        "muro-modal-abierto"
+    );
+
+
+    muroForm?.reset();
+
+
+    actualizarContadorTitulo();
+
+    actualizarContadorMensaje();
+
+    actualizarAvisoReclamo();
+
+    ocultarEstadoFormularioMuro();
+}
+
+
+/* =========================================================
+   CONTADORES FORMULARIO
+========================================================= */
+
+function actualizarContadorTitulo() {
+
+    if (
+        !muroTituloContador
+    ) {
+
+        return;
+    }
+
+
+    const cantidad =
+        muroTitulo?.value.length ||
+        0;
+
+
+    muroTituloContador.textContent =
+        `${cantidad}/120`;
+}
+
+
+function actualizarContadorMensaje() {
+
+    if (
+        !muroMensajeContador
+    ) {
+
+        return;
+    }
+
+
+    const cantidad =
+        muroMensaje?.value.length ||
+        0;
+
+
+    muroMensajeContador.textContent =
+        `${cantidad}/500`;
+}
+
+
+/* =========================================================
+   AVISO RECLAMO
+========================================================= */
+
+function actualizarAvisoReclamo() {
+
+    if (
+        !muroReclamoAviso
+    ) {
+
+        return;
+    }
+
+
+    muroReclamoAviso.hidden =
+        muroTipo?.value !==
+        "reclamo";
+}
+
+
+/* =========================================================
+   ENVIAR PUBLICACIÓN
+========================================================= */
+
+async function enviarPublicacionMuro(
+    event
+) {
+
+    event.preventDefault();
+
+
+    if (
+        muroEnviando
+    ) {
+
+        return;
+    }
+
+
+    const tipo =
+        (
+            muroTipo?.value ||
+            ""
+        ).trim();
+
+
+    const titulo =
+        (
+            muroTitulo?.value ||
+            ""
+        ).trim();
+
+
+    const mensaje =
+        (
+            muroMensaje?.value ||
+            ""
+        ).trim();
+
+
+    const nombre =
+        (
+            muroNombre?.value ||
+            ""
+        ).trim();
+
+
+    const contacto =
+        (
+            muroContacto?.value ||
+            ""
+        ).trim();
+
+
+    const tiposPermitidos = [
+        "informacion",
+        "reclamo",
+        "necesito",
+        "ofrezco"
+    ];
+
+
+    if (
+        !tiposPermitidos.includes(
+            tipo
+        )
+    ) {
+
+        mostrarEstadoFormularioMuro(
+            "Selecciona un tipo de publicación válido.",
+            "error"
+        );
+
+
+        return;
+    }
+
+
+    if (
+        titulo.length < 3 ||
+        titulo.length > 120
+    ) {
+
+        mostrarEstadoFormularioMuro(
+            "El título debe tener entre 3 y 120 caracteres.",
+            "error"
+        );
+
+
+        muroTitulo?.focus();
+
+
+        return;
+    }
+
+
+    if (
+        mensaje.length < 5 ||
+        mensaje.length > 500
+    ) {
+
+        mostrarEstadoFormularioMuro(
+            "El mensaje debe tener entre 5 y 500 caracteres.",
+            "error"
+        );
+
+
+        muroMensaje?.focus();
+
+
+        return;
+    }
+
+
+    if (
+        nombre.length > 100
+    ) {
+
+        mostrarEstadoFormularioMuro(
+            "El nombre no puede superar los 100 caracteres.",
+            "error"
+        );
+
+
+        return;
+    }
+
+
+    if (
+        contacto.length > 150
+    ) {
+
+        mostrarEstadoFormularioMuro(
+            "El contacto no puede superar los 150 caracteres.",
+            "error"
+        );
+
+
+        return;
+    }
+
+
+    muroEnviando =
+        true;
+
+
+    if (
+        muroEnviarButton
+    ) {
+
+        muroEnviarButton.disabled =
+            true;
+
+
+        muroEnviarButton.textContent =
+            "Enviando...";
+    }
+
+
+    mostrarEstadoFormularioMuro(
+        "Enviando publicación...",
+        "cargando"
+    );
+
+
+    try {
+
+        const resultado =
+            await TECNICOM_API
+                .publicarMuro({
+                    tipo,
+                    titulo,
+                    mensaje,
+                    nombre,
+                    contacto
+                });
+
+
+        mostrarEstadoFormularioMuro(
+            resultado?.data?.mensaje ||
+            resultado?.message ||
+            "Tu publicación fue recibida y será revisada antes de aparecer en El Muro.",
+            "exito"
+        );
+
+
+        muroForm?.reset();
+
+
+        actualizarContadorTitulo();
+
+        actualizarContadorMensaje();
+
+        actualizarAvisoReclamo();
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        mostrarEstadoFormularioMuro(
+            error.message ||
+            "No fue posible enviar la publicación.",
+            "error"
+        );
+
+
+    } finally {
+
+        muroEnviando =
+            false;
+
+
+        if (
+            muroEnviarButton
+        ) {
+
+            muroEnviarButton.disabled =
+                false;
+
+
+            muroEnviarButton.textContent =
+                "Enviar publicación";
+        }
+    }
+}
+
+
+/* =========================================================
+   ESTADO FORMULARIO MURO
+========================================================= */
+
+function mostrarEstadoFormularioMuro(
+    mensaje,
+    tipo = ""
+) {
+
+    if (
+        !muroFormStatus
+    ) {
+
+        return;
+    }
+
+
+    muroFormStatus.hidden =
+        false;
+
+
+    muroFormStatus.className =
+        "muro-form-status";
+
+
+    if (
+        tipo
+    ) {
+
+        muroFormStatus.classList.add(
+            tipo
+        );
+    }
+
+
+    muroFormStatus.textContent =
+        mensaje;
+}
+
+
+function ocultarEstadoFormularioMuro() {
+
+    if (
+        !muroFormStatus
+    ) {
+
+        return;
+    }
+
+
+    muroFormStatus.hidden =
+        true;
+
+
+    muroFormStatus.textContent =
+        "";
+
+
+    muroFormStatus.className =
+        "muro-form-status";
+}
 /* =========================================================
    MERCADO
 ========================================================= */
@@ -1480,6 +1983,10 @@ function normalizarArray(
     return [];
 }
 
+
+/* =========================================================
+   CATEGORÍAS
+========================================================= */
 
 function renderCategorias() {
 
@@ -1593,6 +2100,10 @@ function crearCategoriaMercado(
 }
 
 
+/* =========================================================
+   FILTRADO
+========================================================= */
+
 function filtrarMercado() {
 
     const busqueda =
@@ -1656,6 +2167,10 @@ function filtrarMercado() {
 }
 
 
+/* =========================================================
+   RENDER MERCADO
+========================================================= */
+
 function renderMercado(
     items
 ) {
@@ -1717,6 +2232,10 @@ function renderMercado(
     );
 }
 
+
+/* =========================================================
+   TARJETA MERCADO
+========================================================= */
 
 function crearTarjetaMercado(
     item
@@ -1885,6 +2404,10 @@ function crearTarjetaMercado(
 }
 
 
+/* =========================================================
+   ABRIR DETALLE
+========================================================= */
+
 async function abrirDetalleMercado(
     slug
 ) {
@@ -1945,6 +2468,10 @@ async function cargarDetalleMercado(
     }
 }
 
+
+/* =========================================================
+   MOSTRAR DETALLE
+========================================================= */
 
 function mostrarDetalleMercado(
     item
@@ -2028,6 +2555,10 @@ function mostrarDetalleMercado(
 }
 
 
+/* =========================================================
+   OCULTAR LISTADO AL VER DETALLE
+========================================================= */
+
 function ocultarSeccionesListado() {
 
     [
@@ -2056,6 +2587,10 @@ function ocultarSeccionesListado() {
     );
 }
 
+
+/* =========================================================
+   VOLVER AL LISTADO
+========================================================= */
 
 function mostrarListadoMercado() {
 
@@ -2311,6 +2846,10 @@ function resolverImagen(
 }
 
 
+/* =========================================================
+   FECHAS
+========================================================= */
+
 function formatearFecha(
     fecha
 ) {
@@ -2468,6 +3007,10 @@ function crearFecha(
 }
 
 
+/* =========================================================
+   SLUG
+========================================================= */
+
 function slugificar(
     texto
 ) {
@@ -2495,6 +3038,10 @@ function slugificar(
     );
 }
 
+
+/* =========================================================
+   ESTADO MERCADO
+========================================================= */
 
 function mostrarEstadoMercado(
     texto

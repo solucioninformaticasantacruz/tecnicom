@@ -1,19 +1,22 @@
 "use strict";
 
-
 const TECNICOM_API = {
 
-    baseUrl: "https://www.carnesdiaz.cl/api",
+    baseUrl:
+        "https://www.carnesdiaz.cl/api",
 
 
     /* =====================================================
-       PETICIÓN GENERAL
+       REQUEST GENERAL
     ====================================================== */
 
-    async request(endpoint, options = {}) {
+    async request(
+        endpoint,
+        options = {}
+    ) {
 
         const url =
-            `${this.baseUrl}/${endpoint.replace(/^\/+/, "")}`;
+            `${this.baseUrl}/${String(endpoint).replace(/^\/+/, "")}`;
 
 
         const config = {
@@ -22,36 +25,47 @@ const TECNICOM_API = {
                 options.method || "GET",
 
             headers: {
-
                 "Accept":
                     "application/json",
 
-                ...options.headers
-            },
-
-            ...options
+                ...(
+                    options.headers ||
+                    {}
+                )
+            }
         };
 
 
-        /* =============================================
-           JSON AUTOMÁTICO
-        ============================================== */
-
         if (
-            config.body &&
-            typeof config.body === "object" &&
-            !(config.body instanceof FormData)
+            options.body !== undefined &&
+            options.body !== null
         ) {
 
-            config.headers[
-                "Content-Type"
-            ] = "application/json";
+            if (
+                options.body instanceof FormData
+            ) {
 
+                config.body =
+                    options.body;
 
-            config.body =
-                JSON.stringify(
-                    config.body
-                );
+            } else if (
+                typeof options.body ===
+                "object"
+            ) {
+
+                config.headers["Content-Type"] =
+                    "application/json";
+
+                config.body =
+                    JSON.stringify(
+                        options.body
+                    );
+
+            } else {
+
+                config.body =
+                    options.body;
+            }
         }
 
 
@@ -64,69 +78,65 @@ const TECNICOM_API = {
                 );
 
 
-            const responseText =
+            const texto =
                 await response.text();
 
 
-            let result;
+            let resultado =
+                null;
 
-
-            try {
-
-                result =
-                    responseText
-                        ? JSON.parse(responseText)
-                        : null;
-
-            } catch (error) {
-
-                console.error(
-                    "La API no devolvió JSON válido:",
-                    responseText
-                );
-
-
-                throw new Error(
-                    "La API devolvió una respuesta inválida."
-                );
-            }
-
-
-            /* =========================================
-               ERROR HTTP
-            ========================================== */
-
-            if (!response.ok) {
-
-                const message =
-                    result?.message ||
-                    `Error HTTP ${response.status}`;
-
-
-                throw new Error(
-                    message
-                );
-            }
-
-
-            /* =========================================
-               ERROR INFORMADO POR API
-            ========================================== */
 
             if (
-                result &&
-                result.success === false
+                texto.trim() !== ""
+            ) {
+
+                try {
+
+                    resultado =
+                        JSON.parse(
+                            texto
+                        );
+
+                } catch (error) {
+
+                    console.error(
+                        "La API no devolvió JSON válido:",
+                        texto
+                    );
+
+
+                    throw new Error(
+                        "La API devolvió una respuesta inválida."
+                    );
+                }
+            }
+
+
+            if (
+                !response.ok
             ) {
 
                 throw new Error(
-                    result.message ||
+                    resultado?.message ||
+                    resultado?.error ||
+                    `Error HTTP ${response.status}`
+                );
+            }
+
+
+            if (
+                resultado &&
+                resultado.success === false
+            ) {
+
+                throw new Error(
+                    resultado.message ||
                     "La API informó un error."
                 );
             }
 
 
-            return result;
-
+            return resultado;
 
         } catch (error) {
 
@@ -142,58 +152,21 @@ const TECNICOM_API = {
 
 
     /* =====================================================
-       CONTENIDOS / MODALES
+       CONTENIDOS
     ====================================================== */
 
-    async getContenido(clave) {
+    async getContenido(
+        clave
+    ) {
 
-        if (!clave) {
-
-            throw new Error(
-                "No se indicó la clave del contenido."
-            );
-        }
-
-
-        const result =
+        const resultado =
             await this.request(
                 `contenidos/${encodeURIComponent(clave)}`
             );
 
 
-        if (!result?.data) {
-
-            throw new Error(
-                "No se encontró información para este contenido."
-            );
-        }
-
-
-        return result.data;
-    },
-
-
-    async getContenidos() {
-
-        const result =
-            await this.request(
-                "contenidos"
-            );
-
-
-        return result?.data || [];
-    },
-
-
-    async getContenidosPorTipo(tipo) {
-
-        const result =
-            await this.request(
-                `contenidos/tipo/${encodeURIComponent(tipo)}`
-            );
-
-
-        return result?.data || [];
+        return resultado?.data ||
+            null;
     },
 
 
@@ -201,27 +174,29 @@ const TECNICOM_API = {
        SERVICIOS
     ====================================================== */
 
-    async getServicios() {
-
-        const result =
+    async getServicios()
+    {
+        const resultado =
             await this.request(
                 "servicios"
             );
 
-
-        return result?.data || [];
+        return resultado?.data ||
+            [];
     },
 
 
-    async getServicio(slug) {
+    async getServicio(
+        slug
+    ) {
 
-        const result =
+        const resultado =
             await this.request(
                 `servicios/${encodeURIComponent(slug)}`
             );
 
-
-        return result?.data || null;
+        return resultado?.data ||
+            null;
     },
 
 
@@ -229,27 +204,29 @@ const TECNICOM_API = {
        NOTICIAS
     ====================================================== */
 
-    async getNoticias() {
-
-        const result =
+    async getNoticias()
+    {
+        const resultado =
             await this.request(
                 "noticias"
             );
 
-
-        return result?.data || [];
+        return resultado?.data ||
+            [];
     },
 
 
-    async getNoticia(slug) {
+    async getNoticia(
+        slug
+    ) {
 
-        const result =
+        const resultado =
             await this.request(
                 `noticias/${encodeURIComponent(slug)}`
             );
 
-
-        return result?.data || null;
+        return resultado?.data ||
+            null;
     },
 
 
@@ -257,51 +234,53 @@ const TECNICOM_API = {
        MERCADO SANTA CRUZ
     ====================================================== */
 
-    async getMercado() {
-
-        const result =
+    async getMercado()
+    {
+        const resultado =
             await this.request(
                 "mercado"
             );
 
-
-        return result?.data || [];
+        return resultado?.data ||
+            [];
     },
 
 
-    async getMercadoItem(slug) {
+    async getMercadoItem(
+        slug
+    ) {
 
-        const result =
+        const resultado =
             await this.request(
                 `mercado/${encodeURIComponent(slug)}`
             );
 
-
-        return result?.data || null;
+        return resultado?.data ||
+            null;
     },
 
 
-    async getCategoriasMercado() {
-
-        const result =
+    async getCategoriasMercado()
+    {
+        const resultado =
             await this.request(
                 "mercado/categorias"
             );
 
-
-        return result?.data || [];
+        return resultado?.data ||
+            [];
     },
 
 
-    async getEventosMercado() {
-
-        const result =
+    async getEventosMercado()
+    {
+        const resultado =
             await this.request(
                 "mercado/eventos"
             );
 
-
-        return result?.data || [];
+        return resultado?.data ||
+            [];
     },
 
 
@@ -309,75 +288,211 @@ const TECNICOM_API = {
        EL MURO
     ====================================================== */
 
-    async getMuro(limit = 50) {
-
-        const limite =
-            Math.min(
-                Math.max(
-                    Number(limit) || 50,
-                    1
-                ),
-                100
-            );
-
-
-        const result =
-            await this.request(
-                `muro?limit=${limite}`
-            );
-
-
-        return result?.data || [];
-    },
-
-
-    async getMuroPorTipo(
-        tipo,
-        limit = 50
+    async getMuro(
+        limit = 100
     ) {
 
-        if (!tipo) {
-
-            throw new Error(
-                "No se indicó el tipo de publicación."
+        limit =
+            Number.parseInt(
+                limit,
+                10
             );
+
+
+        if (
+            !Number.isFinite(limit) ||
+            limit < 1
+        ) {
+
+            limit =
+                100;
         }
 
 
-        const limite =
+        limit =
             Math.min(
-                Math.max(
-                    Number(limit) || 50,
-                    1
-                ),
+                limit,
                 100
             );
 
 
-        const result =
+        const resultado =
             await this.request(
-                `muro/tipo/${encodeURIComponent(tipo)}?limit=${limite}`
+                `muro?page=1&limit=${limit}`
             );
 
 
-        return result?.data || [];
+        /*
+        |--------------------------------------------------------------------------
+        | IMPORTANTE
+        |--------------------------------------------------------------------------
+        |
+        | MuroController devuelve:
+        |
+        | data: {
+        |     publicaciones: [...],
+        |     paginacion: {...}
+        | }
+        |
+        | mercado-santa-cruz.js necesita recibir solamente el array.
+        |
+        */
+
+
+        if (
+            Array.isArray(
+                resultado?.data?.publicaciones
+            )
+        ) {
+
+            return resultado.data.publicaciones;
+        }
+
+
+        /*
+        | Compatibilidad por si en algún momento
+        | la API retorna directamente un array.
+        */
+
+        if (
+            Array.isArray(
+                resultado?.data
+            )
+        ) {
+
+            return resultado.data;
+        }
+
+
+        return [];
     },
 
 
-    async publicarMuro(datos) {
+    async getMuroPagina(
+        pagina = 1,
+        limit = 6,
+        tipo = ""
+    ) {
 
-        if (!datos) {
-
-            throw new Error(
-                "No se entregaron los datos de la publicación."
+        pagina =
+            Math.max(
+                1,
+                Number.parseInt(
+                    pagina,
+                    10
+                ) || 1
             );
+
+
+        limit =
+            Math.min(
+                100,
+                Math.max(
+                    1,
+                    Number.parseInt(
+                        limit,
+                        10
+                    ) || 6
+                )
+            );
+
+
+        let endpoint;
+
+
+        if (
+            tipo &&
+            tipo !== "todos"
+        ) {
+
+            endpoint =
+                `muro/tipo/${encodeURIComponent(tipo)}?page=${pagina}&limit=${limit}`;
+
+        } else {
+
+            endpoint =
+                `muro?page=${pagina}&limit=${limit}`;
         }
 
+
+        const resultado =
+            await this.request(
+                endpoint
+            );
+
+
+        return resultado?.data || {
+            publicaciones: [],
+            paginacion: {
+                pagina_actual: pagina,
+                por_pagina: limit,
+                total_registros: 0,
+                total_paginas: 0,
+                tiene_anterior: false,
+                tiene_siguiente: false
+            }
+        };
+    },
+
+
+    async getMuroPublicacion(
+        id
+    ) {
+
+        const resultado =
+            await this.request(
+                `muro/${encodeURIComponent(id)}`
+            );
+
+
+        return resultado?.data ||
+            null;
+    },
+
+
+    async publicarMuro(
+        datos
+    ) {
 
         return await this.request(
             "muro",
             {
+                method:
+                    "POST",
 
+                body:
+                    datos
+            }
+        );
+    },
+
+
+    async getMuroComentarios(
+        publicacionId
+    ) {
+
+        const resultado =
+            await this.request(
+                `muro/${encodeURIComponent(publicacionId)}/comentarios`
+            );
+
+
+        return Array.isArray(
+            resultado?.data
+        )
+            ? resultado.data
+            : [];
+    },
+
+
+    async publicarMuroComentario(
+        publicacionId,
+        datos
+    ) {
+
+        return await this.request(
+            `muro/${encodeURIComponent(publicacionId)}/comentarios`,
+            {
                 method:
                     "POST",
 
@@ -392,12 +507,13 @@ const TECNICOM_API = {
        CONTACTO
     ====================================================== */
 
-    async enviarContacto(datos) {
+    async enviarContacto(
+        datos
+    ) {
 
         return await this.request(
             "contacto",
             {
-
                 method:
                     "POST",
 

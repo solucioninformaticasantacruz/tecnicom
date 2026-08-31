@@ -2,6 +2,7 @@
 <html lang="es">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -13,7 +14,7 @@
 
     <meta
         name="description"
-        content="Mercado Santa Cruz: descubre comercios, empresas, servicios, emprendimientos y actividades de Santa Cruz, Región de O'Higgins."
+        content="Mercado Santa Cruz: comercios, empresas, servicios, emprendimientos, avisos y actividades de Santa Cruz, Región de O'Higgins."
     >
 
     <meta
@@ -46,6 +47,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700;900&display=swap"
         rel="stylesheet"
     >
+
 </head>
 
 
@@ -140,15 +142,15 @@
 
 
     <!-- =================================================
-         PORTADA
+         PRESENTACIÓN
     ================================================== -->
 
-    <div class="market-hero">
+    <div class="market-masthead">
 
-        <div class="container market-hero-content">
+        <div class="container market-masthead-content">
 
             <p class="market-kicker">
-                COMERCIO LOCAL
+                COMUNIDAD · COMERCIO · SERVICIOS
             </p>
 
             <h1>
@@ -156,35 +158,10 @@
             </h1>
 
             <p class="market-hero-description">
-                Descubre empresas, comercios, servicios,
-                emprendimientos y actividades de Santa Cruz.
+                Un espacio local para encontrar comercios,
+                servicios, empresas, información y oportunidades
+                en Santa Cruz.
             </p>
-
-
-            <div class="market-search">
-
-                <label
-                    for="marketSearch"
-                    class="sr-only"
-                >
-                    Buscar en Mercado Santa Cruz
-                </label>
-
-                <input
-                    id="marketSearch"
-                    type="search"
-                    placeholder="Buscar comercio, servicio o empresa..."
-                    autocomplete="off"
-                >
-
-                <button
-                    id="marketSearchButton"
-                    type="button"
-                >
-                    Buscar
-                </button>
-
-            </div>
 
         </div>
 
@@ -193,324 +170,858 @@
 </header>
 
 
-<!-- =====================================================
-     CONTENIDO
-====================================================== -->
 
 <main>
 
 
-    <!-- =================================================
-         CATEGORÍAS
-    ================================================== -->
+<!-- =====================================================
+     EL MURO
+====================================================== -->
 
-    <section class="market-categories-section">
+<section
+    id="muro"
+    class="muro-section"
+>
 
-        <div class="container">
+    <div class="container">
 
-            <div class="market-section-heading">
 
-                <div>
+        <!-- =============================================
+             CABECERA
+        ============================================== -->
 
-                    <p class="market-section-label">
-                        EXPLORAR
-                    </p>
+        <div class="muro-heading">
 
-                    <h2>
-                        Categorías
-                    </h2>
+            <div class="muro-heading-text">
 
-                </div>
+                <p class="muro-kicker">
+                    DIARIO MURAL DIGITAL
+                </p>
 
-                <p>
-                    Encuentra negocios y servicios
-                    disponibles en Santa Cruz.
+                <h2>
+                    El Muro
+                </h2>
+
+                <p class="muro-description">
+                    Un espacio para compartir mensajes breves
+                    de la comunidad de Santa Cruz.
+                    Publica lo que necesitas, lo que ofreces,
+                    información útil o un reclamo.
                 </p>
 
             </div>
 
 
-            <div
-                id="marketCategories"
-                class="market-categories"
-            >
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =================================================
-         DESTACADOS
-    ================================================== -->
-
-    <section class="market-featured-section">
-
-        <div class="container">
-
-            <div class="market-section-heading">
-
-                <div>
-
-                    <p class="market-section-label">
-                        MERCADO LOCAL
-                    </p>
-
-                    <h2>
-                        Destacados
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="marketStatus"
-                class="market-status"
-                role="status"
-            >
-                Cargando información...
-            </div>
-
-
-            <div
-                id="marketFeatured"
-                class="market-featured-grid"
-            >
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =================================================
-         NEGOCIOS
-    ================================================== -->
-
-    <section class="market-business-section">
-
-        <div class="container">
-
-            <div class="market-section-heading">
-
-                <div>
-
-                    <p class="market-section-label">
-                        SANTA CRUZ
-                    </p>
-
-                    <h2>
-                        Comercios y servicios
-                    </h2>
-
-                </div>
-
-                <div
-                    id="marketResultsCount"
-                    class="market-results-count"
-                >
-                </div>
-
-            </div>
-
-
-            <div
-                id="marketGrid"
-                class="market-grid"
-                aria-live="polite"
-            >
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =================================================
-         EVENTOS
-    ================================================== -->
-
-    <section
-        id="marketEventsSection"
-        class="market-events-section"
-    >
-
-        <div class="container">
-
-            <div class="market-section-heading">
-
-                <div>
-
-                    <p class="market-section-label">
-                        AGENDA LOCAL
-                    </p>
-
-                    <h2>
-                        Eventos y actividades
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="marketEvents"
-                class="market-events"
-            >
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =================================================
-         VISTA DETALLE
-    ================================================== -->
-
-    <article
-        id="marketDetailView"
-        class="market-detail-view"
-        hidden
-    >
-
-        <div class="market-detail-container">
-
             <button
-                id="marketBackButton"
-                class="market-back-button"
+                id="muroPublicarButton"
+                class="muro-publicar-button"
                 type="button"
             >
-                ← Volver a Mercado Santa Cruz
+                + Publicar en El Muro
+            </button>
+
+        </div>
+
+
+
+        <!-- =============================================
+             TIPOS DE PUBLICACIÓN
+        ============================================== -->
+
+        <div
+            id="muroFiltros"
+            class="muro-filtros"
+            aria-label="Filtrar publicaciones del muro"
+        >
+
+            <button
+                type="button"
+                class="muro-filtro active"
+                data-tipo="todos"
+            >
+                Todos
             </button>
 
 
-            <div class="market-detail-layout">
+            <button
+                type="button"
+                class="muro-filtro"
+                data-tipo="necesito"
+            >
+                Necesito
+            </button>
 
 
-                <!-- =====================================
-                     IMAGEN
-                ====================================== -->
+            <button
+                type="button"
+                class="muro-filtro"
+                data-tipo="ofrezco"
+            >
+                Ofrezco
+            </button>
 
-                <div
-                    id="marketDetailImageWrap"
-                    class="market-detail-image"
+
+            <button
+                type="button"
+                class="muro-filtro"
+                data-tipo="informacion"
+            >
+                Información
+            </button>
+
+
+            <button
+                type="button"
+                class="muro-filtro"
+                data-tipo="reclamo"
+            >
+                Reclamos
+            </button>
+
+        </div>
+
+
+
+        <!-- =============================================
+             ESTADO
+        ============================================== -->
+
+        <div
+            id="muroStatus"
+            class="muro-status"
+            role="status"
+        >
+            Cargando publicaciones...
+        </div>
+
+
+
+        <!-- =============================================
+             PUBLICACIONES
+        ============================================== -->
+
+        <div
+            id="muroGrid"
+            class="muro-grid"
+            aria-live="polite"
+        >
+        </div>
+
+
+
+        <!-- =============================================
+             VER MÁS
+        ============================================== -->
+
+        <div class="muro-more">
+
+            <button
+                id="muroVerMasButton"
+                class="muro-ver-mas"
+                type="button"
+                hidden
+            >
+                Ver más publicaciones
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     BUSCADOR MERCADO
+====================================================== -->
+
+<section class="market-search-section">
+
+    <div class="container">
+
+
+        <div class="market-search-heading">
+
+            <p class="market-section-label">
+                DIRECTORIO LOCAL
+            </p>
+
+            <h2>
+                ¿Qué estás buscando?
+            </h2>
+
+            <p>
+                Encuentra comercios, empresas y servicios
+                disponibles en Santa Cruz.
+            </p>
+
+        </div>
+
+
+        <div class="market-search">
+
+            <label
+                for="marketSearch"
+                class="sr-only"
+            >
+                Buscar comercio, servicio o empresa
+            </label>
+
+
+            <input
+                id="marketSearch"
+                type="search"
+                placeholder="Buscar comercio, servicio o empresa..."
+                autocomplete="off"
+            >
+
+
+            <button
+                id="marketSearchButton"
+                type="button"
+            >
+                Buscar
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CATEGORÍAS
+====================================================== -->
+
+<section class="market-categories-section">
+
+    <div class="container">
+
+        <div class="market-section-heading">
+
+            <div>
+
+                <p class="market-section-label">
+                    EXPLORAR
+                </p>
+
+                <h2>
+                    Categorías
+                </h2>
+
+            </div>
+
+
+            <p>
+                Explora empresas, negocios y servicios
+                disponibles en la comuna.
+            </p>
+
+        </div>
+
+
+        <div
+            id="marketCategories"
+            class="market-categories"
+        >
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     DESTACADOS
+====================================================== -->
+
+<section class="market-featured-section">
+
+    <div class="container">
+
+        <div class="market-section-heading">
+
+            <div>
+
+                <p class="market-section-label">
+                    MERCADO LOCAL
+                </p>
+
+                <h2>
+                    Destacados
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="marketStatus"
+            class="market-status"
+            role="status"
+        >
+            Cargando información...
+        </div>
+
+
+        <div
+            id="marketFeatured"
+            class="market-featured-grid"
+        >
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     COMERCIOS Y SERVICIOS
+====================================================== -->
+
+<section class="market-business-section">
+
+    <div class="container">
+
+        <div class="market-section-heading">
+
+            <div>
+
+                <p class="market-section-label">
+                    SANTA CRUZ
+                </p>
+
+                <h2>
+                    Comercios y servicios
+                </h2>
+
+            </div>
+
+
+            <div
+                id="marketResultsCount"
+                class="market-results-count"
+            >
+            </div>
+
+        </div>
+
+
+        <div
+            id="marketGrid"
+            class="market-grid"
+            aria-live="polite"
+        >
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     EVENTOS
+====================================================== -->
+
+<section
+    id="marketEventsSection"
+    class="market-events-section"
+>
+
+    <div class="container">
+
+        <div class="market-section-heading">
+
+            <div>
+
+                <p class="market-section-label">
+                    AGENDA LOCAL
+                </p>
+
+                <h2>
+                    Eventos y actividades
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="marketEvents"
+            class="market-events"
+        >
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     DETALLE COMERCIO
+====================================================== -->
+
+<article
+    id="marketDetailView"
+    class="market-detail-view"
+    hidden
+>
+
+    <div class="market-detail-container">
+
+        <button
+            id="marketBackButton"
+            class="market-back-button"
+            type="button"
+        >
+            ← Volver a Mercado Santa Cruz
+        </button>
+
+
+        <div class="market-detail-layout">
+
+
+            <!-- IMAGEN -->
+
+            <div
+                id="marketDetailImageWrap"
+                class="market-detail-image"
+            >
+
+                <img
+                    id="marketDetailImage"
+                    src=""
+                    alt=""
                 >
 
-                    <img
-                        id="marketDetailImage"
-                        src=""
-                        alt=""
+            </div>
+
+
+
+            <!-- INFORMACIÓN -->
+
+            <div class="market-detail-information">
+
+                <p
+                    id="marketDetailCategory"
+                    class="market-detail-category"
+                >
+                </p>
+
+
+                <h1
+                    id="marketDetailTitle"
+                >
+                </h1>
+
+
+                <p
+                    id="marketDetailSummary"
+                    class="market-detail-summary"
+                >
+                </p>
+
+
+
+                <div class="market-detail-data">
+
+
+                    <div
+                        id="marketDetailAddressRow"
+                        class="market-detail-row"
                     >
+
+                        <strong>
+                            Dirección
+                        </strong>
+
+                        <span
+                            id="marketDetailAddress"
+                        >
+                        </span>
+
+                    </div>
+
+
+
+                    <div
+                        id="marketDetailPhoneRow"
+                        class="market-detail-row"
+                    >
+
+                        <strong>
+                            Teléfono
+                        </strong>
+
+                        <span
+                            id="marketDetailPhone"
+                        >
+                        </span>
+
+                    </div>
+
+
+
+                    <div
+                        id="marketDetailScheduleRow"
+                        class="market-detail-row"
+                    >
+
+                        <strong>
+                            Horario
+                        </strong>
+
+                        <span
+                            id="marketDetailSchedule"
+                        >
+                        </span>
+
+                    </div>
 
                 </div>
 
 
-                <!-- =====================================
-                     INFORMACIÓN
-                ====================================== -->
 
-                <div class="market-detail-information">
-
-                    <p
-                        id="marketDetailCategory"
-                        class="market-detail-category"
-                    >
-                    </p>
-
-
-                    <h1
-                        id="marketDetailTitle"
-                    >
-                    </h1>
-
-
-                    <p
-                        id="marketDetailSummary"
-                        class="market-detail-summary"
-                    >
-                    </p>
-
-
-                    <div class="market-detail-data">
-
-                        <div
-                            id="marketDetailAddressRow"
-                            class="market-detail-row"
-                        >
-
-                            <strong>
-                                Dirección
-                            </strong>
-
-                            <span
-                                id="marketDetailAddress"
-                            >
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            id="marketDetailPhoneRow"
-                            class="market-detail-row"
-                        >
-
-                            <strong>
-                                Teléfono
-                            </strong>
-
-                            <span
-                                id="marketDetailPhone"
-                            >
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            id="marketDetailScheduleRow"
-                            class="market-detail-row"
-                        >
-
-                            <strong>
-                                Horario
-                            </strong>
-
-                            <span
-                                id="marketDetailSchedule"
-                            >
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        id="marketDetailContent"
-                        class="market-detail-content"
-                    >
-                    </div>
-
+                <div
+                    id="marketDetailContent"
+                    class="market-detail-content"
+                >
                 </div>
 
             </div>
 
         </div>
 
-    </article>
+    </div>
+
+</article>
+
 
 
 </main>
+
+
+
+<!-- =====================================================
+     MODAL PUBLICAR EN EL MURO
+====================================================== -->
+
+<div
+    id="muroModal"
+    class="muro-modal"
+    hidden
+>
+
+
+    <!-- Fondo oscuro -->
+
+    <div
+        id="muroModalOverlay"
+        class="muro-modal-overlay"
+    >
+    </div>
+
+
+
+    <!-- Ventana -->
+
+    <div
+        class="muro-modal-box"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="muroModalTitle"
+    >
+
+
+        <!-- =============================================
+             CABECERA MODAL
+        ============================================== -->
+
+        <div class="muro-modal-header">
+
+            <div>
+
+                <p class="muro-modal-kicker">
+                    MERCADO SANTA CRUZ
+                </p>
+
+                <h2 id="muroModalTitle">
+                    Publicar en El Muro
+                </h2>
+
+            </div>
+
+
+            <button
+                id="muroModalClose"
+                class="muro-modal-close"
+                type="button"
+                aria-label="Cerrar"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <!-- =============================================
+             EXPLICACIÓN
+        ============================================== -->
+
+        <p class="muro-modal-description">
+            Comparte un mensaje corto y claro con la comunidad.
+            Las publicaciones son revisadas antes de aparecer
+            públicamente.
+        </p>
+
+
+
+        <!-- =============================================
+             FORMULARIO
+        ============================================== -->
+
+        <form
+            id="muroForm"
+            class="muro-form"
+        >
+
+
+            <!-- TIPO -->
+
+            <div class="muro-form-group">
+
+                <label for="muroTipo">
+                    ¿Qué quieres publicar?
+                </label>
+
+
+                <select
+                    id="muroTipo"
+                    name="tipo"
+                    required
+                >
+
+                    <option value="">
+                        Seleccionar
+                    </option>
+
+                    <option value="necesito">
+                        Necesito
+                    </option>
+
+                    <option value="ofrezco">
+                        Ofrezco
+                    </option>
+
+                    <option value="informacion">
+                        Información
+                    </option>
+
+                    <option value="reclamo">
+                        Reclamo
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- AVISO RECLAMO -->
+
+            <div
+                id="muroReclamoAviso"
+                class="muro-reclamo-aviso"
+                hidden
+            >
+
+                <strong>
+                    Publicaciones responsables
+                </strong>
+
+                <p>
+                    Describe hechos concretos y evita insultos,
+                    amenazas, información privada o acusaciones
+                    que no puedas respaldar.
+                </p>
+
+            </div>
+
+
+
+            <!-- TÍTULO -->
+
+            <div class="muro-form-group">
+
+                <div class="muro-label-row">
+
+                    <label for="muroTitulo">
+                        Título
+                    </label>
+
+                    <span id="muroTituloContador">
+                        0 / 120
+                    </span>
+
+                </div>
+
+
+                <input
+                    id="muroTitulo"
+                    name="titulo"
+                    type="text"
+                    minlength="3"
+                    maxlength="120"
+                    placeholder="Ej: Busco maestro para reparación"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- MENSAJE -->
+
+            <div class="muro-form-group">
+
+                <div class="muro-label-row">
+
+                    <label for="muroMensaje">
+                        Mensaje
+                    </label>
+
+                    <span id="muroMensajeContador">
+                        0 / 500
+                    </span>
+
+                </div>
+
+
+                <textarea
+                    id="muroMensaje"
+                    name="mensaje"
+                    minlength="5"
+                    maxlength="500"
+                    rows="5"
+                    placeholder="Escribe un mensaje breve y preciso..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+
+            <!-- NOMBRE -->
+
+            <div class="muro-form-group">
+
+                <label for="muroNombre">
+                    Nombre
+                    <span>
+                        opcional
+                    </span>
+                </label>
+
+
+                <input
+                    id="muroNombre"
+                    name="nombre"
+                    type="text"
+                    maxlength="100"
+                    placeholder="Tu nombre o nombre del negocio"
+                >
+
+            </div>
+
+
+
+            <!-- CONTACTO -->
+
+            <div class="muro-form-group">
+
+                <label for="muroContacto">
+                    Contacto
+                    <span>
+                        opcional
+                    </span>
+                </label>
+
+
+                <input
+                    id="muroContacto"
+                    name="contacto"
+                    type="text"
+                    maxlength="150"
+                    placeholder="Teléfono, correo u otra forma de contacto"
+                >
+
+            </div>
+
+
+
+            <!-- INFORMACIÓN -->
+
+            <div class="muro-form-notice">
+
+                <p>
+                    Tu publicación no aparecerá inmediatamente.
+                    Será revisada antes de ser publicada.
+                </p>
+
+            </div>
+
+
+
+            <!-- RESULTADO -->
+
+            <div
+                id="muroFormStatus"
+                class="muro-form-status"
+                role="status"
+                hidden
+            >
+            </div>
+
+
+
+            <!-- BOTONES -->
+
+            <div class="muro-form-actions">
+
+                <button
+                    id="muroCancelarButton"
+                    type="button"
+                    class="muro-button-secondary"
+                >
+                    Cancelar
+                </button>
+
+
+                <button
+                    id="muroEnviarButton"
+                    type="submit"
+                    class="muro-button-primary"
+                >
+                    Enviar publicación
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 
 
 
@@ -529,9 +1040,9 @@
             </strong>
 
             <p>
-                Un espacio de TECNICOM para
-                visibilizar el comercio y los
-                servicios locales.
+                Un espacio para conectar
+                la comunidad, el comercio
+                y los servicios locales.
             </p>
 
         </div>
@@ -560,7 +1071,9 @@
 ====================================================== -->
 
 <script src="api.js"></script>
+
 <script src="mercado-santa-cruz.js"></script>
+
 
 </body>
 

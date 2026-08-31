@@ -27,10 +27,20 @@
         href="https://solucioninformaticasantacruz.github.io/tecnicom/mercado-santa-cruz.html"
     >
 
+
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
+
     <link
         rel="stylesheet"
         href="mercado-santa-cruz.css"
     >
+
+
+    <!-- =====================================================
+         FUENTES
+    ====================================================== -->
 
     <link
         rel="preconnect"
@@ -44,7 +54,7 @@
     >
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700;900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700;900&display=swap"
         rel="stylesheet"
     >
 
@@ -54,26 +64,40 @@
 <body class="market-body">
 
 
-<!-- =====================================================
+<!-- =========================================================
      HEADER
-====================================================== -->
+========================================================= -->
 
 <header class="market-header">
+
+
+    <!-- =====================================================
+         BARRA SUPERIOR
+    ====================================================== -->
 
     <div class="market-topbar">
 
         <div class="container market-topbar-inner">
 
+
+            <!-- LOGO -->
+
             <a
                 class="market-logo"
                 href="index.html"
+                aria-label="TECNICOM - Inicio"
             >
+
                 <img
                     src="img/logo.svg"
                     alt="TECNICOM"
                 >
+
             </a>
 
+
+
+            <!-- BOTÓN MENÚ MÓVIL -->
 
             <button
                 id="marketMenuButton"
@@ -81,10 +105,14 @@
                 type="button"
                 aria-label="Abrir menú"
                 aria-expanded="false"
+                aria-controls="marketNav"
             >
                 ☰
             </button>
 
+
+
+            <!-- NAVEGACIÓN -->
 
             <nav
                 id="marketNav"
@@ -120,8 +148,9 @@
                 </a>
 
                 <a
-                    class="active"
                     href="mercado-santa-cruz.html"
+                    class="active"
+                    aria-current="page"
                 >
                     Mercado Santa Cruz
                 </a>
@@ -141,13 +170,14 @@
     </div>
 
 
-    <!-- =================================================
-         PRESENTACIÓN
-    ================================================== -->
 
-    <div class="market-masthead">
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
 
-        <div class="container market-masthead-content">
+    <section class="market-hero">
+
+        <div class="container market-hero-content">
 
             <p class="market-kicker">
                 COMUNIDAD · COMERCIO · SERVICIOS
@@ -159,24 +189,28 @@
 
             <p class="market-hero-description">
                 Un espacio local para encontrar comercios,
-                servicios, empresas, información y oportunidades
-                en Santa Cruz.
+                servicios, empresas, información, oportunidades
+                y avisos de la comunidad de Santa Cruz.
             </p>
 
         </div>
 
-    </div>
+    </section>
 
 </header>
 
 
 
+<!-- =========================================================
+     CONTENIDO PRINCIPAL
+========================================================= -->
+
 <main>
 
 
-<!-- =====================================================
+<!-- =========================================================
      EL MURO
-====================================================== -->
+========================================================= -->
 
 <section
     id="muro"
@@ -186,9 +220,9 @@
     <div class="container">
 
 
-        <!-- =============================================
-             CABECERA
-        ============================================== -->
+        <!-- =================================================
+             CABECERA EL MURO
+        ================================================== -->
 
         <div class="muro-heading">
 
@@ -203,10 +237,10 @@
                 </h2>
 
                 <p class="muro-description">
-                    Un espacio para compartir mensajes breves
-                    de la comunidad de Santa Cruz.
-                    Publica lo que necesitas, lo que ofreces,
-                    información útil o un reclamo.
+                    Un espacio para compartir mensajes breves de
+                    la comunidad de Santa Cruz. Publica lo que
+                    necesitas, lo que ofreces, información útil
+                    o un reclamo.
                 </p>
 
             </div>
@@ -224,9 +258,9 @@
 
 
 
-        <!-- =============================================
-             TIPOS DE PUBLICACIÓN
-        ============================================== -->
+        <!-- =================================================
+             FILTROS
+        ================================================== -->
 
         <div
             id="muroFiltros"
@@ -282,9 +316,9 @@
 
 
 
-        <!-- =============================================
-             ESTADO
-        ============================================== -->
+        <!-- =================================================
+             ESTADO DE CARGA
+        ================================================== -->
 
         <div
             id="muroStatus"
@@ -296,9 +330,9 @@
 
 
 
-        <!-- =============================================
+        <!-- =================================================
              PUBLICACIONES
-        ============================================== -->
+        ================================================== -->
 
         <div
             id="muroGrid"
@@ -309,9 +343,9 @@
 
 
 
-        <!-- =============================================
+        <!-- =================================================
              VER MÁS
-        ============================================== -->
+        ================================================== -->
 
         <div class="muro-more">
 
@@ -326,37 +360,45 @@
 
         </div>
 
+
     </div>
 
 </section>
 
 
 
-<!-- =====================================================
-     BUSCADOR MERCADO
-====================================================== -->
+<!-- =========================================================
+     BUSCADOR DE COMERCIOS Y SERVICIOS
+========================================================= -->
 
 <section class="market-search-section">
 
     <div class="container">
 
 
-        <div class="market-search-heading">
+        <div class="market-section-heading">
 
-            <p class="market-section-label">
-                DIRECTORIO LOCAL
-            </p>
+            <div>
 
-            <h2>
-                ¿Qué estás buscando?
-            </h2>
+                <p class="market-section-label">
+                    DIRECTORIO LOCAL
+                </p>
+
+                <h2>
+                    ¿Qué estás buscando?
+                </h2>
+
+            </div>
+
 
             <p>
-                Encuentra comercios, empresas y servicios
-                disponibles en Santa Cruz.
+                Encuentra comercios, empresas,
+                profesionales y servicios disponibles
+                en Santa Cruz.
             </p>
 
         </div>
+
 
 
         <div class="market-search">
@@ -386,19 +428,21 @@
 
         </div>
 
+
     </div>
 
 </section>
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      CATEGORÍAS
-====================================================== -->
+========================================================= -->
 
 <section class="market-categories-section">
 
     <div class="container">
+
 
         <div class="market-section-heading">
 
@@ -416,18 +460,22 @@
 
 
             <p>
-                Explora empresas, negocios y servicios
+                Explora empresas, negocios,
+                profesionales y servicios
                 disponibles en la comuna.
             </p>
 
         </div>
 
 
+
         <div
             id="marketCategories"
             class="market-categories"
+            aria-live="polite"
         >
         </div>
+
 
     </div>
 
@@ -435,13 +483,14 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      DESTACADOS
-====================================================== -->
+========================================================= -->
 
 <section class="market-featured-section">
 
     <div class="container">
+
 
         <div class="market-section-heading">
 
@@ -457,7 +506,14 @@
 
             </div>
 
+
+            <p>
+                Empresas, negocios y servicios
+                destacados dentro de Mercado Santa Cruz.
+            </p>
+
         </div>
+
 
 
         <div
@@ -469,11 +525,13 @@
         </div>
 
 
+
         <div
             id="marketFeatured"
             class="market-featured-grid"
         >
         </div>
+
 
     </div>
 
@@ -481,20 +539,21 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      COMERCIOS Y SERVICIOS
-====================================================== -->
+========================================================= -->
 
 <section class="market-business-section">
 
     <div class="container">
+
 
         <div class="market-section-heading">
 
             <div>
 
                 <p class="market-section-label">
-                    SANTA CRUZ
+                    DIRECTORIO SANTA CRUZ
                 </p>
 
                 <h2>
@@ -507,10 +566,12 @@
             <div
                 id="marketResultsCount"
                 class="market-results-count"
+                aria-live="polite"
             >
             </div>
 
         </div>
+
 
 
         <div
@@ -520,15 +581,16 @@
         >
         </div>
 
+
     </div>
 
 </section>
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      EVENTOS
-====================================================== -->
+========================================================= -->
 
 <section
     id="marketEventsSection"
@@ -536,6 +598,7 @@
 >
 
     <div class="container">
+
 
         <div class="market-section-heading">
 
@@ -551,7 +614,14 @@
 
             </div>
 
+
+            <p>
+                Actividades, eventos e información
+                relevante para la comunidad local.
+            </p>
+
         </div>
+
 
 
         <div
@@ -560,15 +630,16 @@
         >
         </div>
 
+
     </div>
 
 </section>
 
 
 
-<!-- =====================================================
-     DETALLE COMERCIO
-====================================================== -->
+<!-- =========================================================
+     DETALLE COMERCIO / SERVICIO
+========================================================= -->
 
 <article
     id="marketDetailView"
@@ -577,6 +648,9 @@
 >
 
     <div class="market-detail-container">
+
+
+        <!-- VOLVER -->
 
         <button
             id="marketBackButton"
@@ -587,10 +661,13 @@
         </button>
 
 
+
         <div class="market-detail-layout">
 
 
-            <!-- IMAGEN -->
+            <!-- =================================================
+                 IMAGEN
+            ================================================== -->
 
             <div
                 id="marketDetailImageWrap"
@@ -607,9 +684,12 @@
 
 
 
-            <!-- INFORMACIÓN -->
+            <!-- =================================================
+                 INFORMACIÓN
+            ================================================== -->
 
             <div class="market-detail-information">
+
 
                 <p
                     id="marketDetailCategory"
@@ -618,9 +698,7 @@
                 </p>
 
 
-                <h1
-                    id="marketDetailTitle"
-                >
+                <h1 id="marketDetailTitle">
                 </h1>
 
 
@@ -632,8 +710,12 @@
 
 
 
+                <!-- DATOS -->
+
                 <div class="market-detail-data">
 
+
+                    <!-- DIRECCIÓN -->
 
                     <div
                         id="marketDetailAddressRow"
@@ -644,14 +726,14 @@
                             Dirección
                         </strong>
 
-                        <span
-                            id="marketDetailAddress"
-                        >
+                        <span id="marketDetailAddress">
                         </span>
 
                     </div>
 
 
+
+                    <!-- TELÉFONO -->
 
                     <div
                         id="marketDetailPhoneRow"
@@ -662,14 +744,14 @@
                             Teléfono
                         </strong>
 
-                        <span
-                            id="marketDetailPhone"
-                        >
+                        <span id="marketDetailPhone">
                         </span>
 
                     </div>
 
 
+
+                    <!-- HORARIO -->
 
                     <div
                         id="marketDetailScheduleRow"
@@ -680,22 +762,24 @@
                             Horario
                         </strong>
 
-                        <span
-                            id="marketDetailSchedule"
-                        >
+                        <span id="marketDetailSchedule">
                         </span>
 
                     </div>
 
+
                 </div>
 
 
+
+                <!-- CONTENIDO -->
 
                 <div
                     id="marketDetailContent"
                     class="market-detail-content"
                 >
                 </div>
+
 
             </div>
 
@@ -706,14 +790,13 @@
 </article>
 
 
-
 </main>
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      MODAL PUBLICAR EN EL MURO
-====================================================== -->
+========================================================= -->
 
 <div
     id="muroModal"
@@ -722,7 +805,9 @@
 >
 
 
-    <!-- Fondo oscuro -->
+    <!-- =====================================================
+         OVERLAY
+    ====================================================== -->
 
     <div
         id="muroModalOverlay"
@@ -732,7 +817,9 @@
 
 
 
-    <!-- Ventana -->
+    <!-- =====================================================
+         VENTANA
+    ====================================================== -->
 
     <div
         class="muro-modal-box"
@@ -742,11 +829,12 @@
     >
 
 
-        <!-- =============================================
-             CABECERA MODAL
-        ============================================== -->
+        <!-- =================================================
+             CABECERA
+        ================================================== -->
 
         <div class="muro-modal-header">
+
 
             <div>
 
@@ -761,22 +849,24 @@
             </div>
 
 
+
             <button
                 id="muroModalClose"
                 class="muro-modal-close"
                 type="button"
-                aria-label="Cerrar"
+                aria-label="Cerrar formulario"
             >
                 ×
             </button>
+
 
         </div>
 
 
 
-        <!-- =============================================
-             EXPLICACIÓN
-        ============================================== -->
+        <!-- =================================================
+             DESCRIPCIÓN
+        ================================================== -->
 
         <p class="muro-modal-description">
             Comparte un mensaje corto y claro con la comunidad.
@@ -786,9 +876,9 @@
 
 
 
-        <!-- =============================================
+        <!-- =================================================
              FORMULARIO
-        ============================================== -->
+        ================================================== -->
 
         <form
             id="muroForm"
@@ -796,7 +886,9 @@
         >
 
 
-            <!-- TIPO -->
+            <!-- =================================================
+                 TIPO
+            ================================================== -->
 
             <div class="muro-form-group">
 
@@ -812,7 +904,7 @@
                 >
 
                     <option value="">
-                        Seleccionar
+                        Seleccionar tipo
                     </option>
 
                     <option value="necesito">
@@ -837,7 +929,9 @@
 
 
 
-            <!-- AVISO RECLAMO -->
+            <!-- =================================================
+                 AVISO PARA RECLAMOS
+            ================================================== -->
 
             <div
                 id="muroReclamoAviso"
@@ -851,17 +945,20 @@
 
                 <p>
                     Describe hechos concretos y evita insultos,
-                    amenazas, información privada o acusaciones
-                    que no puedas respaldar.
+                    amenazas, información privada de terceros
+                    o acusaciones que no puedas respaldar.
                 </p>
 
             </div>
 
 
 
-            <!-- TÍTULO -->
+            <!-- =================================================
+                 TÍTULO
+            ================================================== -->
 
             <div class="muro-form-group">
+
 
                 <div class="muro-label-row">
 
@@ -890,9 +987,12 @@
 
 
 
-            <!-- MENSAJE -->
+            <!-- =================================================
+                 MENSAJE
+            ================================================== -->
 
             <div class="muro-form-group">
+
 
                 <div class="muro-label-row">
 
@@ -917,19 +1017,25 @@
                     required
                 ></textarea>
 
+
             </div>
 
 
 
-            <!-- NOMBRE -->
+            <!-- =================================================
+                 NOMBRE
+            ================================================== -->
 
             <div class="muro-form-group">
 
                 <label for="muroNombre">
+
                     Nombre
+
                     <span>
                         opcional
                     </span>
+
                 </label>
 
 
@@ -945,15 +1051,20 @@
 
 
 
-            <!-- CONTACTO -->
+            <!-- =================================================
+                 CONTACTO
+            ================================================== -->
 
             <div class="muro-form-group">
 
                 <label for="muroContacto">
+
                     Contacto
+
                     <span>
                         opcional
                     </span>
+
                 </label>
 
 
@@ -969,34 +1080,43 @@
 
 
 
-            <!-- INFORMACIÓN -->
+            <!-- =================================================
+                 INFORMACIÓN DE MODERACIÓN
+            ================================================== -->
 
             <div class="muro-form-notice">
 
                 <p>
                     Tu publicación no aparecerá inmediatamente.
-                    Será revisada antes de ser publicada.
+                    Será revisada antes de quedar visible
+                    públicamente en El Muro.
                 </p>
 
             </div>
 
 
 
-            <!-- RESULTADO -->
+            <!-- =================================================
+                 ESTADO FORMULARIO
+            ================================================== -->
 
             <div
                 id="muroFormStatus"
                 class="muro-form-status"
                 role="status"
+                aria-live="polite"
                 hidden
             >
             </div>
 
 
 
-            <!-- BOTONES -->
+            <!-- =================================================
+                 BOTONES
+            ================================================== -->
 
             <div class="muro-form-actions">
+
 
                 <button
                     id="muroCancelarButton"
@@ -1015,9 +1135,12 @@
                     Enviar publicación
                 </button>
 
+
             </div>
 
+
         </form>
+
 
     </div>
 
@@ -1025,13 +1148,14 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      FOOTER
-====================================================== -->
+========================================================= -->
 
 <footer class="market-footer">
 
     <div class="container market-footer-inner">
+
 
         <div>
 
@@ -1040,12 +1164,12 @@
             </strong>
 
             <p>
-                Un espacio para conectar
-                la comunidad, el comercio
-                y los servicios locales.
+                Un espacio para conectar la comunidad,
+                el comercio y los servicios locales.
             </p>
 
         </div>
+
 
 
         <div class="market-footer-links">
@@ -1058,7 +1182,12 @@
                 Noticias
             </a>
 
+            <a href="#muro">
+                El Muro
+            </a>
+
         </div>
+
 
     </div>
 
@@ -1066,9 +1195,9 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      JAVASCRIPT
-====================================================== -->
+========================================================= -->
 
 <script src="api.js"></script>
 

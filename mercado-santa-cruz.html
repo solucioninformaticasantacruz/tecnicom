@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mercado Santa Cruz | TECNICOM</title>
+
+    <meta
+        name="description"
+        content="Mercado Santa Cruz: descubre comercios, empresas, servicios, emprendimientos y actividades de Santa Cruz, Región de O'Higgins."
+    >
+
+    <meta
+        name="robots"
+        content="index,follow"
+    >
+
+    <link
+        rel="canonical"
+        href="https://solucioninformaticasantacruz.github.io/tecnicom/mercado-santa-cruz.html"
+    >
+
+    <link
+        rel="stylesheet"
+        href="mercado-santa-cruz.css"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700;900&display=swap"
+        rel="stylesheet"
+    >
+</head>
+
+
+<body class="market-body">
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header class="market-header">
+
+    <div class="market-topbar">
+
+        <div class="container market-topbar-inner">
+
+            <a
+                class="market-logo"
+                href="index.html"
+            >
+                <img
+                    src="img/logo.svg"
+                    alt="TECNICOM"
+                >
+            </a>
+
+
+            <button
+                id="marketMenuButton"
+                class="market-menu-button"
+                type="button"
+                aria-label="Abrir menú"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+
+            <nav
+                id="marketNav"
+                class="market-nav"
+            >
+
+                <a href="index.html">
+                    Inicio
+                </a>
+
+                <a href="index.html#soluciones">
+                    Soluciones
+                </a>
+
+                <a href="index.html#pos">
+                    Sistemas POS
+                </a>
+
+                <a href="index.html#desarrollo">
+                    Desarrollo
+                </a>
+
+                <a href="index.html#soporte">
+                    Soporte TI
+                </a>
+
+                <a href="index.html#tecnologias">
+                    Tecnologías
+                </a>
+
+                <a href="noticias.html">
+                    Noticias
+                </a>
+
+                <a
+                    class="active"
+                    href="mercado-santa-cruz.html"
+                >
+                    Mercado Santa Cruz
+                </a>
+
+                <a href="index.html#nosotros">
+                    Nosotros
+                </a>
+
+                <a href="index.html#contacto">
+                    Contacto
+                </a>
+
+            </nav>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         PORTADA
+    ================================================== -->
+
+    <div class="market-hero">
+
+        <div class="container market-hero-content">
+
+            <p class="market-kicker">
+                COMERCIO LOCAL
+            </p>
+
+            <h1>
+                Mercado Santa Cruz
+            </h1>
+
+            <p class="market-hero-description">
+                Descubre empresas, comercios, servicios,
+                emprendimientos y actividades de Santa Cruz.
+            </p>
+
+
+            <div class="market-search">
+
+                <label
+                    for="marketSearch"
+                    class="sr-only"
+                >
+                    Buscar en Mercado Santa Cruz
+                </label>
+
+                <input
+                    id="marketSearch"
+                    type="search"
+                    placeholder="Buscar comercio, servicio o empresa..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="marketSearchButton"
+                    type="button"
+                >
+                    Buscar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     CONTENIDO
+====================================================== -->
+
+<main>
+
+
+    <!-- =================================================
+         CATEGORÍAS
+    ================================================== -->
+
+    <section class="market-categories-section">
+
+        <div class="container">
+
+            <div class="market-section-heading">
+
+                <div>
+
+                    <p class="market-section-label">
+                        EXPLORAR
+                    </p>
+
+                    <h2>
+                        Categorías
+                    </h2>
+
+                </div>
+
+                <p>
+                    Encuentra negocios y servicios
+                    disponibles en Santa Cruz.
+                </p>
+
+            </div>
+
+
+            <div
+                id="marketCategories"
+                class="market-categories"
+            >
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         DESTACADOS
+    ================================================== -->
+
+    <section class="market-featured-section">
+
+        <div class="container">
+
+            <div class="market-section-heading">
+
+                <div>
+
+                    <p class="market-section-label">
+                        MERCADO LOCAL
+                    </p>
+
+                    <h2>
+                        Destacados
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="marketStatus"
+                class="market-status"
+                role="status"
+            >
+                Cargando información...
+            </div>
+
+
+            <div
+                id="marketFeatured"
+                class="market-featured-grid"
+            >
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         NEGOCIOS
+    ================================================== -->
+
+    <section class="market-business-section">
+
+        <div class="container">
+
+            <div class="market-section-heading">
+
+                <div>
+
+                    <p class="market-section-label">
+                        SANTA CRUZ
+                    </p>
+
+                    <h2>
+                        Comercios y servicios
+                    </h2>
+
+                </div>
+
+                <div
+                    id="marketResultsCount"
+                    class="market-results-count"
+                >
+                </div>
+
+            </div>
+
+
+            <div
+                id="marketGrid"
+                class="market-grid"
+                aria-live="polite"
+            >
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         EVENTOS
+    ================================================== -->
+
+    <section
+        id="marketEventsSection"
+        class="market-events-section"
+    >
+
+        <div class="container">
+
+            <div class="market-section-heading">
+
+                <div>
+
+                    <p class="market-section-label">
+                        AGENDA LOCAL
+                    </p>
+
+                    <h2>
+                        Eventos y actividades
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="marketEvents"
+                class="market-events"
+            >
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         VISTA DETALLE
+    ================================================== -->
+
+    <article
+        id="marketDetailView"
+        class="market-detail-view"
+        hidden
+    >
+
+        <div class="market-detail-container">
+
+            <button
+                id="marketBackButton"
+                class="market-back-button"
+                type="button"
+            >
+                ← Volver a Mercado Santa Cruz
+            </button>
+
+
+            <div class="market-detail-layout">
+
+
+                <!-- =====================================
+                     IMAGEN
+                ====================================== -->
+
+                <div
+                    id="marketDetailImageWrap"
+                    class="market-detail-image"
+                >
+
+                    <img
+                        id="marketDetailImage"
+                        src=""
+                        alt=""
+                    >
+
+                </div>
+
+
+                <!-- =====================================
+                     INFORMACIÓN
+                ====================================== -->
+
+                <div class="market-detail-information">
+
+                    <p
+                        id="marketDetailCategory"
+                        class="market-detail-category"
+                    >
+                    </p>
+
+
+                    <h1
+                        id="marketDetailTitle"
+                    >
+                    </h1>
+
+
+                    <p
+                        id="marketDetailSummary"
+                        class="market-detail-summary"
+                    >
+                    </p>
+
+
+                    <div class="market-detail-data">
+
+                        <div
+                            id="marketDetailAddressRow"
+                            class="market-detail-row"
+                        >
+
+                            <strong>
+                                Dirección
+                            </strong>
+
+                            <span
+                                id="marketDetailAddress"
+                            >
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            id="marketDetailPhoneRow"
+                            class="market-detail-row"
+                        >
+
+                            <strong>
+                                Teléfono
+                            </strong>
+
+                            <span
+                                id="marketDetailPhone"
+                            >
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            id="marketDetailScheduleRow"
+                            class="market-detail-row"
+                        >
+
+                            <strong>
+                                Horario
+                            </strong>
+
+                            <span
+                                id="marketDetailSchedule"
+                            >
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="marketDetailContent"
+                        class="market-detail-content"
+                    >
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </article>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer class="market-footer">
+
+    <div class="container market-footer-inner">
+
+        <div>
+
+            <strong>
+                Mercado Santa Cruz
+            </strong>
+
+            <p>
+                Un espacio de TECNICOM para
+                visibilizar el comercio y los
+                servicios locales.
+            </p>
+
+        </div>
+
+
+        <div class="market-footer-links">
+
+            <a href="index.html">
+                TECNICOM
+            </a>
+
+            <a href="noticias.html">
+                Noticias
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script src="api.js"></script>
+<script src="mercado-santa-cruz.js"></script>
+
+</body>
+
+</html>
